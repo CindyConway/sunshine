@@ -61,6 +61,11 @@ header{
   top:4rem;
   right:4rem;
 }
+.logo{
+  margin-top: 4rem;
+  margin-left: 4rem;
+}
+
 
 /* ====== [ Search ] ====== */
 .search-box {
@@ -108,18 +113,87 @@ footer li,
 footer a:hover {
   color:white;
 }
+.col-sm-1 {padding-left: 0;}
 
+@media only screen and (max-width:759px){
+    /*====== [ FOOTER ] ====== */
+    footer {
+      padding-top: 2rem !important;
+      padding-bottom: 1rem !important;
+    }
+  footer .col-sm-1:first-child {
+    text-align: center;
+    padding-top: 8%;
+  }
+  footer .container-fluid > .row{
+    padding-left: 2rem;
+  }
+}
 
 @media only screen and (max-width:600px){
   .admin-btn {
-    right:1rem;
-    top:1rem;
+    display: none;
   }
   header h2 {
     font-size: 1.2rem;
   }
-  // header .head-text {
-  //   padding-left: 10px;
-  //   padding-right: 10px;
-  // }
+  span[class=switcher] {
+    display:block;
+    background-image: url(logo-main-small.png) !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    width: 166px !important;
+    height: 70px !important;
+  }
+  img[class=houdini] {
+    display: none !important;
+  }
+  .logo {
+    margin-top: 2rem;
+    margin-left: 2.5rem;
+  }
+  header {
+    height: 320px !important;
+  }
+  .head-text {
+    padding: 0 2.5rem;
+  }
+  /* ====== [ Search ] ====== */
+  [data-ui-component="search-area"] .row,
+  [data-ui-component="choose-by-agency-area"] .row {
+    margin:0;
+  }
+  [data-ui-component="choose-by-agency-area"] .row {
+    position: relative;
+    top:-15px;
+    padding: 0px 15px 15px;
+  }
+   [data-ui-component="search-area"] .row:last-child {
+    margin-bottom: 30px;
+  }
+  .search-box {
+  width: 320px;
+  height: 30px;
+  margin:20px auto;
 }
+  .search-box button {
+    height:30px;
+    width: 50px;
+    font-size:1em;
+  }
+  .search-box input {
+    width: 80%;
+    height: 100%;
+    font-size:1em;
+  }
+
+}
+@media only screen and (max-width:479px){
+  footer .col-sm-1:first-child,
+  footer .col-xs-6:nth-child(2) {
+    width: 100%!important;
+    text-align: center;
+    padding-left: 0!important;
+  }
+}
+
