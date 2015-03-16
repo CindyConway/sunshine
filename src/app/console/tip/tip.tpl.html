@@ -1,0 +1,14 @@
+<div style="height:500px" ng-controller="TipCtrl as tipCtrl">
+  tip
+
+  <input id="tip_search" type="search" placeholder="Search">
+  <span id="tip-count">0</span> results
+  <button id="next" ng-click="tipCtrl.next()">next</button>
+  <button id="previous" ng-click="tipCtrl.previous()">previous</button>
+
+  <div id="tip-grid-sizing-container" cc-handsontable-container style="position:relative;">
+    <div id="tip-grid" style="overflow:scroll; visibility:hidden; padding-bottom:200px" class="handsontable"></div>
+  </div>
+  <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>
+
+</div>

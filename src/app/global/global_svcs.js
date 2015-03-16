@@ -9,6 +9,7 @@ angular.module( 'sunshine.global_svcs', [])
 
 .service('Department', function($http, $rootScope) {
 
+
   /*****************************************
   METHOD: get_adopted
 
@@ -23,7 +24,7 @@ angular.module( 'sunshine.global_svcs', [])
         return res.data;
       });
   };
-  
+
 
   /*****************************************
   METHOD: get_draft
@@ -159,7 +160,87 @@ angular.module( 'sunshine.global_svcs', [])
   };
 })
 
+/*================================
 
+      [ Template Object ]
+
+==================================*/
+
+.service('Template', function($http, $rootScope) {
+  var apiUrl = $rootScope.API_URL;
+  var self = this;
+  self.all = null;
+  self.for_dept = null;
+
+  /*****************************************
+  METHOD: delete
+
+  Deletes one record from templates.
+  ******************************************/
+  this.del = function(record) {
+
+    var url = apiUrl + '/template/' + record._id;
+    return $http["delete"](url)
+      .success(function(data) {
+      })
+      .error(function(data) {
+        console.log(data);
+      });
+  };
+
+  /*****************************************
+  METHOD: get
+
+  This method returns all the records that the
+  Administrator's office recommends that all
+  departments have.
+  ******************************************/
+
+  this.get = function() {
+
+    return $http
+      .get(apiUrl + '/template')
+      .then(function(res) {
+        self.all = res.data;
+        //return res.data;
+      });
+  };
+
+  /*****************************************
+  METHOD: get
+
+  The same as get, but includes an extra field
+  called selected if the template record
+  is present in the department's draft schedule
+  ******************************************/
+
+  this.getByDeptId = function(dept_id) {
+    return $http
+      .get(apiUrl + '/template/' + dept_id)
+      .then(function(res) {
+        self.for_dept = res.data;
+      });
+  };
+  /*****************************************
+  METHOD: upsert
+
+  Saves one record in a schedule. It is
+  saved as a draft.
+  ******************************************/
+  this.upsert = function(record) {
+    var url = apiUrl + '/template';
+
+    return $http.put(url, record)
+      .success(function(data) {
+        //console.log(data);
+
+      })
+      .error(function(data) {
+        //console.log(data);
+      });
+  };
+
+})
 /*================================
 
       [ Schedule Object ]
@@ -169,6 +250,10 @@ angular.module( 'sunshine.global_svcs', [])
 .service('Schedule', function($http, $rootScope) {
 
   var apiUrl = $rootScope.API_URL;
+  var self = this;
+  self.draft = null;
+  self._id = null;
+  self.records = null;
 
   /*****************************************
   METHOD: get_draft
@@ -180,10 +265,13 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
 
   this.get_draft = function(dept_id) {
-    //Department id used to be in $rootScope. Moved it to parameter
     return $http
       .get(apiUrl + '/draft/schedule/' + dept_id)
       .then(function(res) {
+        self.draft = res.data;
+        self._id = res.data._id;
+        self.draft = res.data.draft;
+        self.records = res.data.draft.record;
         return res.data;
       });
   };
@@ -238,7 +326,7 @@ angular.module( 'sunshine.global_svcs', [])
       .success(function(data) {
       })
       .error(function(data) {
-        console.log(data);
+        //console.log(data);
       });
   };
 

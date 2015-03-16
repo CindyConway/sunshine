@@ -4,7 +4,7 @@
         <select name="draftSelect"
                 class="navBarSelect"
                 ng-model="selected_draft_dept"
-                ng-options=" draft_dept as draft_dept.draft.department for draft_dept in draft_depts" 
+                ng-options=" draft_dept as draft_dept.draft.department for draft_dept in draft_depts"
                 ng-change="changed_draft_dept()">
                     <option value="">Choose Drafts</option>
         </select>
@@ -20,6 +20,7 @@
         </select>
         <a class="whiteLink linkPading" ui-sref="console.dashboard">Dashboard</a>
         <a class="whiteLink linkPading" ui-sref="console.users">All Users</a>
+        <a class="whiteLink linkPading" ui-sref="console.tip">Recommendations</a>
     </div>
     <div class="col-xs-4 navBar text-right">
         <a class="whiteLink pad10">Search</a>

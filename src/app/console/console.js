@@ -3,7 +3,8 @@ angular.module( 'sunshine.console', [
         'ui.bootstrap',
         'sunshine.dashboard',
         'sunshine.users',
-        'sunshine.edit'
+        'sunshine.edit',
+        'sunshine.tip'
     ])
 
     .config(function config( $stateProvider) {
