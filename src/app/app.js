@@ -12,6 +12,7 @@ var app = angular
   'sunshine.agency',
   'sunshine.schedule',
   'sunshine.edit',
+  'sunshine.tip',
   'ui.router',
   'angularUtils.directives.dirPagination',
   'ui.bootstrap',
@@ -22,8 +23,7 @@ var app = angular
   'ngSanitize',
   'angular-ellipsis',
   'cgBusy',
-  'ncy-angular-breadcrumb',
-  'xeditable'
+  'ncy-angular-breadcrumb'
 ])
 
 .config(function($breadcrumbProvider) {
@@ -77,9 +77,6 @@ var app = angular
 //            }
 //        }
 //    });
-})
-.run(function(editableOptions) {
-  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 })
 .provider('UserRoles', function()  {
     var roles = {

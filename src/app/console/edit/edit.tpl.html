@@ -9,20 +9,22 @@
   <div id="edit-header" style="z-index:2; height:100px;background-color:white; width:100%">
       <div>Schedule Page</div>
       <button ng-click="editCtrl.publish()">Publishing ...</button>
-      <strong>Count:</strong> {{editCtrl.draft_records.length}}</br>
-      <input name="department" ng-model="editCtrl.draft_dept.draft.department">
-      <input name="website" ng-model="editCtrl.draft_dept.draft.website">
-      <input name="contact" ng-model="editCtrl.draft_dept.draft.contact">
-      <input name="phone" ng-model="editCtrl.draft_dept.draft.phone">
-      <input name="email" ng-model="editCtrl.draft_dept.draft.email">
-      <input id="search_field" type="search" placeholder="Search"><span id="resultCount">0</span> results
+      <strong>{{editCtrl.draf._id}}</strong></br>
+      <strong>Count:</strong> {{editCtrl.draft.record.length}}</br>
+      <input name="department" ng-model="editCtrl.draft.department">
+      <input name="website" ng-model="editCtrl.draft.website">
+      <input name="contact" ng-model="editCtrl.draft.contact">
+      <input name="phone" ng-model="editCtrl.draft.phone">
+      <input name="email" ng-model="editCtrl.draft.email">
+      <input id="schedule-search" type="search" placeholder="Search">
+      <span id="result-count">0</span> results
       <button id="next" ng-click="editCtrl.next()">next</button>
       <button id="previous" ng-click="editCtrl.previous()">previous</button>
   </div>
 
   <div id="grid-sizing-container" cc-handsontable-container style="position:relative;">
-
-    <div id="edit-schedule" style="overflow:scroll; visibility:hidden" class="handsontable"></div>
+    <div id="schedule-grid" style="overflow:scroll; visibility:hidden; padding-bottom:200px" class="handsontable"></div>
   </div>
+
     <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>
 </div>

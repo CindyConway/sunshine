@@ -75,7 +75,6 @@ module.exports = {
       'vendor/checklist-model/checklist-model.js',
       'vendor/angular-busy/dist/angular-busy.js',
       'vendor/angular-breadcrumb/dist/angular-breadcrumb.js',
-      'vendor/angular-xeditable/dist/js/xeditable.min.js',
       'vendor/handsontable/dist/handsontable.full.min.js'
 
     ],
