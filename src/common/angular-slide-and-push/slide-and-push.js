@@ -261,42 +261,4 @@ angular.module('cc.slide.menu', [])
       }
     };
   }])
-  .service('Debounce', function() {
-    var self = this;
-
-    // debounce() method is slightly modified version of:
-    // Underscore.js 1.4.4
-    // http://underscorejs.org
-    // (c) 2009-2013 Jeremy Ashkenas, DocumentCloud Inc.
-    // Underscore may be freely distributed under the MIT license.
-    self.debounce = function(func, wait, immediate) {
-      var timeout,
-      result;
-
-      return function() {
-        var context = this,
-        args = arguments,
-        callNow = immediate && !timeout;
-
-        var later = function() {
-          timeout = null;
-
-          if (!immediate) {
-            result = func.apply(context, args);
-          }
-        };
-
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-
-        if (callNow) {
-          result = func.apply(context, args);
-        }
-
-        return result;
-      };
-    };
-
-    return self;
-  })
 ;

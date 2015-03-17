@@ -9,6 +9,20 @@ angular.module( 'sunshine.global_svcs', [])
 
 .service('Department', function($http, $rootScope) {
 
+  /*****************************************
+  METHOD: save_draft
+
+  Save the propertied of the department.
+  (name, contact, webasite, etc)
+  ******************************************/
+  this.save_draft = function(dept) {
+    var apiUrl = $rootScope.API_URL + '/draft/department';
+    return $http
+      .put(apiUrl, dept)
+      .then(function(res) {
+        return res.data;
+      });
+    };
 
   /*****************************************
   METHOD: get_adopted
@@ -41,7 +55,6 @@ angular.module( 'sunshine.global_svcs', [])
       });
   };
 })
-
 
 /*================================
 
@@ -350,6 +363,45 @@ angular.module( 'sunshine.global_svcs', [])
         $log.log(data);
       });
   };
+})
+
+.service('Debounce', function() {
+  var self = this;
+
+  // debounce() method is slightly modified version of:
+  // Underscore.js 1.4.4
+  // http://underscorejs.org
+  // (c) 2009-2013 Jeremy Ashkenas, DocumentCloud Inc.
+  // Underscore may be freely distributed under the MIT license.
+  self.debounce = function(func, wait, immediate) {
+    var timeout,
+    result;
+
+    return function() {
+      var context = this,
+      args = arguments,
+      callNow = immediate && !timeout;
+
+      var later = function() {
+        timeout = null;
+
+        if (!immediate) {
+          result = func.apply(context, args);
+        }
+      };
+
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+
+      if (callNow) {
+        result = func.apply(context, args);
+      }
+
+      return result;
+    };
+  };
+
+  return self;
 })
 
 /*================================
