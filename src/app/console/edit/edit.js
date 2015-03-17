@@ -16,8 +16,8 @@ angular.module( 'sunshine.edit', [
   });
 })
 
-.controller('EditCtrl', function EditCtrl($window, $rootScope, Schedule,
-    GlobalVariables, ScheduleEdit, HOTHelper) {
+.controller('EditCtrl', function EditCtrl($window, $rootScope, $scope, Schedule, Department,
+    Debounce, GlobalVariables, ScheduleEdit, HOTHelper) {
 
     GlobalVariables.showFooter = false;
     var thisHandsontable;
@@ -32,6 +32,7 @@ angular.module( 'sunshine.edit', [
     $rootScope.$watch('selected_draft_dept', function(newVal, oldVal) {
       Schedule.get_draft(newVal)
         .then(function (data){
+
             // put the data on the controller's scope
             self.draft = Schedule.draft;
 
@@ -61,6 +62,18 @@ angular.module( 'sunshine.edit', [
         });
     });
 
+    self.save =
+      Debounce.debounce(
+        function(){
+            var dept = self.draft;
+            dept.sched_id = Schedule._id;
+            delete dept.record;
+
+            Department.save_draft(dept)
+              .then(function (data){
+                
+              });
+        },1000);
 
     $rootScope.$watch('selected_adopted_dept', function(newVal, oldVal) {
       // Schedule.get_adopted()
@@ -71,13 +84,13 @@ angular.module( 'sunshine.edit', [
     });
 
     // set selected department when the page first loads
-    if ( typeof $rootScope.selected_draft_dept === 'undefined'){
-      //$rootScope.selected_draft_dept = "548c8ed3fe0bdfcb496d4bf9"; //MUNI
-      //$rootScope.selected_draft_dept = "548c8ed3fe0bdfcb496d4bfe"; //Public Health
-      //$rootScope.selected_draft_dept = "548c8ed4fe0bdfcb496d4c08"; //Sherrif
-
-      $rootScope.selected_draft_dept = "548c8ed3fe0bdfcb496d4bce"; // Adult Probation
-    }
+     if ( typeof $rootScope.selected_draft_dept === 'undefined'){
+    //   //$rootScope.selected_draft_dept = "548c8ed3fe0bdfcb496d4bf9"; //MUNI
+    //   //$rootScope.selected_draft_dept = "548c8ed3fe0bdfcb496d4bfe"; //Public Health
+    //   //$rootScope.selected_draft_dept = "548c8ed4fe0bdfcb496d4c08"; //Sherrif
+    //
+       $rootScope.selected_draft_dept = "548c8ed3fe0bdfcb496d4bce"; // Adult Probation
+     }
 
     if ( typeof $rootScope.selected_adopted_dept === 'undefined'){
       $rootScope.selected_adopted_dept = "5452b9e058779c197dfd05caz";
