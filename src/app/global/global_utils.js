@@ -1,3 +1,4 @@
+(function(){
 /*jshint multistr: true */
 angular.module( 'sunshine.global_utils', [])
 
@@ -67,3 +68,4 @@ angular.module( 'sunshine.global_utils', [])
 //   };
 // })
 ;
+})();

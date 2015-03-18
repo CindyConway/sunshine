@@ -1,5 +1,6 @@
+(function(){
 // App wide dependencies
-var app = angular
+angular
 .module( 'sunshine', [
   'templates-app',
   'templates-common',
@@ -88,10 +89,13 @@ var app = angular
         return roles;
     };
 })
-.controller( 'AppCtrl', function AppCtrl ( $scope, $location, $rootScope, AuthService, UserRoles, GlobalVariables ) {
+.controller( 'AppCtrl', function AppCtrl ( $scope, $location,
+  $rootScope, AuthService, UserRoles, GlobalVariables ) {
     $scope.GlobalVariables = GlobalVariables;
     $rootScope.API_URL = 'http://localhost:1971';
     $rootScope.USERS_DEPT_ID = '54331f1023fe388f037119c6';
+    //GlobalVariables.user_dept = '548c8ed4fe0bdfcb496d4c08'; //Sheriff
+    GlobalVariables.user_dept = '548c8ed3fe0bdfcb496d4bce'; //Adult Probation
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
         if ( angular.isDefined( toState.data.pageTitle ) ) {
@@ -104,18 +108,9 @@ var app = angular
     $scope.isAuthorized = AuthService.isAuthorized;
 
     $scope.setCurrentUser = function (user) {
-    $scope.currentUser = user;
-
-  };
-})
-
-.value('GlobalVariables',
-  {
-    "showFooter" : true,
-    "api_url": 'http://localhost:1971'
-  }
-)
-;
+      $scope.currentUser = user;
+    };
+});
 
 // ============= JS added globally ===================]
 //extend all arrays to have a unique function
@@ -155,3 +150,5 @@ String.prototype.visualLength = function()
     return ruler.offsetWidth;
 };
 //[===================================================]
+
+})();

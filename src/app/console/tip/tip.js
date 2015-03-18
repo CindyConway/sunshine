@@ -1,3 +1,4 @@
+(function(){
 angular.module( 'sunshine.tip', [
         'ui.router',
         'ui.bootstrap'
@@ -384,6 +385,12 @@ angular.module( 'sunshine.tip', [
           longestPerField = recordArr.sort(sorter(cols[i].data))[0];
           col = cols[i].data;
 
+          //no records in the record array, so column does not exits
+          if(typeof longestPerField == 'undefined'){
+            fittedColumnWidths[col] = minColWidth;
+            continue;
+          }
+
           // all values for the column are null; set minWidth
           if(longestPerField[col] == null){
             fittedColumnWidths[col] = minColWidth;
@@ -409,5 +416,5 @@ angular.module( 'sunshine.tip', [
   };
 
 })
-
 ;
+})();
