@@ -1,5 +1,19 @@
+(function(){
 angular.module( 'sunshine.global_svcs', [])
 
+/*================================
+
+      [Global Variable ]
+
+==================================*/
+.value('GlobalVariables',
+  {
+    "showFooter" : true,
+    "api_url": 'http://localhost:1971',
+    "user_dept": null,
+    "selected_dept": null
+  }
+)
 
 /*================================
 
@@ -8,6 +22,39 @@ angular.module( 'sunshine.global_svcs', [])
 ==================================*/
 
 .service('Department', function($http, $rootScope) {
+  var apiUrl = $rootScope.API_URL;
+
+  /*****************************************
+  METHOD: del
+
+  Remove the draft document from a deparmtment
+  This in effect removes the document from the
+  system
+  ******************************************/
+  this.del = function(department) {
+
+    var url = apiUrl + '/draft/department/' + department;
+    return $http["delete"](url)
+      .success(function(data) {
+      })
+      .error(function(data) {
+        console.log(data);
+      });
+  };
+
+  /*****************************************
+  METHOD: new
+
+  Add a new Department
+  ******************************************/
+  this.add = function() {
+    var url = apiUrl + '/draft/add';
+    return $http
+      .put(url)
+      .then(function(res) {
+        return res.data;
+      });
+  };
 
   /*****************************************
   METHOD: save_draft
@@ -365,6 +412,12 @@ angular.module( 'sunshine.global_svcs', [])
   };
 })
 
+/*================================
+
+      [ Debounce Object ]
+
+==================================*/
+
 .service('Debounce', function() {
   var self = this;
 
@@ -420,3 +473,4 @@ angular.module( 'sunshine.global_svcs', [])
     "4 - No Retention Required"
   ])
 ;
+})();

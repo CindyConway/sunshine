@@ -8,11 +8,19 @@
 
   <div id="edit-header" style="z-index:2; height:100px;background-color:white; width:100%">
       <div>Schedule Page</div>
+      <select name="draftSelect"
+              class="navBarSelect"
+              ng-model="editCtrl.selected_dept"
+              ng-options="depts._id as depts.draft.department for depts in editCtrl.dept_list">
+      </select>
+
       <button ng-click="editCtrl.publish()">Publishing ...</button>
+      <button ng-click="editCtrl.add()">New</button>
+      <button ng-click="editCtrl.del()">Delete</button>
       <strong>{{editCtrl._id}}</strong></br>
       <strong>{{editCtrl.draft._id}}</strong></br>
       <strong>Count:</strong> {{editCtrl.records.length}}</br>
-    <input name="department" ng-model="editCtrl.draft.department" ng-change="editCtrl.save()">
+      <input name="department" ng-model="editCtrl.draft.department" ng-change="editCtrl.save()">
       <input name="website" ng-model="editCtrl.draft.website" ng-change="editCtrl.save()">
       <input name="contact" ng-model="editCtrl.draft.contact" ng-change="editCtrl.save()">
       <input name="phone" ng-model="editCtrl.draft.phone" ng-change="editCtrl.save()">

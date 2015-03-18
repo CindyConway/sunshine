@@ -1,5 +1,5 @@
+(function(){
 angular.module( 'sunshine.agency', ['ui.router'])
-
 
 .config(function config( $stateProvider ) {
   $stateProvider.state( 'agency', {
@@ -56,6 +56,5 @@ angular.module( 'sunshine.agency', ['ui.router'])
 
   });
 })
-
-
 ;
+})();

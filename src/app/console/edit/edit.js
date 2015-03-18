@@ -1,3 +1,4 @@
+(function(){
 angular.module( 'sunshine.edit', [
     'ui.router',
     'ui.bootstrap'
@@ -5,10 +6,10 @@ angular.module( 'sunshine.edit', [
 
 .config(function config( $stateProvider ) {
 
-  $stateProvider.state( 'console.edit', {
+  $stateProvider.state( 'edit', {
     url: '/edit',
     views: {
-      "console": {
+      "main": {
         templateUrl: 'console/edit/edit.tpl.html'
       }
     },
@@ -28,13 +29,25 @@ angular.module( 'sunshine.edit', [
     self.searchResults = [];
     self.selSearchResult = -1;
 
+    Department
+    .get_draft()
+    .then(function (data){
+        //populate Department DropDown
+        draft_depts = data;
+        self.dept_list = data;
+        self.selected_dept = GlobalVariables.user_dept;
+    });
+
     // watch for changes to the selected draft department
-    $rootScope.$watch('selected_draft_dept', function(newVal, oldVal) {
+    $scope.$watch('editCtrl.selected_dept', function(newVal, oldVal) {
+
+      if(typeof newVal == 'undefined'){return;}
+
       Schedule.get_draft(newVal)
         .then(function (data){
-
             // put the data on the controller's scope
             self.draft = Schedule.draft;
+            self._id = Schedule._id;
 
             //setup configuration
             var settings = HOTHelper.config(ScheduleEdit.config());
@@ -62,39 +75,60 @@ angular.module( 'sunshine.edit', [
         });
     });
 
+    self.del = function(){
+      Department.del(self.selected_dept)
+        .then(function(data){
+
+          //update department dropdown
+          Department
+          .get_draft()
+          .then(function (data){
+              draft_depts = data;
+              self.dept_list = data;
+              self.selected_dept = data[0]._id;
+          });
+        });
+    };
+
     self.save =
-      Debounce.debounce(
-        function(){
+      Debounce.debounce(function(){
             var dept = self.draft;
-            dept.sched_id = Schedule._id;
+            dept.sched_id = self._id;
             delete dept.record;
 
-            Department.save_draft(dept)
-              .then(function (data){
-                
-              });
+            //Save Department properties
+            Department
+            .save_draft(dept)
+            .then(function (data){
+
+              //update department dropdown
+                Department
+                .get_draft()
+                .then(function (data){
+                    var hold_selected = self.selected_dept;
+                    draft_depts = data;
+                    self.dept_list = data;
+                    self.selected_dept = hold_selected;
+                });
+            });
         },1000);
 
-    $rootScope.$watch('selected_adopted_dept', function(newVal, oldVal) {
-      // Schedule.get_adopted()
-      //   .then(function (data){
-      //     $scope.gridOptions.data =  data.record;
-      //     $scope.draft_schedule = data;
-      //   });
-    });
+    self.add = function(){
 
-    // set selected department when the page first loads
-     if ( typeof $rootScope.selected_draft_dept === 'undefined'){
-    //   //$rootScope.selected_draft_dept = "548c8ed3fe0bdfcb496d4bf9"; //MUNI
-    //   //$rootScope.selected_draft_dept = "548c8ed3fe0bdfcb496d4bfe"; //Public Health
-    //   //$rootScope.selected_draft_dept = "548c8ed4fe0bdfcb496d4c08"; //Sherrif
-    //
-       $rootScope.selected_draft_dept = "548c8ed3fe0bdfcb496d4bce"; // Adult Probation
-     }
+      Department.add()
+      .then(function(data){
+          var new_id = data._id;
 
-    if ( typeof $rootScope.selected_adopted_dept === 'undefined'){
-      $rootScope.selected_adopted_dept = "5452b9e058779c197dfd05caz";
-    }
+          Department.get_draft()
+          .then(function (data){
+              var hold_selected = self.selected_dept;
+
+              draft_depts = data;
+              self.dept_list = data;
+              self.selected_dept = new_id;
+          });
+        });
+      };
 
     self.publish = function(){
       Schedule.publish($rootScope.selected_draft_dept);
@@ -309,3 +343,4 @@ angular.module( 'sunshine.edit', [
   };
 }])
 ;
+})();

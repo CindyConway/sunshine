@@ -1,3 +1,4 @@
+(function(){
 angular.module( 'sunshine.home', ['ui.router'])
 
 /**
@@ -37,5 +38,5 @@ angular.module( 'sunshine.home', ['ui.router'])
 
   };
 })
-
 ;
+})();
