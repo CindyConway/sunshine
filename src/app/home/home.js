@@ -40,5 +40,3 @@ angular.module( 'sunshine.home', ['ui.router'])
 })
 
 ;
-
-

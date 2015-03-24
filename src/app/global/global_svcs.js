@@ -381,7 +381,8 @@ angular.module( 'sunshine.global_svcs', [])
   deleted from a draft.
   ******************************************/
   this.delete_draft_record = function(record) {
-    var url = apiUrl + '/draft/record/' + record._id + '/' + record.dept_id;
+
+    var url = apiUrl + '/draft/record/' + record.row._id + '/' + record.dept_id;
     return $http["delete"](url)
       .success(function(data) {
       })
@@ -398,10 +399,10 @@ angular.module( 'sunshine.global_svcs', [])
   the records in a schedule as well as the
   department information
   ******************************************/
-  this.publish = function(schedule) {
-    var url = apiUrl + '/publish/';
+  this.publish = function(dept_id) {
+    var url = apiUrl + '/draft/publish/' + dept_id;
 
-    return $http.post(url + schedule)
+    return $http.post(url)
       .success(function(data) {})
       .error(function(data) {
         $log.log({
@@ -410,6 +411,33 @@ angular.module( 'sunshine.global_svcs', [])
         $log.log(data);
       });
   };
+
+
+    /*****************************************
+    METHOD: lock
+
+    Lock the draft version of a schedule
+    ******************************************/
+    this.lock = function(dept_id) {
+      var url = apiUrl + '/draft/lock/' + dept_id;
+
+      return $http.post(url)
+      .success(function(data, status, headers, config){
+        return data;
+      })
+      .error(function(data, status, headers, config){
+        return status;
+      });
+
+      // return $http.post(url)
+      //   .success(function(data) {return data;})
+      //   .error(function(data) {
+      //     $log.log({
+      //       "fail": "sad face"
+      //     });
+      //     console.log(data);
+      //   });
+    };
 })
 
 /*================================
@@ -426,14 +454,19 @@ angular.module( 'sunshine.global_svcs', [])
   // http://underscorejs.org
   // (c) 2009-2013 Jeremy Ashkenas, DocumentCloud Inc.
   // Underscore may be freely distributed under the MIT license.
-  self.debounce = function(func, wait, immediate) {
+  self.debounce = function(func, wait, immediate, status) {
     var timeout,
     result;
 
     return function() {
+
       var context = this,
       args = arguments,
       callNow = immediate && !timeout;
+      //if debouce breaks for other functions it is
+      //because I added context.status and the status argumanet
+      //It is used on the save of the schedule edit
+      context.status = status;
 
       var later = function() {
         timeout = null;

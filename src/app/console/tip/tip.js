@@ -6,10 +6,10 @@ angular.module( 'sunshine.tip', [
 
 .config(function config( $stateProvider ) {
 
-    $stateProvider.state( 'console.tip', {
+    $stateProvider.state( 'tip', {
         url: '/tip',
         views: {
-            "console": {
+            "main": {
                 //controller: 'DashBoardCtrl',
                 templateUrl: 'console/tip/tip.tpl.html'
             }
@@ -354,7 +354,8 @@ angular.module( 'sunshine.tip', [
       config.fixedRowsTop = false;
       config.autoWrapRow = true;
       config.search = true;
-      config.contextMenu = ["row_above", "row_below", "remove_row"];
+      //config.contextMenu = ["row_above", "row_below", "remove_row"];
+      //config.contextMenu = true;
 
       if(typeof addOns != 'undefined'){
         for(var prop in addOns){
