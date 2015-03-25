@@ -27,6 +27,7 @@ angular.module( 'sunshine.tip', [
   self.tip_count = document.getElementById("tip-count");
   self.searchResults = [];
   self.selSearchResult = -1;
+  self.status = "saved";
 
 
   if (Schedule._id != null){
@@ -114,6 +115,12 @@ angular.module( 'sunshine.tip', [
 })
 
 .factory('TipEdit', ["Template", "RetentionCategories", function (Template, RetentionCategories) {
+
+    //Before Save
+    var beforeSave = function(change, source){
+      var edit_status = document.getElementById("edit-status");
+      edit_status.innerHTML = "saving";
+    };
 
     //Autosave function
     var autoSave = function(change,source){
@@ -209,6 +216,7 @@ angular.module( 'sunshine.tip', [
         //Add Event Functions
         config.afterChange = autoSave;
         config.beforeRemoveRow = beforeRemoveRow;
+        config.beforeChange = beforeSave;
 
         return config;
       }
@@ -218,31 +226,44 @@ angular.module( 'sunshine.tip', [
 .factory('TipPicker', ["Template", "Schedule","RetentionCategories",
   function (Template, Schedule, RetentionCategories) {
 
-  //Autosave function
-  var autoSave = function(change,source){
-    var self = this;
+    //Before Save
+    var beforeSave = function(change, source){
+      setStatus("saving");
+    };
 
-    if(change == null){return;}
-    var data = change[0];
+    var setStatus = function(str){
+      var edit_status = document.getElementById("edit-status");
+      edit_status.innerHTML = str;
+    };
 
-    if (source === 'loadData') {return;} //dont' save this change
-    if (source === 'insertId') {return;} // stops an endless loop when the new record id is added after an insert
 
-    // transform sorted row to original row
-    var rowNumber = this.sortIndex[data[0]] ? this.sortIndex[data[0]][0] : data[0];
-    var row = this.getSourceDataAtRow(rowNumber);
-    row.dept_id = Schedule._id;
+    //Autosave function
+    var autoSave = function(change,source){
+      var self = this;
 
-    if(row.selected){
-      Schedule.save_draft_record(row).then(function(res){
-        self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
-      });
+      if(change == null){return;}
+      var data = change[0];
+
+      if (source === 'loadData') {return;} //dont' save this change
+      if (source === 'insertId') {return;} // stops an endless loop when the new record id is added after an insert
+
+      // transform sorted row to original row
+      var rowNumber = this.sortIndex[data[0]] ? this.sortIndex[data[0]][0] : data[0];
+      var row = this.getSourceDataAtRow(rowNumber);
+      row.dept_id = Schedule._id;
+
+      if(!!row.selected ){
+        Schedule.save_draft_record(row)
+        .then(function(res){
+          self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
+          setStatus("saved");
+        });
     }
 
     if(!row.selected){
       Schedule.delete_draft_record(row)
       .success(function(res){
-
+        setStatus("saved");
       })
       .error(function(err){
         console.log(err);
@@ -322,6 +343,7 @@ angular.module( 'sunshine.tip', [
 
       //Add Event Functions
       config.afterChange = autoSave;
+      config.beforeChange = beforeSave;
 
       return config;
     }

@@ -95,7 +95,7 @@ angular
     $scope.GlobalVariables = GlobalVariables;
     $rootScope.API_URL = 'http://localhost:1971';
     $rootScope.USERS_DEPT_ID = '54331f1023fe388f037119c6';
-    GlobalVariables.user_dept = '550c50ce4e4472c01bf2c2f6'; //Board of Supervisors
+    GlobalVariables.user_dept = '550c50ce4e4472c01bf2c2f4'; //Board of Supervisors
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
         if ( angular.isDefined( toState.data.pageTitle ) ) {

@@ -382,7 +382,7 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
   this.delete_draft_record = function(record) {
 
-    var url = apiUrl + '/draft/record/' + record.row._id + '/' + record.dept_id;
+    var url = apiUrl + '/draft/record/' + record._id + '/' + record.dept_id;
     return $http["delete"](url)
       .success(function(data) {
       })
@@ -428,15 +428,23 @@ angular.module( 'sunshine.global_svcs', [])
       .error(function(data, status, headers, config){
         return status;
       });
+    };
 
-      // return $http.post(url)
-      //   .success(function(data) {return data;})
-      //   .error(function(data) {
-      //     $log.log({
-      //       "fail": "sad face"
-      //     });
-      //     console.log(data);
-      //   });
+    /*****************************************
+    METHOD: unlock
+
+    unlock the draft version of a schedule
+    ******************************************/
+    this.unlock = function(dept_id) {
+      var url = apiUrl + '/draft/unlock/' + dept_id;
+
+      return $http.post(url)
+      .success(function(data, status, headers, config){
+        return data;
+      })
+      .error(function(data, status, headers, config){
+        return status;
+      });
     };
 })
 

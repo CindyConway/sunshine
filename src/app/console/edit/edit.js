@@ -18,7 +18,7 @@ angular.module( 'sunshine.edit', [
 })
 
 .controller('EditCtrl', function EditCtrl(GlobalVariables, ScheduleDelete, PopulateGrid, Department,
-    ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, SearchNext, SearchPrevious) {
+    ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, SearchNext, SearchPrevious) {
 
     GlobalVariables.showFooter = false;
     var thisHandsontable;
@@ -32,11 +32,11 @@ angular.module( 'sunshine.edit', [
     self.add = ScheduleAdd;
     self.publish = SchedulePublish;
     self.lock = ScheduleLock;
+    self.unlock = ScheduleUnlock;
     self.next = SearchNext;
     self.previous = SearchPrevious;
     self.populateGrid = PopulateGrid.populateGrid;
-
-    //self.runValidation = function(){};
+    self.status = "saved";
 
     Department
     .get_draft()
@@ -49,8 +49,8 @@ angular.module( 'sunshine.edit', [
     });
 })
 
-.factory("PopulateGrid",["Schedule", "HOTHelper", "ScheduleEdit", "Debounce",
-  function(Schedule, HOTHelper, ScheduleEdit, Debounce){
+.factory("PopulateGrid",["Schedule", "HOTHelper", "ScheduleEdit", "Debounce", "GlobalVariables",
+  function(Schedule, HOTHelper, ScheduleEdit, Debounce, GlobalVariables){
         var thisHandsontable;
 
         var getHandsontable = function(){
@@ -70,6 +70,7 @@ angular.module( 'sunshine.edit', [
                     // put the data on the controller's scope
                     self.draft = Schedule.draft;
                     self._id = Schedule._id;
+                    self.pdf_link = GlobalVariables.api_url + "/pdf/" + self._id;
 
                     //setup configuration
                     var settings = HOTHelper.config(ScheduleEdit.config());
@@ -86,6 +87,7 @@ angular.module( 'sunshine.edit', [
 
 
                     if(typeof thisHandsontable == 'undefined'){
+                      console.log("undefined");
                       //create handsontable object
                       thisHandsontable = new Handsontable(self.schedule_grid, settings);
 
@@ -101,15 +103,16 @@ angular.module( 'sunshine.edit', [
 
                     }else{
                       thisHandsontable = getHandsontable();
-
+                      console.log("defined");
+                      console.log(Schedule.records);
                       //Repopulate Existing Handsontable
                       thisHandsontable.loadData(Schedule.records);
                       thisHandsontable.updateSettings(settings);
-                      //console.log(settings);
 
                     }
-
+                    console.log(self.schedule_grid);
                     self.schedule_grid.style.visibility = 'visible';
+
                 });
             };
 
@@ -164,14 +167,57 @@ angular.module( 'sunshine.edit', [
       return searchNext;
 }])
 
-.factory("ScheduleLock",["Schedule", "Debounce", "HttpQueue", "PopulateGrid",
-  function(Schedule, Debounce, HttpQueue, PopulateGrid){
-
-    var lock = function(){
-        var self = this;
-
-        var debounceAndLock = Debounce.debounce(function(){
+.factory("ScheduleUnlock",["Schedule", "Debounce", "HttpQueue", "PopulateGrid", "$rootScope",
+  function(Schedule, Debounce, HttpQueue, PopulateGrid, $rootScope){
+    var unlock = Debounce.debounce(function(){
+                        var self = this;
                         var thisHandsontable = PopulateGrid.getHandsontable();
+
+
+                      //  if(self.editDepartment.$valid && IsValid.length === 0){
+
+                        Schedule.unlock(self._id)
+                          .success(function(data){
+
+                            Schedule.draft.status = "DIRTY";
+                            self.draft.status = Schedule.draft.status;
+                            var settings = thisHandsontable.getSettings();
+                            settings.readOnly = false;
+                            thisHandsontable.updateSettings(settings);
+
+                            //update autosave status
+                            if(HttpQueue.count === 0){
+                              self.status = "saved";
+                              self.errorMsg = "";
+                            }
+
+                          })
+                          .error(function(data){
+                            console.log(data);
+                          });
+                        // }else{
+                        //
+                        //   if(HttpQueue.count === 0){
+                        //     self.status = "saved";
+                        //   }
+                        //   self.errorMsg = "Fix validation errors";
+                        //   $rootScope.$apply();
+                        // }
+
+                        },667, false, "saving");
+        return unlock;
+
+}])
+
+
+.factory("ScheduleLock",["Schedule", "Debounce", "HttpQueue", "PopulateGrid", "$rootScope",
+  function(Schedule, Debounce, HttpQueue, PopulateGrid, $rootScope){
+    var lock = Debounce.debounce(function(){
+                        var self = this;
+                        var thisHandsontable = PopulateGrid.getHandsontable();
+                        var IsValid = angular.element(document.querySelector('.htInvalid'));
+
+                        if(self.editDepartment.$valid && IsValid.length === 0){
 
                         Schedule.lock(self._id)
                           .success(function(data){
@@ -182,37 +228,28 @@ angular.module( 'sunshine.edit', [
                             settings.readOnly = true;
                             thisHandsontable.updateSettings(settings);
 
-
                             //update autosave status
                             if(HttpQueue.count === 0){
                               self.status = "saved";
+                              self.errorMsg = "";
                             }
+
                           })
                           .error(function(data){
                             console.log(data);
                           });
+                        }else{
+
+                          if(HttpQueue.count === 0){
+                            self.status = "saved";
+                          }
+                          self.errorMsg = "Fix validation errors";
+                          $rootScope.$apply();
+                        }
+
                         },667, false, "saving");
+        return lock;
 
-        var HOT = PopulateGrid.getHandsontable();
-        HOT.validateCells(function(){
-
-        //Handsontable does not have a method to check is anything is
-        //in an invalid state, so look for the htInvalid class
-        var IsValid = angular.element(document.querySelector('.htInvalid'));
-
-        //If all field are valid, lock
-        if(self.editDepartment.$valid && IsValid.length === 0){
-          debounceAndLock();
-          return;
-        }
-
-        //there are invalid fields, don't lock schedule
-        self.errorMsg = "Resove all validation errors before locking.";
-        return;
-      });
-
-    };
-    return lock;
 }])
 
 .factory("SchedulePublish",["Schedule", "Debounce", "HttpQueue", "PopulateGrid",
@@ -381,7 +418,6 @@ angular.module( 'sunshine.edit', [
     var row = this.getSourceDataAtRow(rowNumber);
     row.dept_id = Schedule._id;
 
-
     Schedule.save_draft_record(row)
     .then(function(res){
       self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
@@ -407,6 +443,7 @@ angular.module( 'sunshine.edit', [
   };
 
   var isRequired = function(value, callback){
+    //Skip the spareMinRow when validating
       var row = this.row + 1;
       var rowCount = this.instance.countRows();
 
@@ -421,7 +458,6 @@ angular.module( 'sunshine.edit', [
         callback (true);
       }
   };
-
 
   //remove one record from the database
   var beforeRemoveRow = function(index, amount){
@@ -452,12 +488,48 @@ angular.module( 'sunshine.edit', [
     }
   };
 
+  var autocompleteStrict = function(value, callback){
+    //Had to write custom function for strict autocomplete
+    //because the built in validation does not skip the spare row
+
+        var row = this.row + 1;
+        var rowCount = this.instance.countRows();
+
+        //skip minSpareRow
+        if(row == rowCount){
+
+          callback(true);
+          return;
+        }
+
+        //validation: field required
+        if(!value){
+          callback(false);
+          return;
+        }
+
+        //validation: value must match RetentionCategories
+        for(var i = 0; i<RetentionCategories.length; i++ ){
+          if(RetentionCategories[i] == value){
+            callback(true);
+            return;
+          }
+        }
+
+        //value was NOT in RetentionCategories
+        callback(false);
+      };
+
+  var afterRender = function(){
+    this.validateCells(function(){});
+  };
+
   return{
       config : function(){
         var config = {};
         config.columns = [];
         config.minSpareRows = 1;
-        //config.contextMenuCopyPaste = true;
+        config.contextMenuCopyPaste = true;
         config.contextMenu = true;
         config.colHeaders = ["_id","Division","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
 
@@ -500,9 +572,9 @@ angular.module( 'sunshine.edit', [
         retentionConfig.data = "retention";
         retentionConfig.type = "autocomplete";
         retentionConfig.source = RetentionCategories;
-        retentionConfig.strict = false;
         retentionConfig.allowInvalid = true;
-        //CREATE CUSTOM STRICT FUNCTION
+      //  retentionConfig.strict=true;
+        retentionConfig.validator = autocompleteStrict;
         config.columns.push(retentionConfig);
 
         // On-site Column
@@ -535,6 +607,7 @@ angular.module( 'sunshine.edit', [
         config.beforeChange = beforeSave;
         config.afterChange = autoSave;
         config.beforeRemoveRow = beforeRemoveRow;
+        config.afterRender = afterRender;
 
         return config;
     }

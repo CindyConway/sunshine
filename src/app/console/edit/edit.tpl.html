@@ -18,8 +18,11 @@
 
       <button ng-click="editCtrl.publish()" ng-disabled="editCtrl.draft.status != 'LOCKED'">Publishing</button>
       <button ng-click="editCtrl.lock()" ng-disabled="editCtrl.draft.status != 'DIRTY'">Lock</button>
+      <button ng-click="editCtrl.unlock()" ng-disabled="editCtrl.draft.status != 'LOCKED'">Unlock</button>
       <button ng-click="editCtrl.add()">New</button>
       <button ng-click="editCtrl.del()">Delete</button>
+      <button ui-sref="tip">Recommendations</button>
+      <a href="{{editCtrl.pdf_link}}" target="_self" download>Generate PDF</a>
       <strong>{{editCtrl._id}}</strong></br>
       <strong>{{editCtrl.draft._id}}</strong></br>
       <strong>Count:</strong> {{editCtrl.draft.record.length}}</br>
@@ -62,7 +65,7 @@
           <span id="result-count">0</span> results
           <button id="next" ng-click="editCtrl.next()">next</button>
           <button id="previous" ng-click="editCtrl.previous()">previous</button>
-          <div id="edit-status">{{editCtrl.status}}</div>
+          <div id="edit-status" ng-model="editCtrl.status">{{editCtrl.status}}</div>
         </form>
       </div>
 

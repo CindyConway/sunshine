@@ -1,4 +1,4 @@
-<div style="background-image: url(assets/draft.png); id="schedule-page" ng-controller="ScheduleCtrl as scheduleCtrl" class="exact_print">
+<div ng-class="{'draft-background': scheduleCtrl.isNotLocked}" id="schedule-page" ng-controller="ScheduleCtrl as scheduleCtrl" class="exact_print">
   <H3 class="underline center p1 small"> RECORDS RETENTION AND DESTRUCTION SCHEDULE</H3>
     <section data-ui-component="department-info">
       <table class="m3" style="table-layout:fixed">
@@ -130,7 +130,7 @@
         </td>
         <td>
         </td>
-        <td>          
+        <td>
           <div class="border-top mt3 mr2 tiny">Signature of Department Head</div>
         </td>
         <td>

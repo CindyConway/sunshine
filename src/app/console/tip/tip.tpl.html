@@ -5,6 +5,8 @@
   <span id="tip-count">0</span> results
   <button id="next" ng-click="tipCtrl.next()">next</button>
   <button id="previous" ng-click="tipCtrl.previous()">previous</button>
+  <button ui-sref="edit">Edit</button>
+  <div id="edit-status" ng-model="tipCtrl.status">{{tipCtrl.status}}</div>
 
   <div id="tip-grid-sizing-container" cc-handsontable-container style="position:relative;">
     <div id="tip-grid" style="overflow:scroll; visibility:hidden; padding-bottom:200px" class="handsontable"></div>
