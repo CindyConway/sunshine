@@ -10,7 +10,7 @@ angular.module( 'sunshine.edit', [
     url: '/edit',
     views: {
       "main": {
-        templateUrl: 'console/edit/edit.tpl.html'
+        templateUrl: 'edit/edit.tpl.html'
       }
     },
     data:{ pageTitle: 'Administration - Edit', authorizedRoles: ['admin', 'editor', 'anonymous'] }
@@ -87,7 +87,7 @@ angular.module( 'sunshine.edit', [
 
 
                     if(typeof thisHandsontable == 'undefined'){
-                      console.log("undefined");
+
                       //create handsontable object
                       thisHandsontable = new Handsontable(self.schedule_grid, settings);
 
@@ -103,14 +103,12 @@ angular.module( 'sunshine.edit', [
 
                     }else{
                       thisHandsontable = getHandsontable();
-                      console.log("defined");
-                      console.log(Schedule.records);
                       //Repopulate Existing Handsontable
                       thisHandsontable.loadData(Schedule.records);
                       thisHandsontable.updateSettings(settings);
 
                     }
-                    console.log(self.schedule_grid);
+
                     self.schedule_grid.style.visibility = 'visible';
 
                 });
@@ -383,8 +381,8 @@ angular.module( 'sunshine.edit', [
   return del;
 }])
 
-.factory("ScheduleEdit",["Schedule", "RetentionCategories", "Debounce", "HttpQueue",
-  function(Schedule, RetentionCategories, Debounce, HttpQueue){
+.factory("ScheduleEdit",["Schedule", "RetentionCategories", "Debounce", "HttpQueue", "HOTHelper",
+  function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper){
 
   function callback(res){}
 
@@ -426,38 +424,6 @@ angular.module( 'sunshine.edit', [
     });
   };
 
-  // Division Autocomplete Function
-  var divisionAutoComplete = function(query, process){
-     var vals = this.instance.getDataAtCol(1);
-     var uniqueVals = vals.unique().sort().nulless();
-     process(uniqueVals);
-  };
-
-
-  // Division Autocomplete Function
-  var categoryAutoComplete = function(query, process){
-    var vals = this.instance.getDataAtCol(2);
-    var uniqueVals = vals.unique().sort().nulless();
-
-    process(uniqueVals);
-  };
-
-  var isRequired = function(value, callback){
-    //Skip the spareMinRow when validating
-      var row = this.row + 1;
-      var rowCount = this.instance.countRows();
-
-      if(row == rowCount){
-        //ignore validating minSpareRow
-        callback(true);
-        return;
-      }else if(!value){
-        callback(false);
-        return;
-      }else{
-        callback (true);
-      }
-  };
 
   //remove one record from the database
   var beforeRemoveRow = function(index, amount){
@@ -488,38 +454,6 @@ angular.module( 'sunshine.edit', [
     }
   };
 
-  var autocompleteStrict = function(value, callback){
-    //Had to write custom function for strict autocomplete
-    //because the built in validation does not skip the spare row
-
-        var row = this.row + 1;
-        var rowCount = this.instance.countRows();
-
-        //skip minSpareRow
-        if(row == rowCount){
-
-          callback(true);
-          return;
-        }
-
-        //validation: field required
-        if(!value){
-          callback(false);
-          return;
-        }
-
-        //validation: value must match RetentionCategories
-        for(var i = 0; i<RetentionCategories.length; i++ ){
-          if(RetentionCategories[i] == value){
-            callback(true);
-            return;
-          }
-        }
-
-        //value was NOT in RetentionCategories
-        callback(false);
-      };
-
   var afterRender = function(){
     this.validateCells(function(){});
   };
@@ -544,7 +478,7 @@ angular.module( 'sunshine.edit', [
         var divisionConfig = {};
         divisionConfig.data = "division";
         divisionConfig.type = "autocomplete";
-        divisionConfig.source = divisionAutoComplete;
+        divisionConfig.source = HOTHelper.divisionAutoComplete;
         divisionConfig.strict = false;
         config.columns.push(divisionConfig);
 
@@ -553,15 +487,15 @@ angular.module( 'sunshine.edit', [
         var categoryConfig = {};
         categoryConfig.data = "category";
         categoryConfig.type = "autocomplete";
-        categoryConfig.source = categoryAutoComplete;
+        categoryConfig.source = HOTHelper.categoryAutoComplete;
         categoryConfig.strict = false;
-        categoryConfig.validator = isRequired;
+        categoryConfig.validator = HOTHelper.isRequired;
         config.columns.push(categoryConfig);
 
         //Title Column
         var titleConfig = {};
         titleConfig.data = "title";
-        titleConfig.validator = isRequired;
+        titleConfig.validator = HOTHelper.isRequired;
         config.columns.push(titleConfig);
 
         //Link Column
@@ -573,20 +507,19 @@ angular.module( 'sunshine.edit', [
         retentionConfig.type = "autocomplete";
         retentionConfig.source = RetentionCategories;
         retentionConfig.allowInvalid = true;
-      //  retentionConfig.strict=true;
-        retentionConfig.validator = autocompleteStrict;
+        retentionConfig.validator = HOTHelper.retentionValidator;
         config.columns.push(retentionConfig);
 
         // On-site Column
         var onsiteConfig = {};
         onsiteConfig.data = "on_site";
-        onsiteConfig.validator = isRequired;
+        onsiteConfig.validator = HOTHelper.isRequired;
         config.columns.push(onsiteConfig);
 
         // Off-site Column
         var offsiteConfig = {};
         offsiteConfig.data = "off_site";
-        offsiteConfig.validator = isRequired;
+        offsiteConfig.validator = HOTHelper.isRequired;
         config.columns.push(offsiteConfig);
 
         // Total Column

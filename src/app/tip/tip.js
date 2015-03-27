@@ -11,7 +11,7 @@ angular.module( 'sunshine.tip', [
         views: {
             "main": {
                 //controller: 'DashBoardCtrl',
-                templateUrl: 'console/tip/tip.tpl.html'
+                templateUrl: 'tip/tip.tpl.html'
             }
         },
         data:{ pageTitle: 'Administration - Dashboard', authorizedRoles: ['admin', 'editor', 'anonymous'] }
@@ -61,7 +61,7 @@ angular.module( 'sunshine.tip', [
           var settings = HOTHelper.config(TipEdit.config());
          var l = HOTHelper.getFittedWidths.call(tip_Handsontable, template, settings.columns);
          settings.search = {callback: HOTHelper.searchResultCounter};
-         settings.manualColumnResize = [1, l.category, l.title, l.link, l.retention, l.on_site, l.off_site, l.total, l.remarks ];
+         settings.manualColumnResize = [1, l.category, l.title, l.link, l.retention, l.on_site, l.off_site, l.total, l.remarks, l.is_visible ];
          settings.data = template;
 
          //Display Table
@@ -114,7 +114,8 @@ angular.module( 'sunshine.tip', [
 
 })
 
-.factory('TipEdit', ["Template", "RetentionCategories", function (Template, RetentionCategories) {
+.factory('TipEdit', ["Template", "RetentionCategories", "HOTHelper",
+  function (Template, RetentionCategories, HOTHelper) {
 
     //Before Save
     var beforeSave = function(change, source){
@@ -135,20 +136,29 @@ angular.module( 'sunshine.tip', [
       // transform sorted row to original row
       var rowNumber = this.sortIndex[data[0]] ? this.sortIndex[data[0]][0] : data[0];
       var row = this.getSourceDataAtRow(rowNumber);
+      var colCount = this.countCols();
+
+      //set visibility
+      row.is_visible = "Visible";
+      for(var i = 0; i< colCount; i++){
+        if(!this.getCellMeta(rowNumber, i).valid){
+          row.is_visible = "Hidden";
+          break;
+        }
+
+        if(row.title == null){
+          row.is_visible = "Hidden";
+          break;
+        }
+      }
 
       Template.upsert(row).then(function(res){
+        if(row._id == null){
+          self.setDataAtCell(rowNumber,8, res.data.is_visible, "fixValidationOfNewRow");
+        }
          self.setDataAtCell(rowNumber,0, res.data._id, "insertId");
        });
     };
-
-    // Category Autocomplete Function
-    var categoryAutoComplete = function(query, process){
-      var vals = this.instance.getDataAtCol(1);
-      var uniqueVals = vals.unique().sort().nulless();
-
-      process(uniqueVals);
-    };
-
 
     //remove one record from the database
     var beforeRemoveRow = function(index, amount){
@@ -164,16 +174,20 @@ angular.module( 'sunshine.tip', [
         });
     };
 
+    var afterRender = function(){
+      this.validateCells(function(){});
+    };
+
     return {
       config : function(){
         var config = {};
         config.columns = [];
         config.minSpareRows = 1;
         config.contextMenu = ["row_above", "row_below", "remove_row"];
-        config.colHeaders = ["_id","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks"];
+        config.colHeaders = ["_id","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "Visibility"];
 
         //schema for empty row
-        config.dataSchema={_id:null, category:null, title:null, link:null, retention:null, on_site:null, off_site:null, total:null, remarks:null};
+        config.dataSchema={_id:null, category:null, title:null, link:null, retention:null, on_site:null, off_site:null, total:null, remarks:null, is_visible: null};
 
         //_id Column (hidden)
         config.columns.push({"data":"_id"});
@@ -182,12 +196,16 @@ angular.module( 'sunshine.tip', [
         var categoryConfig = {};
         categoryConfig.data = "category";
         categoryConfig.type = "autocomplete";
-        categoryConfig.source = categoryAutoComplete;
+        categoryConfig.source = HOTHelper.categoryAutoComplete;
         categoryConfig.strict = false;
+        categoryConfig.validator = HOTHelper.isRequired;
         config.columns.push(categoryConfig);
 
         //Title Column
-        config.columns.push({"data":"title"});
+        var titleConfig = {};
+        titleConfig.data = "title";
+        titleConfig.validator = HOTHelper.isRequired;
+        config.columns.push(titleConfig);
 
         //Link Column
         config.columns.push({"data":"link"});
@@ -197,26 +215,39 @@ angular.module( 'sunshine.tip', [
         retentionConfig.data = "retention";
         retentionConfig.type = "autocomplete";
         retentionConfig.source = RetentionCategories;
-        retentionConfig.strict = true;
-        retentionConfig.allowInvalid = false;
+        retentionConfig.allowInvalid = true;
+        retentionConfig.validator = HOTHelper.retentionValidator;
         config.columns.push(retentionConfig);
 
         // On-site Column
-        config.columns.push({"data":"on_site"});
+        var onSiteConfig = {};
+        onSiteConfig.data = "on_site";
+        onSiteConfig.validator = HOTHelper.isRequired;
+        config.columns.push(onSiteConfig);
 
         // Off-site Column
-        config.columns.push({"data":"off_site"});
-
+        var offSiteConfig = {};
+        offSiteConfig.data = "off_site";
+        offSiteConfig.validator = HOTHelper.isRequired;
+        config.columns.push(offSiteConfig);
         // Total Column
         config.columns.push({"data":"total"});
 
         // Remarks Column
         config.columns.push({"data":"remarks"});
 
+        // Visibility Column
+        var isVisibleConfig = {};
+        isVisibleConfig.data = "is_visible";
+        isVisibleConfig.readOnly = true;
+        config.columns.push(isVisibleConfig);
+
         //Add Event Functions
         config.afterChange = autoSave;
         config.beforeRemoveRow = beforeRemoveRow;
         config.beforeChange = beforeSave;
+        config.afterRender = afterRender;
+
 
         return config;
       }
@@ -350,11 +381,72 @@ angular.module( 'sunshine.tip', [
   };
 }])
 
-.factory("HOTHelper", function(){
+.factory("HOTHelper", ["RetentionCategories", function(RetentionCategories){
   //This is a collections of functions and
   //configurations used in Handsontable (HOT)
   // throughout this app.
    return{
+
+      // Division Autocomplete Function
+      divisionAutoComplete : function(query, process){
+          var vals = this.instance.getDataAtCol(1);
+          var uniqueVals = vals.unique().sort().nulless();
+          process(uniqueVals);
+       },
+      // Division Autocomplete Function
+      categoryAutoComplete : function(query, process){
+         var vals = this.instance.getDataAtCol(2);
+         var uniqueVals = vals.unique().sort().nulless();
+
+         process(uniqueVals);
+       },
+      retentionValidator : function(value, callback){
+       //Had to write custom function for strict autocomplete
+       //because the built in validation does not skip the spare row
+
+           var row = this.row + 1;
+           var rowCount = this.instance.countRows();
+
+           //skip minSpareRow
+           if(row == rowCount){
+
+             callback(true);
+             return;
+           }
+
+           //validation: field required
+           if(!value){
+             callback(false);
+             return;
+           }
+
+           //validation: value must match RetentionCategories
+           for(var i = 0; i<RetentionCategories.length; i++ ){
+             if(RetentionCategories[i] == value){
+               callback(true);
+               return;
+             }
+           }
+
+           //value was NOT in RetentionCategories
+           callback(false);
+      },
+     isRequired : function(value, callback){
+       //Skip the spareMinRow when validating
+         var row = this.row + 1;
+         var rowCount = this.instance.countRows();
+
+         if(row == rowCount){
+           //ignore validating minSpareRow
+           callback(true);
+           return;
+         }else if(!value){
+           callback(false);
+           return;
+         }else{
+           callback (true);
+         }
+     },
      searchResultCounter : function (instance, row, col, value, result) {
 
          Handsontable.Search.DEFAULT_CALLBACK.apply(this, arguments);
@@ -390,7 +482,7 @@ angular.module( 'sunshine.tip', [
      getFittedWidths : function(){
         var recordArr = arguments[0].slice();
         var maxColWidth = 800;
-        var minColWidth = 100;
+        var minColWidth = 120;
         var padding = 50; //accounts for arrow on dropdown fields
         var fittedColumnWidths = {};
         var longestPerField = {};
@@ -438,6 +530,6 @@ angular.module( 'sunshine.tip', [
     }
   };
 
-})
+}])
 ;
 })();

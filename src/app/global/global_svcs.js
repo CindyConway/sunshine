@@ -17,6 +17,27 @@ angular.module( 'sunshine.global_svcs', [])
 
 /*================================
 
+      [ User Object ]
+
+==================================*/
+.service("User", function($http, GlobalVariables){
+  var apiUrl = GlobalVariables.api_url;
+  var url = apiUrl + "/v1/signup";
+
+  this.signup = function(user){
+      console.log(url);
+
+      return $http.post(url, user)
+        .success(function(data) {})
+        .error(function(data) {
+          console.log({"fail": "sad face"});
+        });
+  };
+
+})
+
+/*================================
+
       [ Department Object ]
 
 ==================================*/
@@ -33,7 +54,7 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
   this.del = function(department) {
 
-    var url = apiUrl + '/draft/department/' + department;
+    var url = apiUrl + '/v1/edit/department/' + department;
     return $http["delete"](url)
       .success(function(data) {
       })
@@ -48,7 +69,7 @@ angular.module( 'sunshine.global_svcs', [])
   Add a new Department
   ******************************************/
   this.add = function() {
-    var url = apiUrl + '/draft/add';
+    var url = apiUrl + '/v1/edit/add';
     return $http
       .put(url)
       .then(function(res) {
@@ -63,7 +84,7 @@ angular.module( 'sunshine.global_svcs', [])
   (name, contact, webasite, etc)
   ******************************************/
   this.save_draft = function(dept) {
-    var apiUrl = $rootScope.API_URL + '/draft/department';
+    var apiUrl = $rootScope.API_URL + '/v1/edit/department';
     return $http
       .put(apiUrl, dept)
       .then(function(res) {
@@ -80,7 +101,7 @@ angular.module( 'sunshine.global_svcs', [])
   this.get_adopted = function() {
     var apiUrl = $rootScope.API_URL;
     return $http
-      .get(apiUrl + '/department')
+      .get(apiUrl + '/v1/department')
       .then(function(res) {
         return res.data;
       });
@@ -96,7 +117,7 @@ angular.module( 'sunshine.global_svcs', [])
   this.get_draft = function() {
     var apiUrl = $rootScope.API_URL;
     return $http
-      .get(apiUrl + '/draft/department')
+      .get(apiUrl + '/v1/edit/department')
       .then(function(res) {
         return res.data;
       });
@@ -203,7 +224,7 @@ angular.module( 'sunshine.global_svcs', [])
   the full text search of the index
   ******************************************/
   this.full_text = function() {
-    var url = apiUrl + '/search';
+    var url = apiUrl + '/v1/search';
 
     var req_data = {};
     req_data.criteria = search_terms;
@@ -239,7 +260,7 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
   this.del = function(record) {
 
-    var url = apiUrl + '/template/' + record._id;
+    var url = apiUrl + '/v1/pub/template/' + record._id;
     return $http["delete"](url)
       .success(function(data) {
       })
@@ -259,7 +280,7 @@ angular.module( 'sunshine.global_svcs', [])
   this.get = function() {
 
     return $http
-      .get(apiUrl + '/template')
+      .get(apiUrl + '/v1/pub/template')
       .then(function(res) {
         self.all = res.data;
         //return res.data;
@@ -276,7 +297,7 @@ angular.module( 'sunshine.global_svcs', [])
 
   this.getByDeptId = function(dept_id) {
     return $http
-      .get(apiUrl + '/template/' + dept_id)
+      .get(apiUrl + '/v1/edit/template/' + dept_id)
       .then(function(res) {
         self.for_dept = res.data;
       });
@@ -288,7 +309,7 @@ angular.module( 'sunshine.global_svcs', [])
   saved as a draft.
   ******************************************/
   this.upsert = function(record) {
-    var url = apiUrl + '/template';
+    var url = apiUrl + '/v1/edit/template';
 
     return $http.put(url, record)
       .success(function(data) {
@@ -326,7 +347,7 @@ angular.module( 'sunshine.global_svcs', [])
 
   this.get_draft = function(dept_id) {
     return $http
-      .get(apiUrl + '/draft/schedule/' + dept_id)
+      .get(apiUrl + '/v1/edit/schedule/' + dept_id)
       .then(function(res) {
         self.draft = res.data;
         self._id = res.data._id;
@@ -348,7 +369,7 @@ angular.module( 'sunshine.global_svcs', [])
 
     return $http
       //.get(apiUrl + '/schedule/' + $rootScope.selected_adopted_dept)
-      .get(apiUrl + '/schedule/' + schedule_id)
+      .get(apiUrl + '/v1/schedule/' + schedule_id)
       .then(function(res) {
         return res.data;
       });
@@ -361,12 +382,12 @@ angular.module( 'sunshine.global_svcs', [])
   saved as a draft.
   ******************************************/
   this.save_draft_record = function(record) {
-    var url = apiUrl + '/draft/record/';
+    var url = apiUrl + '/v1/edit/record/';
 
     return $http.put(url, record)
       .success(function(data) {
       //  $log.log(data);
-        // this.post.push(data);
+        // this.get.push(data);
       })
       .error(function(data) {
         //$log.log(data);
@@ -382,7 +403,7 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
   this.delete_draft_record = function(record) {
 
-    var url = apiUrl + '/draft/record/' + record._id + '/' + record.dept_id;
+    var url = apiUrl + '/v1/edit/record/' + record._id + '/' + record.dept_id;
     return $http["delete"](url)
       .success(function(data) {
       })
@@ -400,7 +421,7 @@ angular.module( 'sunshine.global_svcs', [])
   department information
   ******************************************/
   this.publish = function(dept_id) {
-    var url = apiUrl + '/draft/publish/' + dept_id;
+    var url = apiUrl + '/v1/pub/publish/' + dept_id;
 
     return $http.post(url)
       .success(function(data) {})
@@ -419,7 +440,7 @@ angular.module( 'sunshine.global_svcs', [])
     Lock the draft version of a schedule
     ******************************************/
     this.lock = function(dept_id) {
-      var url = apiUrl + '/draft/lock/' + dept_id;
+      var url = apiUrl + '/v1/edit/lock/' + dept_id;
 
       return $http.post(url)
       .success(function(data, status, headers, config){
@@ -436,7 +457,7 @@ angular.module( 'sunshine.global_svcs', [])
     unlock the draft version of a schedule
     ******************************************/
     this.unlock = function(dept_id) {
-      var url = apiUrl + '/draft/unlock/' + dept_id;
+      var url = apiUrl + '/v1/pub/unlock/' + dept_id;
 
       return $http.post(url)
       .success(function(data, status, headers, config){

@@ -6,14 +6,15 @@ angular
   'templates-common',
   'sunshine.home',
   'sunshine.login',
-  'sunshine.console',
   'sunshine.global_svcs',
   'sunshine.global_utils',
   'sunshine.search',
   'sunshine.agency',
   'sunshine.schedule',
   'sunshine.edit',
+  'sunshine.user',
   'sunshine.tip',
+  'sunshine.auth_svcs',
   'ui.router',
   'angularUtils.directives.dirPagination',
   'ui.bootstrap',
@@ -28,6 +29,35 @@ angular
   'debounce'
 ])
 
+.run(function($rootScope, $window, $location, Authentication) {
+  Authentication.check();
+
+  $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
+    if ((nextRoute.access && nextRoute.access.requiredLogin) && !Authentication.isLogged) {
+      $location.path("/login");
+    } else {
+      // check if user object exists else fetch it. This is incase of a page refresh
+      if (!Authentication.user){
+         Authentication.user = $window.sessionStorage.user;
+       }
+
+      if (!Authentication.userRole){
+        Authentication.userRole = $window.sessionStorage.userRole;
+      }
+    }
+  });
+
+  $rootScope.$on('$routeChangeSuccess', function(event, nextRoute, currentRoute) {
+    $rootScope.showMenu = Authentication.isLogged;
+    $rootScope.role = Authentication.userRole;
+    // if the user is already logged in, take him to the home page
+    if (Authentication.isLogged === true && $location.path() == '/login') {
+      $location.path('/');
+    }
+  });
+}
+)
+
 .config(function($breadcrumbProvider) {
   $breadcrumbProvider.setOptions({
     prefixStateName: 'home',
@@ -36,8 +66,9 @@ angular
 })
 
 .config(function ($httpProvider) {
-  //$httpProvider.responseInterceptors.push('HttpInterceptor');
   $httpProvider.interceptors.push('HttpInterceptor');
+  $httpProvider.interceptors.push('TokenInterceptor');
+
   var spinnerFunction = function spinnerFunction(data, headersGetter) {
   var search_button = angular.element(document.querySelector('.fa-search'));
      search_button.removeClass('fa-search');
@@ -54,44 +85,12 @@ angular
   $urlRouterProvider.otherwise( '/home' );
 }, function(USER_ROLESProvider){} )
 //Using the main application's run method to execute any code after services have been started
-.run( function run ($rootScope, AUTH_EVENTS, AuthService) {
+.run( function run ($rootScope) {
 
-//    $rootScope.$on('$stateChangeStart', function (event, next) {
-//        var authorizedRoles = next.data.authorizedRoles;
-//
-//        //route permits anonymous users
-//        if (authorizedRoles.indexOf("anonymous") !== -1){
-//            return;
-//        }
-//
-//        // Route requires authentication and authorization check
-//        if (!AuthService.isAuthorized(authorizedRoles)) {
-//
-//            //prevent routing
-//            event.preventDefault();
-//
-//            if (AuthService.isAuthenticated()) {
-//                // user is not allowed
-//                $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
-//            } else {
-//                // user is not logged in
-//                $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-//            }
-//        }
-//    });
 })
-.provider('UserRoles', function()  {
-    var roles = {
-        anon: 'anonymous',
-        admin: 'admin',
-        editor: 'editor',
-        guest: 'guest'};
-    this.$get = function() {
-        return roles;
-    };
-})
-.controller( 'AppCtrl', function AppCtrl ( $scope, $location,
-  $rootScope, AuthService, UserRoles, GlobalVariables ) {
+
+.controller( 'AppCtrl', function AppCtrl ( $scope, $location, Login, UserAuth,
+  $rootScope, GlobalVariables ) {
     $scope.GlobalVariables = GlobalVariables;
     $rootScope.API_URL = 'http://localhost:1971';
     $rootScope.USERS_DEPT_ID = '54331f1023fe388f037119c6';
@@ -103,13 +102,13 @@ angular
         }
     });
 
-    $scope.currentUser = null;
-    $scope.userRoles = UserRoles;
-    $scope.isAuthorized = AuthService.isAuthorized;
-
-    $scope.setCurrentUser = function (user) {
-      $scope.currentUser = user;
+    /*** START TEST CODE *****/
+    $scope.login = Login;
+    $scope.logout = function () {
+      UserAuth.logout();
     };
+    /**** EBD TEST CODE *****/
+
 });
 
 // ============= JS added globally ===================]
