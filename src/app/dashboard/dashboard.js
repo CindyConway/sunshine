@@ -8,9 +8,9 @@ angular.module( 'sunshine.dashboard', [
         $stateProvider.state( 'console.dashboard', {
             url: '/dashboard',
             views: {
-                "console": {
+                "main": {
                     //controller: 'DashBoardCtrl',
-                    templateUrl: 'console/dashboard/dashboard.tpl.html'
+                    templateUrl: 'dashboard/dashboard.tpl.html'
                 }
             },
             data:{ pageTitle: 'Administration - Dashboard', authorizedRoles: ['admin', 'editor', 'anonymous'] }

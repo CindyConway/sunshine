@@ -1,0 +1,77 @@
+<div id="edit-page">
+
+  <div class="container-fluid" ng-controller="EditCtrl as editCtrl">
+
+    <!-- Hidden field to convert character to pixels  -->
+    <!-- <table id="ruler" style="border:solid 1px; width:auto; white-space: nowrap"><tr><td id="ruler2"></td></tr></table> -->
+
+
+  <div id="edit-header" style="z-index:2; height:180px;background-color:white; width:100%">
+      <div>Schedule Page</div>
+      <span>{{editCtrl.errorMsg}}</span>
+      <select name="draftSelect"
+              class="navBarSelect"
+              ng-model="editCtrl.selected_dept"
+              ng-options="depts._id as depts.draft.department for depts in editCtrl.dept_list"
+              ng-change="editCtrl.populateGrid()">
+      </select>
+
+      <button ng-click="editCtrl.publish()" ng-disabled="editCtrl.draft.status != 'LOCKED'">Publishing</button>
+      <button ng-click="editCtrl.lock()" ng-disabled="editCtrl.draft.status != 'DIRTY'">Lock</button>
+      <button ng-click="editCtrl.unlock()" ng-disabled="editCtrl.draft.status != 'LOCKED'">Unlock</button>
+      <button ng-click="editCtrl.add()">New</button>
+      <button ng-click="editCtrl.del()">Delete</button>
+      <button ui-sref="tip">Recommendations</button>
+      <a href="{{editCtrl.pdf_link}}" target="_self" download>Generate PDF</a>
+      <strong>{{editCtrl._id}}</strong></br>
+      <strong>{{editCtrl.draft._id}}</strong></br>
+      <strong>Count:</strong> {{editCtrl.draft.record.length}}</br>
+      <strong><div>{{editCtrl.draft.status}}</div></strong>
+      <form name="editCtrl.editDepartment" ng-submit="editCtrl.runValidation()">
+          <input name="department"
+            ng-model="editCtrl.draft.department"
+            ng-change="editCtrl.save()"
+            ng-disabled="editCtrl.draft.status == 'LOCKED'"
+            placeholder="Organization Name"
+            required="">
+          <input
+            name="website"
+            ng-model="editCtrl.draft.website"
+            ng-change="editCtrl.save()"
+            ng-disabled="editCtrl.draft.status == 'LOCKED'"
+            placeholder="Organization Website"
+            required="">
+          <input
+            name="contact"
+            ng-model="editCtrl.draft.contact"
+            ng-change="editCtrl.save()"
+            ng-disabled="editCtrl.draft.status == 'LOCKED'"
+            placeholder="Person to contact to make a request"
+            required="">
+          <input
+            name="phone"
+            ng-model="editCtrl.draft.phone"
+            ng-change="editCtrl.save()"
+            ng-disabled="editCtrl.draft.status == 'LOCKED'"
+            placeholder="Phone number to use to make a request"
+            required="">
+          <input
+            name="email"
+            ng-model="editCtrl.draft.email"
+            ng-change="editCtrl.save()"
+            ng-disabled="editCtrl.draft.status == 'LOCKED'"
+            placeholder="Email address to use to make a request">
+          <input id="schedule-search" type="search" placeholder="Search">
+          <span id="result-count">0</span> results
+          <button id="next" ng-click="editCtrl.next()">next</button>
+          <button id="previous" ng-click="editCtrl.previous()">previous</button>
+          <div id="edit-status" ng-model="editCtrl.status">{{editCtrl.status}}</div>
+        </form>
+      </div>
+
+  <div id="grid-sizing-container" cc-handsontable-container style="position:relative;">
+    <div id="schedule-grid" style="overflow:scroll; visibility:hidden; padding-bottom:200px" class="handsontable"></div>
+  </div>
+
+    <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>
+</div>

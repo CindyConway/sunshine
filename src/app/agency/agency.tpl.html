@@ -123,9 +123,12 @@
                                                   total: agencyCtrl.total_fltr}"
                                                   ng-class-odd="'grey-background'" ng-class="'grey-border'">
           <td class="p1 grey-border">{{::record.category}}</td>
-          <td class="p1 grey-border">{{::record.title}}</td>
-          <td class="p1 grey-border">{{::record.division}}</t
-            +d>
+          <td class="p1 grey-border">
+            <a target="_blank" ng-if="::record.link" href="http://{{::record.link}}">{{::record.title}}</a>
+                      <!-- OR -->
+            <span ng-hide="::record.link">{{::record.title}}</span>
+          </td>
+          <td class="p1 grey-border">{{::record.division}}</td>
           <td class="p1 grey-border">{{::record.remarks}}</td>
           <td class="p1 grey-border">{{::record.retention}}</td>
           <td class="p1 grey-border">{{::record.on_site}}</td>

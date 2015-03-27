@@ -26,14 +26,26 @@ angular.module( 'sunshine.global_utils', [])
   );
 }])
 
-
-.factory('HttpInterceptor', function($q) {
+.service('HttpQueue', function(){
+  var self = this;
+  self.count = 0;
+    this.add = function(){ self.count++; };
+    this.subtract = function(){ self.count--; };
+})
+.factory('HttpInterceptor', function($q, HttpQueue) {
   return {
+    request: function(request){
+      //console.log("interceptor request");
+      HttpQueue.add();
+      return request;
+    },
     response: function(response) {
       var search_button = angular.element(document.querySelector('.fa-spinner'));
+      //console.log("interceptor response");
       search_button.removeClass('fa-spinner');
       search_button.removeClass('fa-spin');
       search_button.addClass('fa-search');
+      HttpQueue.subtract();
       return response;
     },
     responseError: function(response) {
@@ -45,27 +57,5 @@ angular.module( 'sunshine.global_utils', [])
     }
   };
 })
-// .factory('HttpInterceptor', function ($q, $window) {
-// // special spinner to make search icon rotate during HTTP call
-//   return function (promise) {
-//     var search_button = angular.element(document.querySelector('.fa-spinner'));
-
-//     return promise.then(function (response) {
-
-//       search_button.removeClass('fa-spinner');
-//       search_button.removeClass('fa-spin');
-//       search_button.addClass('fa-search');
-
-//       return response;
-//     }, function (response) {
-
-//       search_button.removeClass('fa-spinner');
-//       search_button.removeClass('fa-spin');
-//       search_button.addClass('fa-search');
-
-//       return $q.reject(response);
-//     });
-//   };
-// })
 ;
 })();
