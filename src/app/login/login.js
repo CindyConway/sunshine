@@ -14,38 +14,52 @@ angular.module( 'sunshine.login', [
                 templateUrl: 'login/login.tpl.html'
             }
         },
-        data:{ pageTitle: 'Login', authorizedRoles: ['anonymous'] }
+        data:{ pageTitle: 'Login', authorizedRoles: ['Everyone'] }
     });
 })
 
-
-.controller('LoginCtrl', function ($scope, $rootScope, Login, DummyUser) {
+.controller('LoginCtrl', function ($scope, $rootScope, Login, Authentication) {
   var self = this;
-    self.email = DummyUser.email;
-    self.password = DummyUser.password;
+    self.email = Authentication.user;
+    self.password = '';
     self.login = Login;
 
-
+    self.login_status = "Please Login...";
 })
-.factory("Login", ["$window", "UserAuth", "Authentication", "$location",
-    function($window, UserAuth, Authentication, $location){
+
+.factory("Login", ["$window", "UserAuth", "Authentication", "$location", "$rootScope",
+    function($window, UserAuth, Authentication, $location, $rootScope){
   var login = function(email, password){
+    var self = this;
+
+    UserAuth.logout();
 
     if (email !== undefined && password !== undefined) {
-     UserAuth.login(email, password).success(function(data) {
-       console.log(data);
+     UserAuth.login(email, password)
+     .success(function(data) {
+
        Authentication.isLogged = true;
        Authentication.user = data.user;
-       Authentication.userRole = data.roles;
+       Authentication.userRoles = data.roles;
+       Authentication.usersDept = data.users_dept;
 
+       console.log("Step 1 - Login in");
+       console.log(data);
+
+       //Fetch users details on refresh
        $window.sessionStorage.token = data.token;
-       $window.sessionStorage.user = data.user; // to fetch the user details on refresh
-       $window.sessionStorage.userRole = data.roles; // to fetch the user details on refresh
+       $window.sessionStorage.user = data.user;
+       $window.sessionStorage.userRoles = data.roles;
+       $window.sessionStorage.usersDept = data.users_dept;
+       console.log("Step 2 = set session variables");
+       console.log($window.sessionStorage);
 
        $location.path("/edit");
 
-     }).error(function(status) {
-       alert('Oopsy something went wrong!');
+     }).error(function(obj) {
+       console.log("error in login");
+       self.login_status = "Login Failed";
+       UserAuth.logout();
      });
    } else {
      alert('Invalid credentials');
@@ -56,10 +70,5 @@ angular.module( 'sunshine.login', [
   return login;
 
 }])
-.value("DummyUser", {
-    "email":"ro.laren@sfgov.org",
-    "password":"RoLaren"
-  }
-)
 ;
 })();

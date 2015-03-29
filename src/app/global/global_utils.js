@@ -32,7 +32,7 @@ angular.module( 'sunshine.global_utils', [])
     this.add = function(){ self.count++; };
     this.subtract = function(){ self.count--; };
 })
-.factory('HttpInterceptor', function($q, HttpQueue) {
+.factory('HttpInterceptor', function($q, HttpQueue, $location, $timeout) {
   return {
     request: function(request){
       //console.log("interceptor request");
@@ -48,12 +48,15 @@ angular.module( 'sunshine.global_utils', [])
       HttpQueue.subtract();
       return response;
     },
-    responseError: function(response) {
+    responseError: function(errorResponse) {
       // do something on error
-      if (canRecover(response)) {
-        return responseOrNewPromise;
+
+      if(errorResponse.status === 401){
+        console.log("in interceptor");
+        $location.path("/login");
       }
-      return $q.reject(response);
+
+      return $q.reject(errorResponse);
     }
   };
 })

@@ -84,7 +84,7 @@ angular.module( 'sunshine.global_svcs', [])
   (name, contact, webasite, etc)
   ******************************************/
   this.save_draft = function(dept) {
-    var apiUrl = $rootScope.API_URL + '/v1/edit/department';
+    var apiUrl = $rootScope.API_URL + '/v1/edit/department/' + dept._id;
     return $http
       .put(apiUrl, dept)
       .then(function(res) {
@@ -305,11 +305,10 @@ angular.module( 'sunshine.global_svcs', [])
   /*****************************************
   METHOD: upsert
 
-  Saves one record in a schedule. It is
-  saved as a draft.
+  Update a template record class
   ******************************************/
   this.upsert = function(record) {
-    var url = apiUrl + '/v1/edit/template';
+    var url = apiUrl + '/v1/pub/template';
 
     return $http.put(url, record)
       .success(function(data) {
@@ -401,9 +400,8 @@ angular.module( 'sunshine.global_svcs', [])
   Deletes one record in a schedule. It is
   deleted from a draft.
   ******************************************/
-  this.delete_draft_record = function(record) {
-
-    var url = apiUrl + '/v1/edit/record/' + record._id + '/' + record.dept_id;
+  this.delete_draft_record = function(dept) {
+    var url = apiUrl + '/v1/edit/record/' + dept.draft.record._id + '/' + dept._id;
     return $http["delete"](url)
       .success(function(data) {
       })

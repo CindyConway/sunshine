@@ -21,7 +21,7 @@
       <button ng-click="editCtrl.unlock()" ng-disabled="editCtrl.draft.status != 'LOCKED'">Unlock</button>
       <button ng-click="editCtrl.add()">New</button>
       <button ng-click="editCtrl.del()">Delete</button>
-      <button ui-sref="tip">Recommendations</button>
+      <button ng-click="editCtrl.tips()">Recommendations</button>
       <a href="{{editCtrl.pdf_link}}" target="_self" download>Generate PDF</a>
       <strong>{{editCtrl._id}}</strong></br>
       <strong>{{editCtrl.draft._id}}</strong></br>
@@ -70,7 +70,7 @@
       </div>
 
   <div id="grid-sizing-container" cc-handsontable-container style="position:relative;">
-    <div id="schedule-grid" style="overflow:scroll; visibility:hidden; padding-bottom:200px" class="handsontable"></div>
+    <div id="schedule-grid" style="overflow:scroll; padding-bottom:200px" class="handsontable"></div>
   </div>
 
     <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>

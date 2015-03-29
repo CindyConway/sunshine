@@ -13,7 +13,7 @@ angular.module( 'sunshine.agency', ['ui.router'])
         templateUrl: 'agency/agency.tpl.html'
       }
     },
-    data:{ pageTitle: 'Schedule Table', authorizedRoles: ['anonymous'] }
+    data:{ pageTitle: 'Schedule Table', authorizedRoles: ['Everyone'] }
   });
 
   $stateProvider.state( 'agency_list', {

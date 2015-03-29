@@ -14,7 +14,7 @@ angular.module( 'sunshine.user', [
                     templateUrl: 'users/users.tpl.html'
                 }
             },
-            data:{ pageTitle: 'Administration - users', authorizedRoles: ['admin', 'editor', 'anonymous'] }
+            data:{ pageTitle: 'Administration - users', authorizedRoles: ['Administrator'] }
         });
     })
 
