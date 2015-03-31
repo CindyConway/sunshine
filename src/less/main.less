@@ -11,6 +11,11 @@
 @import '../common/paper-input/paper-input.less';
 @import '../common/paper-input/paper-input.less';
 
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+
 body {
   -webkit-print-color-adjust: exact;
 }
@@ -1228,4 +1233,293 @@ strong {
 /*[======= FOR PDF GENERATION ========]*/
 .draft-background{
   background-image: url(draft.png);
+}
+
+#search-group input{
+  background-color:#EEEEEE;
+  border: solid 1px #d7d7d7;
+  width: 700px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding:3px;
+}
+
+#admin-main input{
+  background-color:#EEEEEE;
+  border: solid 1px #d7d7d7;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding:3px;
+}
+
+#admin-main input[type=submit]{
+  padding-right:15px;
+  padding-left:15px;
+}
+
+#count-group{
+  vertical-align:top;
+  margin:0px;
+  padding:0px;
+}
+
+#count-group{
+  font-size:0.8em;
+}
+
+#count-group a{
+  font-size: 1.5em;
+}
+
+#count-group #previous{
+  padding-left: 5px;
+  padding-right:5px;
+}
+
+#admin-page.outer{
+  background-color:#EEEEEE;
+  position: absolute;
+  top: 0;
+  left:0;
+  right:0;
+  bottom: 0;
+}
+
+#admin-page .county{
+  font-size: 1em;
+}
+
+#admin-main.login{
+  width:33%;
+  min-width:300px;
+  min-height:300px;
+}
+
+#admin-page .IOR{
+  font-size: 3em;
+  font-weight:bold;
+}
+
+#admin-page .small-italic{
+  font-style: italic;
+  font-weight: normal;
+  font-size: 0.5em;
+  display:inline-block;
+}
+
+#admin-page .admin-title{
+  margin-bottom:30px;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-right:30px;
+  display:inline-block;
+}
+
+#admin-main{
+  z-index:2;
+  height:180px;
+  background-color:white;
+  width:97%;
+  padding-top: 30px;
+  padding-left: 30px
+}
+
+#result-count{
+  display:inline-block;
+  margin-right:5px;
+  margin-bottom:10px
+}
+
+#tip-count{
+  display:inline-block;
+  margin-right:5px;
+  margin-bottom:10px
+}
+
+#admin-main #schedule-status{
+  font-size:0.8em;
+}
+
+#admin-main #schedule-status div{
+  display:inline-block;
+  margin-right:5px;
+  margin-bottom:10px
+}
+
+#admin-main select{
+  background-color: #EEEEEE;
+  width:700px;
+}
+
+#edit-status{
+  padding-right:30px;
+  float:right;
+}
+
+.floating-status{
+  padding-right:30px;
+  float:right;
+}
+
+#action-group button{
+     background:none!important;
+     border:none;
+     font: inherit;
+     padding:0px!important;
+     cursor: pointer;
+     margin-right: 40px;
+     margin-left: 0px;
+     color:#428bca;
+}
+
+#action-group a{
+     font: inherit;
+     padding:0px!important;
+     cursor: pointer;
+     margin:0px;
+     margin-right: 40px;
+     margin-left: 0px;
+     text-decoration: none;
+}
+
+#action-group a:hover{
+    text-decoration: underline;
+}
+
+#action-group button:hover{
+  border-bottom:1px solid #428bca;
+}
+
+#action-group{
+  padding-top:30px;
+  padding-bottom:30px;
+  margin:auto;
+  display:table;
+}
+
+#action-group button[disabled=disabled],
+#action-group button[disabled=disabled]:hover
+{
+  color:#EEEEEE;
+  border-bottom:none;
+  cursor:default;
+}
+
+#department-info{
+  margin-right: 30px;
+  background-color:#E9F5FC;
+  border: solid 1px #d7d7d7;
+  border-bottom: none;
+}
+
+#department-info input{
+  border: solid 1px #E9F5FC;
+  display:block;
+  width:400px;
+}
+
+#department-info .dept-input{
+  background-color: #E9F5FC;
+}
+
+#department-info input:focus{
+  border: solid 1px #d7d7d7;
+  background-color: #FBFDFE;
+}
+
+#department-info input:hover{
+  border: solid 1px #d7d7d7;
+  background-color: #FBFDFE;
+}
+
+#department-info #department{
+  font-size:2.0em;
+  font-weight:bold;
+  width:700px;
+}
+
+#department-info #website{
+  width:700px;
+}
+
+#department-info .dept-right{
+  margin-right:10px;
+  margin-top:30px;
+  margin-bottom:30px;
+  display: inline-block;
+  float:right;
+}
+
+#department-info .dept-left{
+  margin-left:10px;
+  margin-top:30px;
+  margin-bottom:30px;
+  float:left;
+  display: inline-block;
+}
+
+#department-info input.ng-invalid{
+  border: solid 1px #E62E00;
+  background-color:#FBFDFE;
+}
+
+#main-admin-menu i {
+  margin-right:5px;
+}
+
+#main-admin-menu {
+  margin-right:30px;
+  margin-top:30px
+}
+
+#main-admin-menu .btn .fa{
+  margin-left:5px;
+}
+
+.btn-default:hover{
+  background-color:#FFF;
+}
+
+.btn-default:active{
+  background-color:#FFF;
+}
+.btn-default:focus{
+  background-color:#FFF;
+}
+
+.open .dropdown-toggle.btn-default{
+  background-color:#FFF;
+}
+
+.btn{
+  border-radius:0;
+  border: solid 1px #000;
+}
+/*[========= handsontable styling =============]*/
+
+.handsontable th{
+  background-color:#FFF;
+}
+
+span.colHeader{
+  font-weight:bold;
+  line-height:3em;
+}
+
+.handsontable td{
+  padding:7px;
+}
+
+.handsontable td{
+  padding:10px;
+}
+
+.handsontable .handsontable table {
+  -webkit-box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.4);
+}
+
+.handsontable td.htInvalid {
+  background-color:#FFF!important;
+  border: solid 1px #E62E00;
 }

@@ -3,7 +3,7 @@ angular.module( 'sunshine.agency', ['ui.router'])
 
 .config(function config( $stateProvider ) {
   $stateProvider.state( 'agency', {
-    url: '/agency/:schedule_id',
+    url: '/agency/:dept_id',
     ncyBreadcrumb: {
       label: 'Schedule Table'
     },
@@ -17,7 +17,7 @@ angular.module( 'sunshine.agency', ['ui.router'])
   });
 
   $stateProvider.state( 'agency_list', {
-    url: '/agency_list/:schedule_id',
+    url: '/agency_list/:dept_id',
     ncyBreadcrumb: {
       label: 'Schedule List'
     },
@@ -27,13 +27,14 @@ angular.module( 'sunshine.agency', ['ui.router'])
         templateUrl: 'agency/agency_list.tpl.html'
       }
     },
-    data:{ pageTitle: 'Schedule List', authorizedRoles: ['anonymous'] }
+    data:{ pageTitle: 'Schedule List', authorizedRoles: ['Everyone'] }
   });
 })
 
-.controller( 'AgencyCtrl', function AgencyController(Schedule, $stateParams, GlobalVariables) {
+.controller( 'AgencyCtrl', function AgencyController(Schedule, $stateParams, GlobalVariables, Authentication) {
   var self = this;
-  self.schedule_id = $stateParams.schedule_id;
+  Authentication.selDept = $stateParams.dept_id;
+  self.schedule_id = Authentication.selDept;
   self.adopted = {};
   self.records = {};
 

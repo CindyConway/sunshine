@@ -25,7 +25,6 @@ angular.module( 'sunshine.global_svcs', [])
   var url = apiUrl + "/v1/signup";
 
   this.signup = function(user){
-      console.log(url);
 
       return $http.post(url, user)
         .success(function(data) {})
@@ -382,7 +381,7 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
   this.save_draft_record = function(record) {
     var url = apiUrl + '/v1/edit/record/';
-
+console.log(record);
     return $http.put(url, record)
       .success(function(data) {
       //  $log.log(data);

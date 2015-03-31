@@ -6,10 +6,10 @@ angular.module( 'sunshine.login', [
 
 
 .config(function config( $stateProvider ) {
-    $stateProvider.state( 'login', {
+    $stateProvider.state( 'admin.login', {
         url: '/login',
         views: {
-            "main": {
+            "admin": {
                 controller: 'LoginCtrl',
                 templateUrl: 'login/login.tpl.html'
             }
@@ -31,9 +31,6 @@ angular.module( 'sunshine.login', [
     function($window, UserAuth, Authentication, $location, $rootScope){
   var login = function(email, password){
     var self = this;
-
-    UserAuth.logout();
-
     if (email !== undefined && password !== undefined) {
      UserAuth.login(email, password)
      .success(function(data) {
@@ -43,21 +40,16 @@ angular.module( 'sunshine.login', [
        Authentication.userRoles = data.roles;
        Authentication.usersDept = data.users_dept;
 
-       console.log("Step 1 - Login in");
-       console.log(data);
-
        //Fetch users details on refresh
        $window.sessionStorage.token = data.token;
        $window.sessionStorage.user = data.user;
        $window.sessionStorage.userRoles = data.roles;
        $window.sessionStorage.usersDept = data.users_dept;
-       console.log("Step 2 = set session variables");
-       console.log($window.sessionStorage);
 
-       $location.path("/edit");
+       $location.path("/admin/edit");
 
      }).error(function(obj) {
-       console.log("error in login");
+
        self.login_status = "Login Failed";
        UserAuth.logout();
      });

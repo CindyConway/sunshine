@@ -21,8 +21,13 @@ angular.module( 'sunshine.home', ['ui.router'])
     });
 })
 
-.controller('HomeCtrl', function HomeController( $scope, Department, GlobalVariables) {
+.controller('HomeCtrl', function HomeController( $scope, Department, GlobalVariables, Authentication) {
     var self = this;
+
+    self.set_sel_dept = function(id){
+      Authentication.selDept = id;
+    };
+
     GlobalVariables.showFooter = true;
     Department.get_adopted().then(function (data){
         self.dept_list =  data;
