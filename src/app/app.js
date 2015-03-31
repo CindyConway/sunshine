@@ -14,6 +14,7 @@ angular
   'sunshine.edit',
   'sunshine.user',
   'sunshine.tip',
+  'sunshine.tip_picker',
   'sunshine.auth_svcs',
   'ui.router',
   'angularUtils.directives.dirPagination',
@@ -29,34 +30,55 @@ angular
   'debounce'
 ])
 
-.run(function($rootScope, $window, $location, Authentication) {
-  Authentication.check();
+.run(function($rootScope, $window, $location, Authentication, $state) {
 
-  $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
-    if ((nextRoute.access && nextRoute.access.requiredLogin) && !Authentication.isLogged) {
-      $location.path("/login");
-    } else {
-      // check if user object exists else fetch it. This is incase of a page refresh
-      if (!Authentication.user){
-         Authentication.user = $window.sessionStorage.user;
-       }
 
-      if (!Authentication.userRole){
-        Authentication.userRole = $window.sessionStorage.userRole;
+  $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+    Authentication.check();
+
+    console.log("Step 0 - changing state");
+    console.log(Authentication);
+    //This is a public page, allow routing
+    if(toState.data.authorizedRoles.indexOf("Everyone") > -1){
+        return;
+    }
+
+    //Is user logged in (account for page refresh)
+    if (!Authentication.isLogged){
+      Authentication.check();
+    }
+
+     if(!Authentication.isLogged){
+       event.preventDefault();
+       $state.go('login');
+       return;
+     }
+
+    if(toState.data.authorizedRoles.indexOf("Administrator") > -1 ){
+      if(Authentication.userRoles.indexOf("Administrator") > -1 ){
+        return;
       }
     }
-  });
 
-  $rootScope.$on('$routeChangeSuccess', function(event, nextRoute, currentRoute) {
-    $rootScope.showMenu = Authentication.isLogged;
-    $rootScope.role = Authentication.userRole;
-    // if the user is already logged in, take him to the home page
-    if (Authentication.isLogged === true && $location.path() == '/login') {
-      $location.path('/');
+    if(toState.data.authorizedRoles.indexOf("Publisher") > -1){
+      if(Authentication.userRoles.indexOf("Publisher") > -1 ){
+        return;
+      }
     }
+
+    if(toState.data.authorizedRoles.indexOf("Editor") > -1){
+      if(Authentication.userRoles.indexOf("Editor") > -1){
+        return;
+      }
+    }
+
+    // Route unauthorized for user
+    event.preventDefault();
+    $state.go('login');
+    return;
+
   });
-}
-)
+})
 
 .config(function($breadcrumbProvider) {
   $breadcrumbProvider.setOptions({
@@ -89,7 +111,7 @@ angular
 
 })
 
-.controller( 'AppCtrl', function AppCtrl ( $scope, $location, Login, UserAuth,
+.controller( 'AppCtrl', function AppCtrl ( $scope, $location, Login, UserAuth, $window,
   $rootScope, GlobalVariables ) {
     $scope.GlobalVariables = GlobalVariables;
     $rootScope.API_URL = 'http://localhost:1971';
@@ -107,7 +129,9 @@ angular
     $scope.logout = function () {
       UserAuth.logout();
     };
-    /**** EBD TEST CODE *****/
+
+    $scope.testuser = $window.sessionStorage.user;
+    /**** END TEST CODE *****/
 
 });
 

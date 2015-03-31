@@ -13,15 +13,15 @@ angular.module( 'sunshine.edit', [
         templateUrl: 'edit/edit.tpl.html'
       }
     },
-    data:{ pageTitle: 'Administration - Edit', authorizedRoles: ['admin', 'editor', 'anonymous'] }
+    data:{ pageTitle: 'Administration - Edit', authorizedRoles: ['Administrator', 'Publisher', 'Editor'] }
   });
 })
 
 .controller('EditCtrl', function EditCtrl(GlobalVariables, ScheduleDelete, PopulateGrid, Department,
-    ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, SearchNext, SearchPrevious) {
+    ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, SearchNext, SearchPrevious,
+    Authentication, TipGo) {
 
     GlobalVariables.showFooter = false;
-    var thisHandsontable;
     var self = this;
     self.schedule_grid = document.getElementById('schedule-grid');
     self.searchCount = document.getElementById("result-count");
@@ -33,24 +33,36 @@ angular.module( 'sunshine.edit', [
     self.publish = SchedulePublish;
     self.lock = ScheduleLock;
     self.unlock = ScheduleUnlock;
+    self.tips = TipGo;
     self.next = SearchNext;
     self.previous = SearchPrevious;
     self.populateGrid = PopulateGrid.populateGrid;
     self.status = "saved";
 
+    // console.log("setp3 - in Edit Controller");
+    // console.log(Authentication);
     Department
     .get_draft()
     .then(function (data){
         //populate Department DropDown
         draft_depts = data;
         self.dept_list = data;
-        self.selected_dept = GlobalVariables.user_dept;
+        self.selected_dept = (typeof Authentication.selDept === 'undefined' ? data[0]._id : Authentication.selDept);
+        Authentication.setValue("selDept", self.selected_dept);
         self.populateGrid();
     });
 })
 
-.factory("PopulateGrid",["Schedule", "HOTHelper", "ScheduleEdit", "Debounce", "GlobalVariables",
-  function(Schedule, HOTHelper, ScheduleEdit, Debounce, GlobalVariables){
+.factory("TipGo",["$state", function($state){
+  var  go = function(){
+    var self = this;
+    $state.go('tip_picker',{schedule_id : self.selected_dept});
+  };
+  return go;
+}])
+
+.factory("PopulateGrid",["Schedule", "HOTHelper", "ScheduleEdit", "Debounce", "GlobalVariables", "Authentication",
+  function(Schedule, HOTHelper, ScheduleEdit, Debounce, GlobalVariables, Authentication){
         var thisHandsontable;
 
         var getHandsontable = function(){
@@ -60,9 +72,8 @@ angular.module( 'sunshine.edit', [
         var populateGrid = function(){
             var self = this;
 
-            if(typeof self.selected_dept == 'undefined'){return;}
-
             var dept_id = self.selected_dept;
+            Authentication.setValue("selDept", dept_id);
 
               Schedule.get_draft(dept_id)
                 .then(function (data){
@@ -83,33 +94,22 @@ angular.module( 'sunshine.edit', [
                     }
 
                     settings.data = Schedule.records;
-                    self.schedule_grid.style.visibility = 'hidden';
 
+                    if(typeof thisHandsontable != 'undefined'){
+                        thisHandsontable.destroy();
+                    }
 
-                    if(typeof thisHandsontable == 'undefined'){
-
-                      //create handsontable object
                       thisHandsontable = new Handsontable(self.schedule_grid, settings);
+                      thisHandsontable.render();
 
                       //add event to monitor seach input element
                       var schedule_search = document.getElementById('schedule-search');
-                    //  console.log(settings);
                       Handsontable.Dom.addEvent(schedule_search, 'keyup', Debounce.debounce(function(){
                           //var thisHandsontable = self.getHandsontable();
                           self.searchResults = thisHandsontable.search.query(this.value);
                           self.searchCount.innerHTML = self.searchResults.length;
                           thisHandsontable.render();
                       },667));
-
-                    }else{
-                      thisHandsontable = getHandsontable();
-                      //Repopulate Existing Handsontable
-                      thisHandsontable.loadData(Schedule.records);
-                      thisHandsontable.updateSettings(settings);
-
-                    }
-
-                    self.schedule_grid.style.visibility = 'visible';
 
                 });
             };
@@ -291,21 +291,25 @@ angular.module( 'sunshine.edit', [
               var self = this;
 
               var dept = self.draft;
-              dept.sched_id = self._id;
               delete dept.record;
+
+              var req = {};
+              req._id = self._id;
+              req.draft = dept;
+
 
               //Save Department properties
               Department
-              .save_draft(dept)
+              .save_draft(req)
               .then(function (data){
                 //update department dropdown
                   Department
                   .get_draft()
                   .then(function (data){
-                      var hold_selected = self.selected_dept;
+                    //  var hold_selected = self.selected_dept;
                       draft_depts = data;
                       self.dept_list = data;
-                      self.selected_dept = hold_selected;
+                      self.selected_dept = Authorization.selDept;
 
                       Schedule.draft.status = "DIRTY";
                       self.draft.status = Schedule.draft.status;
@@ -335,7 +339,7 @@ angular.module( 'sunshine.edit', [
 
                 Department.get_draft()
                 .then(function (data){
-                    var hold_selected = self.selected_dept;
+                  //  var hold_selected = self.selected_dept;
 
                     draft_depts = data;
                     self.dept_list = data;
@@ -414,9 +418,12 @@ angular.module( 'sunshine.edit', [
     // transform sorted row to original row
     var rowNumber = this.sortIndex[data[0]] ? this.sortIndex[data[0]][0] : data[0];
     var row = this.getSourceDataAtRow(rowNumber);
-    row.dept_id = Schedule._id;
+    var obj = {};
+    obj._id = Schedule._id;
+    obj.draft = {};
+    obj.draft.record = row;
 
-    Schedule.save_draft_record(row)
+    Schedule.save_draft_record(obj)
     .then(function(res){
       self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
       Schedule.draft.status = "DIRTY";

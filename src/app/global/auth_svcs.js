@@ -6,10 +6,23 @@ angular.module( 'sunshine.auth_svcs', [])
     check: function() {
       if ($window.sessionStorage.token && $window.sessionStorage.user) {
         this.isLogged = true;
+        this.userRoles = $window.sessionStorage.userRoles;
+        this.user = $window.sessionStorage.user;
+        this.token = $window.sessionStorage.token;
+        this.usersDept = $window.sessionStorage.usersDept;
+        this.selDept = $window.sessionStorage.selDept;
       } else {
         this.isLogged = false;
         delete this.user;
+        delete this.token;
+        delete this.userRoles;
+        delete this.userDept;
+        delete this.selDept;
       }
+    },
+    setValue: function(key, value){
+      $window.sessionStorage[key] = value;
+      this[key] = value;
     }
   };
 
@@ -23,6 +36,12 @@ angular.module( 'sunshine.auth_svcs', [])
       return $http.post(url, {
         "email": email,
         "pwrd": password
+      })
+      .success(function(data, status, headers, config){
+        return data;
+      })
+      .error(function(data, status, headers, config){
+        return data;
       });
     },
     logout: function() {
@@ -32,12 +51,14 @@ angular.module( 'sunshine.auth_svcs', [])
         Authentication.isLogged = false;
         delete Authentication.user;
         delete Authentication.userRole;
+        delete Authentication.usersDept;
 
         delete $window.sessionStorage.token;
         delete $window.sessionStorage.user;
         delete $window.sessionStorage.userRole;
+        delete $window.sessionStorage.userDept;
 
-        $location.path("/home");
+        $location.path("/login");
       }
 
     }
@@ -58,7 +79,6 @@ angular.module( 'sunshine.auth_svcs', [])
     },
 
     response: function(response) {
-      //console.log(response);
       return response || $q.when(response);
     }
   };

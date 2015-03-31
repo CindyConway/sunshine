@@ -14,12 +14,13 @@ angular.module( 'sunshine.tip', [
                 templateUrl: 'tip/tip.tpl.html'
             }
         },
-        data:{ pageTitle: 'Administration - Dashboard', authorizedRoles: ['admin', 'editor', 'anonymous'] }
+        data:{ pageTitle: 'Administration - Dashboard',
+        authorizedRoles: ['Administrator', 'Publisher'] }
     });
 })
 
 .controller('TipCtrl', function tipCtrl( $rootScope, Schedule, Template,
- TipEdit, TipPicker, HOTHelper) {
+ TipEdit, HOTHelper) {
   var self = this;
   var tip_Handsontable;
   self.draft_dept = $rootScope.selected_draft_dept;
@@ -30,29 +31,6 @@ angular.module( 'sunshine.tip', [
   self.status = "saved";
 
 
-  if (Schedule._id != null){
-    Template.getByDeptId(Schedule._id)
-      .then(function (data){
-        var template = Template.for_dept;
-
-        //Add runtime settings
-         var settings = HOTHelper.config(TipPicker.config());
-         var l = HOTHelper.getFittedWidths.call(tip_Handsontable, template, settings.columns);
-         settings.search = {callback: HOTHelper.searchResultCounter};
-         settings.manualColumnResize = [1, l.selected, l.category, l.title, l.link, l.retention, l.on_site, l.off_site, l.total, l.remarks ];
-         settings.data = template;
-
-        //Display Table
-        self.tip_grid.style.visibility = 'hidden';
-        if(typeof tip_Handsontable == 'undefined'){
-          tip_Handsontable = new Handsontable(self.tip_grid, settings);
-        }
-
-        self.tip_grid.style.visibility = 'visible';
-      });
-  }
-
-  if(Schedule.draft == null){
     Template.get()
       .then(function (data){
         var template = Template.all;
@@ -71,7 +49,7 @@ angular.module( 'sunshine.tip', [
          }
          self.tip_grid.style.visibility = 'visible';
       });
-  }
+
 
   self.next = function(){
 
@@ -252,133 +230,6 @@ angular.module( 'sunshine.tip', [
         return config;
       }
     };
-}])
-
-.factory('TipPicker', ["Template", "Schedule","RetentionCategories",
-  function (Template, Schedule, RetentionCategories) {
-
-    //Before Save
-    var beforeSave = function(change, source){
-      setStatus("saving");
-    };
-
-    var setStatus = function(str){
-      var edit_status = document.getElementById("edit-status");
-      edit_status.innerHTML = str;
-    };
-
-
-    //Autosave function
-    var autoSave = function(change,source){
-      var self = this;
-
-      if(change == null){return;}
-      var data = change[0];
-
-      if (source === 'loadData') {return;} //dont' save this change
-      if (source === 'insertId') {return;} // stops an endless loop when the new record id is added after an insert
-
-      // transform sorted row to original row
-      var rowNumber = this.sortIndex[data[0]] ? this.sortIndex[data[0]][0] : data[0];
-      var row = this.getSourceDataAtRow(rowNumber);
-      row.dept_id = Schedule._id;
-
-      if(!!row.selected ){
-        Schedule.save_draft_record(row)
-        .then(function(res){
-          self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
-          setStatus("saved");
-        });
-    }
-
-    if(!row.selected){
-      Schedule.delete_draft_record(row)
-      .success(function(res){
-        setStatus("saved");
-      })
-      .error(function(err){
-        console.log(err);
-      });
-    }
-
-  };
-
-  return{
-    config : function(){
-      // basic config
-      var config = {};
-      config.columns = [];
-      config.contextMenu = false;
-      config.colHeaders = ["_id", " ", "Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks"];
-
-      //schema for empty row
-      config.dataSchema={_id:null, selected:false, category:null, title:null, link:null, retention:null, on_site:null, off_site:null, total:null, remarks:null};
-
-      //_id Column (hidden)
-      config.columns.push({"data":"_id"});
-
-      var checkboxConfig = {};
-      checkboxConfig.data = "selected";
-      checkboxConfig.type = "checkbox";
-      checkboxConfig.readOnly = false;
-      config.columns.push(checkboxConfig);
-
-      //Category Column
-      var categoryConfig = {};
-      categoryConfig.data = "category";
-      categoryConfig.readOnly = "true";
-      config.columns.push(categoryConfig);
-
-
-      //Title Column
-      var titleConfig = {};
-      titleConfig.data = "title";
-      titleConfig.readOnly = "true";
-      config.columns.push(titleConfig);
-
-      //Link Column
-      var linkConfig = {};
-      linkConfig.data = "link";
-      linkConfig.readOnly = "true";
-      config.columns.push(linkConfig);
-
-      // Retention Column
-      var retentionConfig = {};
-      retentionConfig.data = "retention";
-      retentionConfig.readOnly = "true";
-      config.columns.push(retentionConfig);
-
-      // On-site Column
-      var on_siteConfig = {};
-      on_siteConfig.data = "on_site";
-      on_siteConfig.readOnly = "true";
-      config.columns.push(on_siteConfig);
-
-      // Off-site Column
-      var off_siteConfig = {};
-      off_siteConfig.data = "off_site";
-      off_siteConfig.readOnly = "true";
-      config.columns.push(off_siteConfig);
-
-      // Total Column
-      var totalConfig = {};
-      totalConfig.data = "total";
-      totalConfig.readOnly = "true";
-      config.columns.push(totalConfig);
-
-      // Remarks Column
-      var remarksConfig = {};
-      remarksConfig.data = "remarks";
-      remarksConfig.readOnly = "true";
-      config.columns.push(remarksConfig);
-
-      //Add Event Functions
-      config.afterChange = autoSave;
-      config.beforeChange = beforeSave;
-
-      return config;
-    }
-  };
 }])
 
 .factory("HOTHelper", ["RetentionCategories", function(RetentionCategories){
