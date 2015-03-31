@@ -52,8 +52,7 @@ angular.module( 'sunshine.global_utils', [])
       // do something on error
 
       if(errorResponse.status === 401){
-        console.log("in interceptor");
-        $location.path("/login");
+        $location.path("/admin/login");
       }
 
       return $q.reject(errorResponse);

@@ -23,7 +23,7 @@
     <div ng-if="::agencyCtrl2.adopted.department" class="full-width absolute-center p2-bottom intro"><p>You can request any of the following records. When possible, a link is included so you can access the document directly. If there is no link, please contact the department using the information provided in the header below. If a division contact is
       given for a record, it is the preferred way to request access.</p></div>
 	<div ng-if="::agencyCtrl2.adopted.department" class="right view-link sm-hide">
-      <a ui-sref="agency({schedule_id:'{{::agencyCtrl2.schedule_id}}'})">table view </a>
+      <a ui-sref="agency({dept_id:'{{::agencyCtrl2.schedule_id}}'})">table view </a>
     </div>
     <table ng-if="::agencyCtrl2.adopted.department">
       <thead>

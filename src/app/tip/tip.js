@@ -6,10 +6,14 @@ angular.module( 'sunshine.tip', [
 
 .config(function config( $stateProvider ) {
 
-    $stateProvider.state( 'tip', {
+    $stateProvider.state( 'admin.tip', {
         url: '/tip',
+        ncyBreadcrumb: {
+          label: 'Recommendations Edit',
+          parent: 'admin.edit'
+        },
         views: {
-            "main": {
+            "admin": {
                 //controller: 'DashBoardCtrl',
                 templateUrl: 'tip/tip.tpl.html'
             }
@@ -84,6 +88,7 @@ angular.module( 'sunshine.tip', [
 
   // add listener to tip_search field to cause the grid to
   // be searched
+  var tip_search = document.getElementById('tip-search');
   Handsontable.Dom.addEvent(tip_search, 'keyup', function (event) {
     self.searchResults = tip_Handsontable.search.query(this.value);
     self.tip_count.innerHTML = self.searchResults.length;
@@ -97,8 +102,13 @@ angular.module( 'sunshine.tip', [
 
     //Before Save
     var beforeSave = function(change, source){
-      var edit_status = document.getElementById("edit-status");
-      edit_status.innerHTML = "saving";
+      var tip_status = document.getElementById("tip-status");
+      tip_status.innerHTML = "saving";
+    };
+
+    var setStatus = function(str){
+      var tip_status = document.getElementById("tip-status");
+      tip_status.innerHTML = str;
     };
 
     //Autosave function
@@ -135,6 +145,7 @@ angular.module( 'sunshine.tip', [
           self.setDataAtCell(rowNumber,8, res.data.is_visible, "fixValidationOfNewRow");
         }
          self.setDataAtCell(rowNumber,0, res.data._id, "insertId");
+         setStatus("saved");
        });
     };
 

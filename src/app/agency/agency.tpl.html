@@ -10,11 +10,13 @@
     </div>
   </header>
 
+  <div ng-controller="AgencyCtrl as agencyCtrl" class="m2" style="min-height:400px">
+
   <div class="white-background" ncy-breadcrumb></div>
   <div class="right view-link sm-hide p2-right p2-bottom ng-scope">
-    <a class="px1 regular" ui-sref="agency_list({schedule_id:'{{::agencyCtrl.schedule_id}}'})">List View</a>
+    <a class="px1 regular" ui-sref="agency_list({dept_id:'{{::agencyCtrl.schedule_id}}'})">List View</a>
   </div>
-  <div ng-controller="AgencyCtrl as agencyCtrl" class="m2" style="min-height:400px">
+
 
     <div class="relative center"
       cg-busy="{promise:agencyCtrl.agency_promise,templateUrl:'loading_msg.html',delay:30}"></div>

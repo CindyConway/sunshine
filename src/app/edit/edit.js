@@ -6,10 +6,13 @@ angular.module( 'sunshine.edit', [
 
 .config(function config( $stateProvider ) {
 
-  $stateProvider.state( 'edit', {
+  $stateProvider.state( 'admin.edit', {
     url: '/edit',
+    ncyBreadcrumb: {
+      label: 'Edit Schedule'
+    },
     views: {
-      "main": {
+      "admin": {
         templateUrl: 'edit/edit.tpl.html'
       }
     },
@@ -19,12 +22,12 @@ angular.module( 'sunshine.edit', [
 
 .controller('EditCtrl', function EditCtrl(GlobalVariables, ScheduleDelete, PopulateGrid, Department,
     ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, SearchNext, SearchPrevious,
-    Authentication, TipGo) {
+    Authentication, TipGo, TipEditGo) {
 
     GlobalVariables.showFooter = false;
     var self = this;
     self.schedule_grid = document.getElementById('schedule-grid');
-    self.searchCount = document.getElementById("result-count");
+    self.searchCount = document.getElementById('result-count');
     self.searchResults = [];
     self.selSearchResult = -1;
     self.del = ScheduleDelete;
@@ -34,10 +37,14 @@ angular.module( 'sunshine.edit', [
     self.lock = ScheduleLock;
     self.unlock = ScheduleUnlock;
     self.tips = TipGo;
+    self.tip_edit = TipEditGo;
     self.next = SearchNext;
     self.previous = SearchPrevious;
     self.populateGrid = PopulateGrid.populateGrid;
     self.status = "saved";
+    self.allow = false;
+    self.allow=(Authentication.userRoles.indexOf("Administrator") > -1 ||
+      Authentication.userRoles.indexOf("Publisher") > -1);
 
     // console.log("setp3 - in Edit Controller");
     // console.log(Authentication);
@@ -48,7 +55,9 @@ angular.module( 'sunshine.edit', [
         draft_depts = data;
         self.dept_list = data;
         self.selected_dept = (typeof Authentication.selDept === 'undefined' ? data[0]._id : Authentication.selDept);
+        self.selected_dept_name = (typeof Authentication.selDeptName === 'undefined' ? data[0].draft.department : Authentication.selDeptName);
         Authentication.setValue("selDept", self.selected_dept);
+        Authentication.setValue("selDeptName", self.selected_dept_name);
         self.populateGrid();
     });
 })
@@ -56,9 +65,17 @@ angular.module( 'sunshine.edit', [
 .factory("TipGo",["$state", function($state){
   var  go = function(){
     var self = this;
-    $state.go('tip_picker',{schedule_id : self.selected_dept});
+    $state.go('admin.tip_picker',{schedule_id : self.selected_dept});
   };
   return go;
+}])
+
+.factory("TipEditGo",["$state", function($state){
+  var  go_picker = function(){
+    var self = this;
+    $state.go('admin.tip');
+  };
+  return go_picker;
 }])
 
 .factory("PopulateGrid",["Schedule", "HOTHelper", "ScheduleEdit", "Debounce", "GlobalVariables", "Authentication",
@@ -73,7 +90,9 @@ angular.module( 'sunshine.edit', [
             var self = this;
 
             var dept_id = self.selected_dept;
+            var dept_name = self.selected_dept_name;
             Authentication.setValue("selDept", dept_id);
+            Authentication.setValue("selDeptName", dept_name);
 
               Schedule.get_draft(dept_id)
                 .then(function (data){
@@ -207,7 +226,6 @@ angular.module( 'sunshine.edit', [
 
 }])
 
-
 .factory("ScheduleLock",["Schedule", "Debounce", "HttpQueue", "PopulateGrid", "$rootScope",
   function(Schedule, Debounce, HttpQueue, PopulateGrid, $rootScope){
     var lock = Debounce.debounce(function(){
@@ -221,11 +239,11 @@ angular.module( 'sunshine.edit', [
                           .success(function(data){
 
                             Schedule.draft.status = "LOCKED";
-                            self.draft.status = Schedule.draft.status;
+                            self.draft.status = "LOCKED";
                             var settings = thisHandsontable.getSettings();
+
                             settings.readOnly = true;
                             thisHandsontable.updateSettings(settings);
-
                             //update autosave status
                             if(HttpQueue.count === 0){
                               self.status = "saved";
@@ -283,8 +301,8 @@ angular.module( 'sunshine.edit', [
     return publish;
 }])
 
-.factory("ScheduleSave", ["Schedule", "Department", "Debounce", "HttpQueue",
-  function(Schedule, Department, Debounce, HttpQueue){
+.factory("ScheduleSave", ["Schedule", "Department", "Debounce", "HttpQueue", "Authentication",
+  function(Schedule, Department, Debounce, HttpQueue, Authentication){
 
   var save = Debounce.debounce(function(){
 
@@ -309,7 +327,7 @@ angular.module( 'sunshine.edit', [
                     //  var hold_selected = self.selected_dept;
                       draft_depts = data;
                       self.dept_list = data;
-                      self.selected_dept = Authorization.selDept;
+                      self.selected_dept = Authentication.selDept;
 
                       Schedule.draft.status = "DIRTY";
                       self.draft.status = Schedule.draft.status;
@@ -427,6 +445,7 @@ angular.module( 'sunshine.edit', [
     .then(function(res){
       self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
       Schedule.draft.status = "DIRTY";
+      console.log(edit_status);
       edit_status.innerHTML = "saved";
     });
   };
@@ -471,7 +490,7 @@ angular.module( 'sunshine.edit', [
         config.columns = [];
         config.minSpareRows = 1;
         config.contextMenuCopyPaste = true;
-        config.contextMenu = true;
+      //  config.contextMenu = true;
         config.colHeaders = ["_id","Division","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
 
         //schema for empty row
@@ -520,13 +539,11 @@ angular.module( 'sunshine.edit', [
         // On-site Column
         var onsiteConfig = {};
         onsiteConfig.data = "on_site";
-        onsiteConfig.validator = HOTHelper.isRequired;
         config.columns.push(onsiteConfig);
 
         // Off-site Column
         var offsiteConfig = {};
         offsiteConfig.data = "off_site";
-        offsiteConfig.validator = HOTHelper.isRequired;
         config.columns.push(offsiteConfig);
 
         // Total Column
@@ -566,7 +583,7 @@ angular.module( 'sunshine.edit', [
 
         var childHandsontable =elem[0].children[0];
 
-         var win_width = Math.max(document.documentElement.clientWidth, $window.innerWidth || 0);
+         var win_width = Math.max(document.documentElement.clientWidth, $window.innerWidth || 0) * 0.93;
          elem.css('width', win_width + "px");
 
          var win_height = Math.max(document.documentElement.clientHeight, $window.innerHeight || 0);

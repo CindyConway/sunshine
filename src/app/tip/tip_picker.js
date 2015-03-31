@@ -6,10 +6,14 @@ angular.module( 'sunshine.tip_picker', [
 
 .config(function config( $stateProvider ) {
 
-    $stateProvider.state( 'tip_picker', {
+    $stateProvider.state( 'admin.tip_picker', {
         url: '/tip_picker/:schedule_id',
+        ncyBreadcrumb: {
+          label: 'Recommendations',
+          parent: 'admin.edit'
+        },
         views: {
-            "main": {
+            "admin": {
                 //controller: 'DashBoardCtrl',
                 templateUrl: 'tip/tip_picker.tpl.html'
             }
@@ -22,7 +26,8 @@ angular.module( 'sunshine.tip_picker', [
   TipPicker, HOTHelper) {
   var self = this;
   var tip_Handsontable;
-  self.draft_dept =  Authentication.selDept; //$stateParams.schedule_id;
+  self.draft_dept =  Authentication.selDept;
+  self.draft_dept_name = Authentication.selDeptName;
   self.tip_grid = document.getElementById('tip-grid');
   self.tip_count = document.getElementById("tip-count");
   self.searchResults = [];
@@ -31,7 +36,9 @@ angular.module( 'sunshine.tip_picker', [
 
     Template.getByDeptId(self.draft_dept)
       .then(function (data){
+
         var template = Template.for_dept;
+
         //Add runtime settings
          var settings = HOTHelper.config(TipPicker.config());
          var l = HOTHelper.getFittedWidths.call(tip_Handsontable, template, settings.columns);
@@ -81,6 +88,7 @@ angular.module( 'sunshine.tip_picker', [
 
   // add listener to tip_search field to cause the grid to
   // be searched
+  var tip_search = document.getElementById('tip-search');
   Handsontable.Dom.addEvent(tip_search, 'keyup', function (event) {
     self.searchResults = tip_Handsontable.search.query(this.value);
     self.tip_count.innerHTML = self.searchResults.length;
@@ -89,8 +97,8 @@ angular.module( 'sunshine.tip_picker', [
 
 })
 
-.factory('TipPicker', ["Template", "Schedule","RetentionCategories",
-  function (Template, Schedule, RetentionCategories) {
+.factory('TipPicker', ["Template", "Schedule","RetentionCategories", 'Authentication',
+  function (Template, Schedule, RetentionCategories, Authentication) {
 
     //Before Save
     var beforeSave = function(change, source){
@@ -98,8 +106,8 @@ angular.module( 'sunshine.tip_picker', [
     };
 
     var setStatus = function(str){
-      var edit_status = document.getElementById("edit-status");
-      edit_status.innerHTML = str;
+      var tip_status = document.getElementById("tippicker-status");
+      tip_status.innerHTML = str;
     };
 
 
@@ -117,7 +125,7 @@ angular.module( 'sunshine.tip_picker', [
       var rowNumber = this.sortIndex[data[0]] ? this.sortIndex[data[0]][0] : data[0];
       var row = this.getSourceDataAtRow(rowNumber);
       var dept = {};
-      dept._id = Schedule._id;
+      dept._id = Authentication.selDept;
       dept.draft = {};
       dept.draft.record = row;
 

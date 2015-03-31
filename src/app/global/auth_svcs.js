@@ -11,6 +11,7 @@ angular.module( 'sunshine.auth_svcs', [])
         this.token = $window.sessionStorage.token;
         this.usersDept = $window.sessionStorage.usersDept;
         this.selDept = $window.sessionStorage.selDept;
+        this.selDeptName = $window.sessionStorage.selDeptName;
       } else {
         this.isLogged = false;
         delete this.user;
@@ -18,6 +19,7 @@ angular.module( 'sunshine.auth_svcs', [])
         delete this.userRoles;
         delete this.userDept;
         delete this.selDept;
+        delete this.selDeptName;
       }
     },
     setValue: function(key, value){
@@ -52,13 +54,15 @@ angular.module( 'sunshine.auth_svcs', [])
         delete Authentication.user;
         delete Authentication.userRole;
         delete Authentication.usersDept;
+        delete Authentication.usersDeptName;
 
         delete $window.sessionStorage.token;
         delete $window.sessionStorage.user;
         delete $window.sessionStorage.userRole;
         delete $window.sessionStorage.userDept;
+        delete $window.sessionStorage.userDeptName;
 
-        $location.path("/login");
+        $location.path("/admin.login");
       }
 
     }

@@ -1,15 +1,17 @@
-<legend>Login Form</legend>
-<div ng-controller="LoginCtrl as loginCtrl">
-{{loginCtrl.login_status}}
-<div class="form-group">
-  <label for="username">Username</label>
-  <input type="text" id="username" placeholder="email" ng-model="loginCtrl.email">
-</div>
+<div id="admin-main" class="horizontal-center login" ng-controller="LoginCtrl as loginCtrl">
 
-<div class="form-group">
-  <label for="password">Password</label>
-  <input type="password" class="form-control" id="password" placeholder="Password" ng-model="loginCtrl.password">
-</div>
+  <div class="py2">{{loginCtrl.login_status}}</div>
 
-<button type="button" ng-click="loginCtrl.login(loginCtrl.email,loginCtrl.password)" class="btn btn-primary">Submit</button>
+  <form name="login" ng-submit="loginCtrl.login(loginCtrl.email,loginCtrl.password)">
+    <div class="form-group">
+      <input type="text" id="username" class="three-quarter-width" placeholder="email" ng-model="loginCtrl.email">
+    </div>
+
+    <div class="form-group">
+      <input type="password" class="three-quarter-width" id="password" placeholder="Password" ng-model="loginCtrl.password">
+    </div>
+
+    <input id="submit" type="submit" class="btn blue-fade btn-default white-text p1" value="Login" />
+  </form>
+
 </div>

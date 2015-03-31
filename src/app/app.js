@@ -16,6 +16,7 @@ angular
   'sunshine.tip',
   'sunshine.tip_picker',
   'sunshine.auth_svcs',
+  'sunshine.admin',
   'ui.router',
   'angularUtils.directives.dirPagination',
   'ui.bootstrap',
@@ -36,8 +37,6 @@ angular
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
     Authentication.check();
 
-    console.log("Step 0 - changing state");
-    console.log(Authentication);
     //This is a public page, allow routing
     if(toState.data.authorizedRoles.indexOf("Everyone") > -1){
         return;
@@ -50,7 +49,7 @@ angular
 
      if(!Authentication.isLogged){
        event.preventDefault();
-       $state.go('login');
+       $state.go('admin.login');
        return;
      }
 
@@ -74,7 +73,7 @@ angular
 
     // Route unauthorized for user
     event.preventDefault();
-    $state.go('login');
+    $state.go('admin.login');
     return;
 
   });
