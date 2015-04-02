@@ -35,13 +35,13 @@ angular.module( 'sunshine.global_utils', [])
 .factory('HttpInterceptor', function($q, HttpQueue, $location, $timeout) {
   return {
     request: function(request){
-      //console.log("interceptor request");
+      console.log("interceptor request");
       HttpQueue.add();
       return request;
     },
     response: function(response) {
       var search_button = angular.element(document.querySelector('.fa-spinner'));
-      //console.log("interceptor response");
+      console.log("interceptor response");
       search_button.removeClass('fa-spinner');
       search_button.removeClass('fa-spin');
       search_button.addClass('fa-search');

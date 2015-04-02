@@ -21,7 +21,7 @@ angular.module( 'sunshine.admin', [
     });
 })
 
-.controller("AdminCtrl", function(Authentication, UserAuth, $scope){
+.controller("AdminCtrl", function(Authentication, UserAuth, $scope, $timeout){
 
   var self = this;
   self.user = Authentication.user;
@@ -45,6 +45,12 @@ angular.module( 'sunshine.admin', [
             self.allowPublisher = newVal.indexOf("Publisher") > -1;
           }
       }, true);
+
+      $scope.$on('$viewContentLoaded', function(event) {
+        $timeout(function() {
+          console.log("view LOADED");
+        },0);
+      });
 })
 ;
 })();

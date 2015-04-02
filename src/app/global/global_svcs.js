@@ -41,8 +41,8 @@ angular.module( 'sunshine.global_svcs', [])
 
 ==================================*/
 
-.service('Department', function($http, $rootScope) {
-  var apiUrl = $rootScope.API_URL;
+.service('Department', function($http, GlobalVariables) {
+  var apiUrl =GlobalVariables.api_url;
 
   /*****************************************
   METHOD: del
@@ -53,7 +53,7 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
   this.del = function(department) {
 
-    var url = apiUrl + '/v1/edit/department/' + department;
+    var url = apiUrl + '/v1/pub/department/' + department;
     return $http["delete"](url)
       .success(function(data) {
       })
@@ -83,9 +83,9 @@ angular.module( 'sunshine.global_svcs', [])
   (name, contact, webasite, etc)
   ******************************************/
   this.save_draft = function(dept) {
-    var apiUrl = $rootScope.API_URL + '/v1/edit/department/' + dept._id;
+    var url = apiUrl + '/v1/edit/department/' + dept._id;
     return $http
-      .put(apiUrl, dept)
+      .put(url, dept)
       .then(function(res) {
         return res.data;
       });
@@ -98,7 +98,7 @@ angular.module( 'sunshine.global_svcs', [])
   department or agency
   ******************************************/
   this.get_adopted = function() {
-    var apiUrl = $rootScope.API_URL;
+
     return $http
       .get(apiUrl + '/v1/department')
       .then(function(res) {
@@ -114,7 +114,7 @@ angular.module( 'sunshine.global_svcs', [])
   department or agency
   ******************************************/
   this.get_draft = function() {
-    var apiUrl = $rootScope.API_URL;
+
     return $http
       .get(apiUrl + '/v1/edit/department')
       .then(function(res) {
@@ -128,9 +128,8 @@ angular.module( 'sunshine.global_svcs', [])
         [ Search Object ]
 
 ==================================*/
-.service('Search', function($http, $rootScope) {
-
-  var apiUrl = $rootScope.API_URL;
+.service('Search', function($http, GlobalVariables) {
+  var apiUrl = GlobalVariables.api_url;
   search_terms = {};
   search_filters = {};
 
@@ -246,8 +245,8 @@ angular.module( 'sunshine.global_svcs', [])
 
 ==================================*/
 
-.service('Template', function($http, $rootScope) {
-  var apiUrl = $rootScope.API_URL;
+.service('Template', function($http, GlobalVariables) {
+  var apiUrl = GlobalVariables.api_url;
   var self = this;
   self.all = null;
   self.for_dept = null;
@@ -277,9 +276,9 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
 
   this.get = function() {
-
+    var url = apiUrl + '/v1/pub/template';
     return $http
-      .get(apiUrl + '/v1/pub/template')
+      .get(url)
       .then(function(res) {
         self.all = res.data;
         //return res.data;
@@ -295,8 +294,9 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
 
   this.getByDeptId = function(dept_id) {
+    var url = apiUrl + '/v1/edit/template/' + dept_id;
     return $http
-      .get(apiUrl + '/v1/edit/template/' + dept_id)
+      .get(url)
       .then(function(res) {
         self.for_dept = res.data;
       });
@@ -326,9 +326,9 @@ angular.module( 'sunshine.global_svcs', [])
 
 ==================================*/
 
-.service('Schedule', function($http, $rootScope) {
+.service('Schedule', function($http, GlobalVariables) {
 
-  var apiUrl = $rootScope.API_URL;
+  var apiUrl = GlobalVariables.api_url;
   var self = this;
   self.draft = null;
   self._id = null;
@@ -344,8 +344,9 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
 
   this.get_draft = function(dept_id) {
+    var url = apiUrl + '/v1/edit/schedule/' + dept_id;
     return $http
-      .get(apiUrl + '/v1/edit/schedule/' + dept_id)
+      .get(url)
       .then(function(res) {
         self.draft = res.data;
         self._id = res.data._id;
@@ -364,10 +365,9 @@ angular.module( 'sunshine.global_svcs', [])
   department.
   ******************************************/
   this.get_adopted = function(schedule_id) {
-
+    var url = apiUrl + '/v1/schedule/' + schedule_id;
     return $http
-      //.get(apiUrl + '/schedule/' + $rootScope.selected_adopted_dept)
-      .get(apiUrl + '/v1/schedule/' + schedule_id)
+      .get(url)
       .then(function(res) {
         return res.data;
       });
@@ -381,7 +381,6 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
   this.save_draft_record = function(record) {
     var url = apiUrl + '/v1/edit/record/';
-console.log(record);
     return $http.put(url, record)
       .success(function(data) {
       //  $log.log(data);

@@ -1,0 +1,20 @@
+<div id="admin-main" class="horizontal-center" ng-controller="testCtrl as testCtrl">
+
+  <div id="test-status" class="floating-status" ng-model="testCtrl.status">{{testCtrl.status}}</div>
+  <div class="white-background py0" ncy-breadcrumb></div>
+  <div id="search-group">
+    <input id="test-search" type="search" placeholder="Search">
+  </div>
+
+  <div id="count-group">
+    <div id="test-count">0</div><span>results</span>
+    <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
+    <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a>
+  </div>
+
+
+    <div id="test-grid" style="overflow:scroll; visibility:hidden; padding-bottom:200px" class="handsontable"></div>
+
+  <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>
+
+</div>

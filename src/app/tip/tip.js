@@ -243,155 +243,155 @@ angular.module( 'sunshine.tip', [
     };
 }])
 
-.factory("HOTHelper", ["RetentionCategories", function(RetentionCategories){
-  //This is a collections of functions and
-  //configurations used in Handsontable (HOT)
-  // throughout this app.
-   return{
-
-      // Division Autocomplete Function
-      divisionAutoComplete : function(query, process){
-          var vals = this.instance.getDataAtCol(1);
-          var uniqueVals = vals.unique().sort().nulless();
-          process(uniqueVals);
-       },
-      // Division Autocomplete Function
-      categoryAutoComplete : function(query, process){
-         var vals = this.instance.getDataAtCol(2);
-         var uniqueVals = vals.unique().sort().nulless();
-
-         process(uniqueVals);
-       },
-      retentionValidator : function(value, callback){
-       //Had to write custom function for strict autocomplete
-       //because the built in validation does not skip the spare row
-
-           var row = this.row + 1;
-           var rowCount = this.instance.countRows();
-
-           //skip minSpareRow
-           if(row == rowCount){
-
-             callback(true);
-             return;
-           }
-
-           //validation: field required
-           if(!value){
-             callback(false);
-             return;
-           }
-
-           //validation: value must match RetentionCategories
-           for(var i = 0; i<RetentionCategories.length; i++ ){
-             if(RetentionCategories[i] == value){
-               callback(true);
-               return;
-             }
-           }
-
-           //value was NOT in RetentionCategories
-           callback(false);
-      },
-     isRequired : function(value, callback){
-       //Skip the spareMinRow when validating
-         var row = this.row + 1;
-         var rowCount = this.instance.countRows();
-
-         if(row == rowCount){
-           //ignore validating minSpareRow
-           callback(true);
-           return;
-         }else if(!value){
-           callback(false);
-           return;
-         }else{
-           callback (true);
-         }
-     },
-     searchResultCounter : function (instance, row, col, value, result) {
-
-         Handsontable.Search.DEFAULT_CALLBACK.apply(this, arguments);
-
-        //  if (result) {
-        //     searchResultCount++;
-        //  }
-     },
-     config: function(addOns){
-     // basic config
-      var config = {};
-      config.colHeaders = true;
-      config.rowHeaders = true;
-      config.autoColumnSize = false;
-      config.manualColumnResize = true;
-      config.currentRowClassName = "current-row";
-      config.minSpareRows = 0;
-      config.columnSorting = true;
-      config.fixedRowsTop = false;
-      config.autoWrapRow = true;
-      config.search = true;
-      //config.contextMenu = ["row_above", "row_below", "remove_row"];
-      //config.contextMenu = true;
-
-      if(typeof addOns != 'undefined'){
-        for(var prop in addOns){
-           config[prop] = addOns[prop];
-        }
-      }
-      return config;
-     },
-
-     getFittedWidths : function(){
-        var recordArr = arguments[0].slice();
-        var maxColWidth = 800;
-        var minColWidth = 120;
-        var padding = 50; //accounts for arrow on dropdown fields
-        var fittedColumnWidths = {};
-        var longestPerField = {};
-        var cols = arguments[1];
-        var col;
-        var sorter = function (property) {
-            return function (a,b) {
-              if(b[property] != null){bLength = b[property].length;}else{bLength = 0;}
-              if(a[property] != null){aLength = a[property].length;}else{aLength = 0;}
-              return bLength - aLength;
-          };
-        };
-
-        for(var i = 0; i < cols.length; i++){
-          longestPerField = recordArr.sort(sorter(cols[i].data))[0];
-          col = cols[i].data;
-
-          //no records in the record array, so column does not exits
-          if(typeof longestPerField == 'undefined'){
-            fittedColumnWidths[col] = minColWidth;
-            continue;
-          }
-
-          // all values for the column are null; set minWidth
-          if(longestPerField[col] == null){
-            fittedColumnWidths[col] = minColWidth;
-            continue;
-          }
-
-          if(typeof longestPerField[col] == "boolean"){
-            fittedColumnWidths[col] = minColWidth;
-            continue;
-          }
-
-          //visual field length greater than maxColWidth
-          if (longestPerField[col].visualLength() > maxColWidth) {
-            fittedColumnWidths[col] = maxColWidth;
-            continue;
-          }
-
-          fittedColumnWidths[col] = longestPerField[col].visualLength() + padding;
-        }
-
-        return fittedColumnWidths;
-    }
-  };
-
-}])
+// .factory("HOTHelper", ["RetentionCategories", function(RetentionCategories){
+//   //This is a collections of functions and
+//   //configurations used in Handsontable (HOT)
+//   // throughout this app.
+//    return{
+//
+//       // Division Autocomplete Function
+//       divisionAutoComplete : function(query, process){
+//           var vals = this.instance.getDataAtCol(1);
+//           var uniqueVals = vals.unique().sort().nulless();
+//           process(uniqueVals);
+//        },
+//       // Division Autocomplete Function
+//       categoryAutoComplete : function(query, process){
+//          var vals = this.instance.getDataAtCol(2);
+//          var uniqueVals = vals.unique().sort().nulless();
+//
+//          process(uniqueVals);
+//        },
+//       retentionValidator : function(value, callback){
+//        //Had to write custom function for strict autocomplete
+//        //because the built in validation does not skip the spare row
+//
+//            var row = this.row + 1;
+//            var rowCount = this.instance.countRows();
+//
+//            //skip minSpareRow
+//            if(row == rowCount){
+//
+//              callback(true);
+//              return;
+//            }
+//
+//            //validation: field required
+//            if(!value){
+//              callback(false);
+//              return;
+//            }
+//
+//            //validation: value must match RetentionCategories
+//            for(var i = 0; i<RetentionCategories.length; i++ ){
+//              if(RetentionCategories[i] == value){
+//                callback(true);
+//                return;
+//              }
+//            }
+//
+//            //value was NOT in RetentionCategories
+//            callback(false);
+//       },
+//      isRequired : function(value, callback){
+//        //Skip the spareMinRow when validating
+//          var row = this.row + 1;
+//          var rowCount = this.instance.countRows();
+//
+//          if(row == rowCount){
+//            //ignore validating minSpareRow
+//            callback(true);
+//            return;
+//          }else if(!value){
+//            callback(false);
+//            return;
+//          }else{
+//            callback (true);
+//          }
+//      },
+//      searchResultCounter : function (instance, row, col, value, result) {
+//
+//          Handsontable.Search.DEFAULT_CALLBACK.apply(this, arguments);
+//
+//         //  if (result) {
+//         //     searchResultCount++;
+//         //  }
+//      },
+//      config: function(addOns){
+//      // basic config
+//       var config = {};
+//       config.colHeaders = true;
+//       config.rowHeaders = true;
+//       config.autoColumnSize = false;
+//       config.manualColumnResize = true;
+//       config.currentRowClassName = "current-row";
+//       config.minSpareRows = 0;
+//       config.columnSorting = true;
+//       config.fixedRowsTop = false;
+//       config.autoWrapRow = true;
+//       config.search = true;
+//       //config.contextMenu = ["row_above", "row_below", "remove_row"];
+//       //config.contextMenu = true;
+//
+//       if(typeof addOns != 'undefined'){
+//         for(var prop in addOns){
+//            config[prop] = addOns[prop];
+//         }
+//       }
+//       return config;
+//      },
+//
+//      getFittedWidths : function(){
+//         var recordArr = arguments[0].slice();
+//         var maxColWidth = 800;
+//         var minColWidth = 120;
+//         var padding = 50; //accounts for arrow on dropdown fields
+//         var fittedColumnWidths = {};
+//         var longestPerField = {};
+//         var cols = arguments[1];
+//         var col;
+//         var sorter = function (property) {
+//             return function (a,b) {
+//               if(b[property] != null){bLength = b[property].length;}else{bLength = 0;}
+//               if(a[property] != null){aLength = a[property].length;}else{aLength = 0;}
+//               return bLength - aLength;
+//           };
+//         };
+//
+//         for(var i = 0; i < cols.length; i++){
+//           longestPerField = recordArr.sort(sorter(cols[i].data))[0];
+//           col = cols[i].data;
+//
+//           //no records in the record array, so column does not exits
+//           if(typeof longestPerField == 'undefined'){
+//             fittedColumnWidths[col] = minColWidth;
+//             continue;
+//           }
+//
+//           // all values for the column are null; set minWidth
+//           if(longestPerField[col] == null){
+//             fittedColumnWidths[col] = minColWidth;
+//             continue;
+//           }
+//
+//           if(typeof longestPerField[col] == "boolean"){
+//             fittedColumnWidths[col] = minColWidth;
+//             continue;
+//           }
+//
+//           //visual field length greater than maxColWidth
+//           if (longestPerField[col].visualLength() > maxColWidth) {
+//             fittedColumnWidths[col] = maxColWidth;
+//             continue;
+//           }
+//
+//           fittedColumnWidths[col] = longestPerField[col].visualLength() + padding;
+//         }
+//
+//         return fittedColumnWidths;
+//     }
+//   };
+//
+// }])
 ;
 })();

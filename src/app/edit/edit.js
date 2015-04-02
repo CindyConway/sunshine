@@ -20,7 +20,7 @@ angular.module( 'sunshine.edit', [
   });
 })
 
-.controller('EditCtrl', function EditCtrl(GlobalVariables, ScheduleDelete, PopulateGrid, Department,
+.controller('EditCtrl', function EditCtrl($scope, GlobalVariables, ScheduleDelete, PopulateGrid, Department,
     ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, SearchNext, SearchPrevious,
     Authentication, TipGo, TipEditGo) {
 
@@ -60,6 +60,7 @@ angular.module( 'sunshine.edit', [
         Authentication.setValue("selDeptName", self.selected_dept_name);
         self.populateGrid();
     });
+
 })
 
 .factory("TipGo",["$state", function($state){
@@ -403,10 +404,15 @@ angular.module( 'sunshine.edit', [
   return del;
 }])
 
-.factory("ScheduleEdit",["Schedule", "RetentionCategories", "Debounce", "HttpQueue", "HOTHelper",
-  function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper){
+.factory("ScheduleEdit",["Schedule", "RetentionCategories", "Debounce", "HttpQueue", "HOTHelper", "Authentication",
+  function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper, Authentication){
 
   function callback(res){}
+
+  var setStatus = function(str){
+    var status = document.getElementById("edit-status");
+    status.innerHTML = str;
+  };
 
   var cellFmt =  function(row, col, prop){
      var props = {};
@@ -445,8 +451,10 @@ angular.module( 'sunshine.edit', [
     .then(function(res){
       self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
       Schedule.draft.status = "DIRTY";
-      console.log(edit_status);
-      edit_status.innerHTML = "saved";
+
+      if(HttpQueue.count === 0){
+        setStatus("saved");
+      }
     });
   };
 
@@ -455,27 +463,25 @@ angular.module( 'sunshine.edit', [
   var beforeRemoveRow = function(index, amount){
 
     function successCallback(res){
-      var edit_status = document.getElementById("edit-status");
       if(HttpQueue.count === 0){
-        edit_status.innerHTML = "saved";
+        setStatus("saved");
       }
     }
 
     var self = this;
-    var edit_status = document.getElementById("edit-status");
-    edit_status.innerHTML = "saving";
+    setStatus("saving");
 
     for(var i = 0; i < amount; i++){
       var rowNumber = Array.isArray(this.sortIndex[index]) ? this.sortIndex[index][0] : index;
 
       var row = this.getSourceDataAtRow(rowNumber);
       var record = {};
-      record.row = row;
-      record.dept_id = Schedule._id;
+      record._id = Authentication.selDept;
+      record.draft = {};
+      record.draft.record = row;
 
       Schedule.delete_draft_record(record)
-      .success(successCallback)
-      .error(callback);
+      .then(successCallback);
       index++;
     }
   };
@@ -489,8 +495,8 @@ angular.module( 'sunshine.edit', [
         var config = {};
         config.columns = [];
         config.minSpareRows = 1;
-        config.contextMenuCopyPaste = true;
-      //  config.contextMenu = true;
+        config.contextMenu = ["row_above", "row_below", "remove_row"];
+        //config.contextMenu = ["row_above", "row_below", "remove_row"];
         config.colHeaders = ["_id","Division","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
 
         //schema for empty row
@@ -561,10 +567,10 @@ angular.module( 'sunshine.edit', [
         config.cells = cellFmt;
 
         //add event handlers
-        config.beforeChange = beforeSave;
-        config.afterChange = autoSave;
-        config.beforeRemoveRow = beforeRemoveRow;
-        config.afterRender = afterRender;
+      //  config.beforeChange = beforeSave;
+      //  config.afterChange = autoSave;
+      //  config.beforeRemoveRow = beforeRemoveRow;
+      //  config.afterRender = afterRender;
 
         return config;
     }
@@ -578,7 +584,7 @@ angular.module( 'sunshine.edit', [
     scope: true,
     link: function(scope, elem, attr){
 
-      var resizeCalc = function(){
+     var resizeCalc = function(){
 
 
         var childHandsontable =elem[0].children[0];
@@ -596,6 +602,7 @@ angular.module( 'sunshine.edit', [
 
       angular.element($window).bind('resize', Debounce.debounce(function() {
         // must apply since the browser resize event is not seen by the digest process
+        console.log("RESIZE");
         scope.$apply(function() {
           resizeCalc();
         });
@@ -603,11 +610,11 @@ angular.module( 'sunshine.edit', [
 
       angular.element($window).bind('load', Debounce.debounce(function() {
         // must apply since the browser resize event is not seen by the digest process
+        console.log("LOAD");
         scope.$apply(function() {
           resizeCalc();
         });
       }, 50));
-
     }
   };
 }])
