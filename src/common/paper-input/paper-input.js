@@ -26,11 +26,10 @@ angular.module( 'paper.input', [])
         nextLabel.removeClass('floating-label');
 
       });
-
-
     }
   };
 })
+
 .directive('paperInput', ['$templateCache', function ($templateCache) {
   return {
         restrict: 'E',

@@ -51,16 +51,19 @@ angular.module( 'sunshine.auth_svcs', [])
       if (Authentication.isLogged) {
 
         Authentication.isLogged = false;
-        delete Authentication.user;
+
         delete Authentication.userRole;
         delete Authentication.usersDept;
+        delete Authentication.selDept;
         delete Authentication.usersDeptName;
+        delete Authentication.user;
 
         delete $window.sessionStorage.token;
-        delete $window.sessionStorage.user;
         delete $window.sessionStorage.userRole;
         delete $window.sessionStorage.userDept;
+        delete $window.sessionStorage.selDept;
         delete $window.sessionStorage.userDeptName;
+        delete $window.sessionStorage.user;
 
         $location.path("/admin.login");
       }

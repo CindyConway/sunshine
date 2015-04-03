@@ -3,54 +3,60 @@ angular.module( 'sunshine.admin', [
         'ui.router',
         'ui.bootstrap'
     ])
-.config(function config( $stateProvider ) {
 
-    $stateProvider.state( 'admin', {
-        url: '/admin',
-        ncyBreadcrumb: {
-          skip: true
-        },
-        views: {
-            "main": {
-                //controller: 'DashBoardCtrl',
-                templateUrl: 'admin/admin.tpl.html'
-            }
-        },
-        data:{ pageTitle: 'Administration',
-        authorizedRoles: ['Administrator', 'Publisher', 'Editor'] }
-    });
-})
+.run(['$templateCache', function($templateCache) {
+ var template = [
+      '<div>',
+      //'<div id="main-admin-menu" class="btn-group right" dropdown ng-if="user">',
+      '<div id="main-admin-menu" class="btn-group right" dropdown ng-if="isLogged">',
+      '<button type="button" class="btn btn-default dropdown-toggle">',
+      '{{user}}<span class="fa fa-bars"></span>',
+      '</button>',
+      '<ul  class="dropdown-menu" role="menu">',
+      '<li><a href="#" ng-show="allowPublisher"><i class="fa fa-tachometer"></i>Dashboard</a></li>',
+      '<li><a href="#" ng-show="allowAdmin"><i class="fa fa-user"></i>All Users</a></li>',
+      '<li class="divider"></li> ',
+      '<li><a href="#" ng-click="logout()"><i class="fa fa-sign-out"></i>Logout</a></li>',
+      '</ul> ',
+      '</div>',
+      '<div class="admin-title">',
+      '<div class="county">City &amp; County of San Francisco</div>',
+      '<div class="IOR">Index <span class="small-italic">of</span> Records</div>',
+      '</div>',
+      '</div>'];
+    $templateCache.put('adminHeader',  template.join('\n'));
+}])
 
-.controller("AdminCtrl", function(Authentication, UserAuth, $scope, $timeout){
+.directive('ccAdminHeader', ['$window', 'Debounce', 'Authentication', 'UserAuth', '$templateCache',
 
-  var self = this;
-  self.user = Authentication.user;
-  self.logout =  UserAuth.logout;
-  self.allowPublisher = false;
-  self.allowAdmin = false;
+  function ($window, Debounce, Authentication, UserAuth, $templateCache) {
+  return {
+    restrict : 'A',
+    scope: true,
+    template: $templateCache.get('adminHeader'),
+    link: function(scope, elem, attr){
+        scope.user = Authentication.user;
+        scope.isLogged = Authentication.isLogged;
+        scope.allowPublisher = false;
+        scope.allowAdmin = false;
+        scope.log = UserAuth.logout;
 
+        scope.$watch(function () {
+                return Authentication.userRoles;
+          }, function (newVal, oldVal) {
+              if(newVal){
+                scope.allowAdmin = newVal.indexOf("Administrator") > -1;
+                scope.allowPublisher = newVal.indexOf("Publisher") > -1;
+              }
+          }, true);
 
-
-  $scope.$watch(function () {
-          return Authentication.user;
-    }, function (newVal, oldVal) {
-          self.user = newVal;
-    }, true);
-
-    $scope.$watch(function () {
-            return Authentication.userRoles;
-      }, function (newVal, oldVal) {
-          if(newVal){
-            self.allowAdmin = newVal.indexOf("Administrator") > -1;
-            self.allowPublisher = newVal.indexOf("Publisher") > -1;
-          }
-      }, true);
-
-      $scope.$on('$viewContentLoaded', function(event) {
-        $timeout(function() {
-          console.log("view LOADED");
-        },0);
-      });
-})
+        scope.$watch(function () {
+                return Authentication.user;
+          }, function (newVal, oldVal) {
+                scope.user = newVal;
+          }, true);
+      }
+    };
+}])
 ;
 })();

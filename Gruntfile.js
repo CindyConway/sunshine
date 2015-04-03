@@ -283,7 +283,8 @@ module.exports = function ( grunt ) {
     jshint: {
       src: [
         '<%= app_files.js %>',
-        '!src/common/**/*.js' //added this to account for ui-angular components
+        '!src/common/**/*.js', //added this to account for ui-angular components
+        '!src/vendor/**/*.js' // added this because of bootstrap 3
       ],
       test: [
         '<%= app_files.jsunit %>'

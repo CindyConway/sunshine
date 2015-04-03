@@ -1,5 +1,5 @@
-
-  <div id="edit-page" class="container-fluid" ng-controller="EditCtrl as editCtrl" ng-cloak>
+<div id="admin-header" class="outer" cc-admin-header></div>
+<div id="edit-page" class="container-fluid" ng-controller="EditCtrl as editCtrl">
 
   <div id="admin-main" class="horizontal-center">
     <div id="edit-status" ng-model="editCtrl.status">{{editCtrl.status}}</div>
@@ -92,9 +92,9 @@
         </div>
 
 
-    <div id="grid-sizing-container" cc-handsontable-container class="horizontal-center" style="position:relative; margin:0px;">
-      <div id="schedule-grid" style="overflow:scroll; padding-bottom:200px" class="handsontable"></div>
-    </div>
+    <!-- <div id="grid-sizing-container" class="horizontal-center" style="position:relative; margin:0px;"> -->
+      <div id="schedule-grid" style="overflow:scroll; padding-bottom:200px;" class="handsontable"></div>
+    <!-- </div> -->
   </div>
   <!-- Hidden field to convert character to pixels  -->
     <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>

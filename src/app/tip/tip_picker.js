@@ -6,14 +6,14 @@ angular.module( 'sunshine.tip_picker', [
 
 .config(function config( $stateProvider ) {
 
-    $stateProvider.state( 'admin.tip_picker', {
+    $stateProvider.state( 'tip_picker', {
         url: '/tip_picker/:schedule_id',
         ncyBreadcrumb: {
           label: 'Recommendations',
-          parent: 'admin.edit'
+          parent: 'edit'
         },
         views: {
-            "admin": {
+            "main": {
                 //controller: 'DashBoardCtrl',
                 templateUrl: 'tip/tip_picker.tpl.html'
             }

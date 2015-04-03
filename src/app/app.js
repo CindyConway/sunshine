@@ -17,7 +17,7 @@ angular
   'sunshine.tip_picker',
   'sunshine.auth_svcs',
   'sunshine.admin',
-  'sunshine.test',
+  //'sunshine.test',
   'ui.router',
   'angularUtils.directives.dirPagination',
   'ui.bootstrap',
@@ -50,7 +50,7 @@ angular
 
      if(!Authentication.isLogged){
        event.preventDefault();
-       $state.go('admin.login');
+       $state.go('login');
        return;
      }
 

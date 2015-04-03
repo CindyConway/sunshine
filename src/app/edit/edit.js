@@ -1,18 +1,21 @@
 (function(){
 angular.module( 'sunshine.edit', [
     'ui.router',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'dialogs.main'
   ])
 
-.config(function config( $stateProvider ) {
+.config(function config( $stateProvider, dialogsProvider ) {
 
-  $stateProvider.state( 'admin.edit', {
+  dialogsProvider.useFontAwesome();
+
+  $stateProvider.state( 'edit', {
     url: '/edit',
     ncyBreadcrumb: {
       label: 'Edit Schedule'
     },
     views: {
-      "admin": {
+      "main": {
         templateUrl: 'edit/edit.tpl.html'
       }
     },
@@ -46,8 +49,6 @@ angular.module( 'sunshine.edit', [
     self.allow=(Authentication.userRoles.indexOf("Administrator") > -1 ||
       Authentication.userRoles.indexOf("Publisher") > -1);
 
-    // console.log("setp3 - in Edit Controller");
-    // console.log(Authentication);
     Department
     .get_draft()
     .then(function (data){
@@ -66,7 +67,7 @@ angular.module( 'sunshine.edit', [
 .factory("TipGo",["$state", function($state){
   var  go = function(){
     var self = this;
-    $state.go('admin.tip_picker',{schedule_id : self.selected_dept});
+    $state.go('tip_picker',{schedule_id : self.selected_dept});
   };
   return go;
 }])
@@ -74,7 +75,7 @@ angular.module( 'sunshine.edit', [
 .factory("TipEditGo",["$state", function($state){
   var  go_picker = function(){
     var self = this;
-    $state.go('admin.tip');
+    $state.go('tip');
   };
   return go_picker;
 }])
@@ -105,6 +106,7 @@ angular.module( 'sunshine.edit', [
 
                     //setup configuration
                     var settings = HOTHelper.config(ScheduleEdit.config());
+                    console.log(settings);
                     var l = HOTHelper.getFittedWidths.call(self.schedule_grid, Schedule.records, settings.columns);
                     settings.manualColumnResize = [1, l.division, l.category, l.title, l.link, l.retention, l.on_site, l.off_site, l.total, l.remarks, 1 ];
 
@@ -117,6 +119,7 @@ angular.module( 'sunshine.edit', [
 
                     if(typeof thisHandsontable != 'undefined'){
                         thisHandsontable.destroy();
+
                     }
 
                       thisHandsontable = new Handsontable(self.schedule_grid, settings);
@@ -125,6 +128,7 @@ angular.module( 'sunshine.edit', [
                       //add event to monitor seach input element
                       var schedule_search = document.getElementById('schedule-search');
                       Handsontable.Dom.addEvent(schedule_search, 'keyup', Debounce.debounce(function(){
+
                           //var thisHandsontable = self.getHandsontable();
                           self.searchResults = thisHandsontable.search.query(this.value);
                           self.searchCount.innerHTML = self.searchResults.length;
@@ -376,30 +380,37 @@ angular.module( 'sunshine.edit', [
   return add;
 }])
 
-.factory("ScheduleDelete", ["Department", "Debounce", "HttpQueue",
-  function(Department, Debounce, HttpQueue){
+.factory("ScheduleDelete", ["Department", "Debounce", "HttpQueue", "dialogs",
+  function(Department, Debounce, HttpQueue, dialogs){
 
   var del = Debounce.debounce(function(){
+          var self = this;
+          var header = "Delete";
+          var msg = "Are you sure you want to delete the entire schedule for the " + self.draft.department + "?";
+          var dlg = dialogs.confirm( header, msg);
+          dlg.result.then(function(btn){
+                //User clicked Yes in confirmation dialog
+                Department.del(self.selected_dept)
+                  .then(function(data){
+                    //update department dropdown
+                    Department
+                    .get_draft()
+                    .then(function (data){
+                        draft_depts = data;
+                        self.dept_list = data;
+                        self.selected_dept = data[0]._id;
+                        self.populateGrid();
 
-            var self = this;
-
-            Department.del(self.selected_dept)
-              .then(function(data){
-                //update department dropdown
-                Department
-                .get_draft()
-                .then(function (data){
-                    draft_depts = data;
-                    self.dept_list = data;
-                    self.selected_dept = data[0]._id;
-                    self.populateGrid();
-
-                    if(HttpQueue.count === 0){
-                      self.status = "saved";
-                    }
-                });
-              });
-          },667, false, "saving");
+                        if(HttpQueue.count === 0){
+                          self.status = "saved";
+                        }
+                    });
+                  });
+          },function(btn){
+            //user clicked not in confirmation dialog
+            self.status = "cancelled";
+          });
+        },667, false, "saving");
 
   return del;
 }])
@@ -410,6 +421,7 @@ angular.module( 'sunshine.edit', [
   function callback(res){}
 
   var setStatus = function(str){
+    console.log("set status");
     var status = document.getElementById("edit-status");
     status.innerHTML = str;
   };
@@ -495,8 +507,8 @@ angular.module( 'sunshine.edit', [
         var config = {};
         config.columns = [];
         config.minSpareRows = 1;
+        config.fixedRowsTop = 2;
         config.contextMenu = ["row_above", "row_below", "remove_row"];
-        //config.contextMenu = ["row_above", "row_below", "remove_row"];
         config.colHeaders = ["_id","Division","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
 
         //schema for empty row
@@ -515,7 +527,7 @@ angular.module( 'sunshine.edit', [
         config.columns.push(divisionConfig);
 
 
-        // //Category Column
+         //Category Column
         var categoryConfig = {};
         categoryConfig.data = "category";
         categoryConfig.type = "autocomplete";
@@ -567,10 +579,10 @@ angular.module( 'sunshine.edit', [
         config.cells = cellFmt;
 
         //add event handlers
-      //  config.beforeChange = beforeSave;
-      //  config.afterChange = autoSave;
-      //  config.beforeRemoveRow = beforeRemoveRow;
-      //  config.afterRender = afterRender;
+        config.beforeChange = beforeSave;
+        config.afterChange = autoSave;
+        config.beforeRemoveRow = beforeRemoveRow;
+        config.afterRender = afterRender;
 
         return config;
     }
@@ -600,21 +612,20 @@ angular.module( 'sunshine.edit', [
          childHandsontable.style.height =  win_height + "px";
        };
 
-      angular.element($window).bind('resize', Debounce.debounce(function() {
-        // must apply since the browser resize event is not seen by the digest process
-        console.log("RESIZE");
-        scope.$apply(function() {
-          resizeCalc();
-        });
-      }, 50));
+      // angular.element($window).bind('resize', Debounce.debounce(function() {
+      //   // must apply since the browser resize event is not seen by the digest process
+      //   console.log("RESIZE");
+      //   scope.$apply(function() {
+      //     resizeCalc();
+      //   });
+      // }, 50));
 
-      angular.element($window).bind('load', Debounce.debounce(function() {
-        // must apply since the browser resize event is not seen by the digest process
-        console.log("LOAD");
-        scope.$apply(function() {
-          resizeCalc();
-        });
-      }, 50));
+      // angular.element($window).bind('load', Debounce.debounce(function() {
+      //   // must apply since the browser resize event is not seen by the digest process
+      //   scope.$apply(function() {
+      //     resizeCalc();
+      //   });
+      // }, 50));
     }
   };
 }])

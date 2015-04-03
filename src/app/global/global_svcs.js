@@ -345,6 +345,7 @@ angular.module( 'sunshine.global_svcs', [])
 
   this.get_draft = function(dept_id) {
     var url = apiUrl + '/v1/edit/schedule/' + dept_id;
+    //console.log(url);
     return $http
       .get(url)
       .then(function(res) {
