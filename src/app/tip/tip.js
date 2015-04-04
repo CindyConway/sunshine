@@ -6,14 +6,14 @@ angular.module( 'sunshine.tip', [
 
 .config(function config( $stateProvider ) {
 
-    $stateProvider.state( 'admin.tip', {
+    $stateProvider.state( 'tip', {
         url: '/tip',
         ncyBreadcrumb: {
           label: 'Recommendations Edit',
-          parent: 'admin.edit'
+          parent: 'edit'
         },
         views: {
-            "admin": {
+            "main": {
                 //controller: 'DashBoardCtrl',
                 templateUrl: 'tip/tip.tpl.html'
             }
@@ -327,10 +327,10 @@ angular.module( 'sunshine.tip', [
       config.currentRowClassName = "current-row";
       config.minSpareRows = 0;
       config.columnSorting = true;
-      config.fixedRowsTop = false;
+      //config.fixedRowsTop = false;
       config.autoWrapRow = true;
       config.search = true;
-      //config.contextMenu = ["row_above", "row_below", "remove_row"];
+      config.contextMenu = ["row_above", "row_below", "remove_row"];
       //config.contextMenu = true;
 
       if(typeof addOns != 'undefined'){

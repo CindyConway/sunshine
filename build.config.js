@@ -79,7 +79,9 @@ module.exports = {
       'vendor/ng-debounce/angular-debounce.js',
       'vendor/zeroclipboard/dist/ZeroClipboard.min.js',
       'vendor/zeroclipboard/dist/ZeroClipboard.min.map',
-      'vendor/zeroclipboard/dist/ZeroClipboard.swf'
+      'vendor/zeroclipboard/dist/ZeroClipboard.swf',
+      'vendor/angular-dialog-service/dist/dialogs.min.js',
+      'vendor/bootstrap/dist/bootstrap.min.js'
 
     ],
     css: [

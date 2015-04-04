@@ -6,10 +6,10 @@ angular.module( 'sunshine.login', [
 
 
 .config(function config( $stateProvider ) {
-    $stateProvider.state( 'admin.login', {
+    $stateProvider.state( 'login', {
         url: '/login',
         views: {
-            "admin": {
+            "main": {
                 controller: 'LoginCtrl',
                 templateUrl: 'login/login.tpl.html'
             }
@@ -18,10 +18,9 @@ angular.module( 'sunshine.login', [
     });
 })
 
-.controller('LoginCtrl', function ($scope, $rootScope, Login, Authentication) {
+.controller('LoginCtrl', function ($scope, $rootScope, Login ) {
   var self = this;
-    self.email = Authentication.user;
-    self.password = '';
+
     self.login = Login;
 
     self.login_status = "Please Login...";
@@ -46,7 +45,7 @@ angular.module( 'sunshine.login', [
        $window.sessionStorage.userRoles = data.roles;
        $window.sessionStorage.usersDept = data.users_dept;
 
-       $location.path("/admin/edit");
+       $location.path("edit");
 
      }).error(function(obj) {
 

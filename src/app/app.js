@@ -17,6 +17,7 @@ angular
   'sunshine.tip_picker',
   'sunshine.auth_svcs',
   'sunshine.admin',
+  //'sunshine.test',
   'ui.router',
   'angularUtils.directives.dirPagination',
   'ui.bootstrap',
@@ -49,7 +50,7 @@ angular
 
      if(!Authentication.isLogged){
        event.preventDefault();
-       $state.go('admin.login');
+       $state.go('login');
        return;
      }
 
@@ -113,7 +114,7 @@ angular
 .controller( 'AppCtrl', function AppCtrl ( $scope, $location, Login, UserAuth, $window,
   $rootScope, GlobalVariables ) {
     $scope.GlobalVariables = GlobalVariables;
-    $rootScope.API_URL = 'http://localhost:1971';
+  //  $rootScope.API_URL = 'http://localhost:1971';
     $rootScope.USERS_DEPT_ID = '54331f1023fe388f037119c6';
     GlobalVariables.user_dept = '550c50ce4e4472c01bf2c2f4'; //Board of Supervisors
 

@@ -2,6 +2,8 @@
 @import '../../vendor/bootstrap/less/bootstrap.less';
 @import '../../vendor/angular-busy/dist/angular-busy.less';
 @import '../../vendor/handsontable/dist/handsontable.full.min.less';
+@import '../../vendor/angular-dialog-service/dist/dialogs.min.less';
+
 
 @import 'variables.less';
 @import 'fonts/font-awesome-4.2.0/css/font-awesome.css';
@@ -1235,6 +1237,10 @@ strong {
   background-image: url(draft.png);
 }
 
+#edit-page{
+  background-color:#EEEEEE;
+}
+
 #search-group input{
   background-color:#EEEEEE;
   border: solid 1px #d7d7d7;
@@ -1276,15 +1282,6 @@ strong {
   padding-right:5px;
 }
 
-#admin-page.outer{
-  background-color:#EEEEEE;
-  position: absolute;
-  top: 0;
-  left:0;
-  right:0;
-  bottom: 0;
-}
-
 #admin-page .county{
   font-size: 1em;
 }
@@ -1295,19 +1292,23 @@ strong {
   min-height:300px;
 }
 
-#admin-page .IOR{
+#admin-header{
+  background-color: #EEEEEE;
+}
+
+#admin-header .IOR{
   font-size: 3em;
   font-weight:bold;
 }
 
-#admin-page .small-italic{
+#admin-header .small-italic{
   font-style: italic;
   font-weight: normal;
   font-size: 0.5em;
   display:inline-block;
 }
 
-#admin-page .admin-title{
+#admin-header .admin-title{
   margin-bottom:30px;
   padding-top: 30px;
   padding-left: 30px;
@@ -1319,7 +1320,7 @@ strong {
   z-index:2;
   height:180px;
   background-color:white;
-  width:97%;
+  width:100%;
   padding-top: 30px;
   padding-left: 30px
 }
@@ -1503,15 +1504,11 @@ strong {
 
 span.colHeader{
   font-weight:bold;
-  line-height:3em;
+  line-height:4em;
 }
-
-.handsontable td{
-  padding:7px;
-}
-
-.handsontable td{
-  padding:10px;
+.handsontable th,
+.handsontable td {
+    line-height: 3em;
 }
 
 .handsontable .handsontable table {
@@ -1522,4 +1519,4 @@ span.colHeader{
 .handsontable td.htInvalid {
   background-color:#FFF!important;
   border: solid 1px #E62E00;
-}
+ }
