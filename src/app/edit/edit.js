@@ -106,9 +106,6 @@ angular.module( 'sunshine.edit', [
 
                     //setup configuration
                     var settings = HOTHelper.config(ScheduleEdit.config());
-                    console.log(settings);
-                    var l = HOTHelper.getFittedWidths.call(self.schedule_grid, Schedule.records, settings.columns);
-                    settings.manualColumnResize = [1, l.division, l.category, l.title, l.link, l.retention, l.on_site, l.off_site, l.total, l.remarks, 1 ];
 
                     //Make grid read only if it is locked
                     if(self.draft.status == "LOCKED"){
@@ -117,11 +114,12 @@ angular.module( 'sunshine.edit', [
 
                     settings.data = Schedule.records;
 
+//console.log(typeof thisHandsontable);
                     if(typeof thisHandsontable != 'undefined'){
+                      console.log("DESTROY");
                         thisHandsontable.destroy();
-
                     }
-
+console.log(settings);
                       thisHandsontable = new Handsontable(self.schedule_grid, settings);
                       thisHandsontable.render();
 
@@ -134,7 +132,6 @@ angular.module( 'sunshine.edit', [
                           self.searchCount.innerHTML = self.searchResults.length;
                           thisHandsontable.render();
                       },667));
-
                 });
             };
 
@@ -415,8 +412,8 @@ angular.module( 'sunshine.edit', [
   return del;
 }])
 
-.factory("ScheduleEdit",["Schedule", "RetentionCategories", "Debounce", "HttpQueue", "HOTHelper", "Authentication",
-  function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper, Authentication){
+.factory("ScheduleEdit",["Schedule", "RetentionCategories", "Debounce", "HttpQueue", "HOTHelper", "Authentication", "$window",
+  function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper, Authentication, $window){
 
   function callback(res){}
 
@@ -502,14 +499,54 @@ angular.module( 'sunshine.edit', [
     this.validateCells(function(){});
   };
 
+  var colWidth = function(index){
+    var win_width = Math.max(document.documentElement.clientWidth, $window.innerWidth || 0) ;
+    win_width = win_width - 99;
+
+    var fivePct = win_width * 0.05;
+    var tenPct = win_width * 0.1;
+    var fifteenPct = win_width * 0.15;
+    var twentyPct = win_width * 0.2;
+
+    switch(index){
+      case 0 :
+        return  1;
+      case 1 :
+        return tenPct;
+      case 2 :
+        return fifteenPct;
+      case 3 :
+        return twentyPct;
+      case 4 :
+        return tenPct;
+      case 5 :
+        return tenPct;
+      case 6 :
+          return fivePct;
+      case 7 :
+        return fivePct;
+      case 8 :
+        return fivePct;
+      case 9 :
+        return twentyPct;
+      case 10 :
+        return  1;
+    }
+
+  };
+
   return{
       config : function(){
         var config = {};
         config.columns = [];
         config.minSpareRows = 1;
-        config.fixedRowsTop = 2;
-        config.contextMenu = ["row_above", "row_below", "remove_row"];
+        config.fixedRowsTop = 0;
+        config.autoColumnSize = false;
+        config.contextMenu = false;
+        //config.contextMenu = ["row_above", "row_below", "remove_row"];
         config.colHeaders = ["_id","Division","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
+        config.colWidths = colWidth;
+
 
         //schema for empty row
         // NB: A bad dataSchema causes minSpareRows to double
@@ -590,44 +627,20 @@ angular.module( 'sunshine.edit', [
 
 }])
 
-.directive('ccHandsontableContainer', ['$window', 'Debounce', function ($window, Debounce) {
+.directive('ccHandsontableContainer', ['$window', 'Debounce', 'PopulateGrid', function ($window, Debounce, PopulateGrid) {
   return {
     restrict : 'A',
     scope: true,
     link: function(scope, elem, attr){
 
-     var resizeCalc = function(){
-
-
-        var childHandsontable =elem[0].children[0];
-
-         var win_width = Math.max(document.documentElement.clientWidth, $window.innerWidth || 0) * 0.93;
-         elem.css('width', win_width + "px");
-
-         var win_height = Math.max(document.documentElement.clientHeight, $window.innerHeight || 0);
-         win_height = win_height - 150;
-         elem.css('height', win_height +"px");
-
-         childHandsontable.style.width = win_width - 15 + "px";
-         childHandsontable.style.height =  win_height + "px";
-       };
-
-      // angular.element($window).bind('resize', Debounce.debounce(function() {
-      //   // must apply since the browser resize event is not seen by the digest process
-      //   console.log("RESIZE");
-      //   scope.$apply(function() {
-      //     resizeCalc();
-      //   });
-      // }, 50));
-
-      // angular.element($window).bind('load', Debounce.debounce(function() {
-      //   // must apply since the browser resize event is not seen by the digest process
-      //   scope.$apply(function() {
-      //     resizeCalc();
-      //   });
-      // }, 50));
+        angular.element($window).bind('resize', Debounce.debounce(function() {
+          console.log('resize');
+          var hot = PopulateGrid.getHandsontable();
+          hot.render();
+        }, 633));
     }
   };
+
 }])
 ;
 })();
