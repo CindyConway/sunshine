@@ -542,8 +542,7 @@ console.log(settings);
         config.minSpareRows = 1;
         config.fixedRowsTop = 0;
         config.autoColumnSize = false;
-        config.contextMenu = false;
-        //config.contextMenu = ["row_above", "row_below", "remove_row"];
+        config.contextMenu = ["row_above", "row_below", "remove_row"];
         config.colHeaders = ["_id","Division","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
         config.colWidths = colWidth;
 
