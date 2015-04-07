@@ -19,7 +19,7 @@ angular.module( 'sunshine.edit', [
         templateUrl: 'edit/edit.tpl.html'
       }
     },
-    data:{ pageTitle: 'Administration - Edit', authorizedRoles: ['Administrator', 'Publisher', 'Editor'] }
+    data:{ pageTitle: 'Administration - Edit', authorizedRoles: ['Administrator', 'Publisher', 'Editor'], footer: false }
   });
 })
 

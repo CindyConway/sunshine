@@ -1,22 +1,24 @@
-<div id="admin-header" class="outer" cc-admin-header></div>
-  <div id="edit-page" class="container-fluid">
-  <div id="admin-main" class="horizontal-center" ng-controller="TipPickerCtrl as tipPickerCtrl">
-    <div id="tippicker-status" class="floating-status" ng-model="tipPickerCtrl.status">{{tipPickerCtrl.status}}</div>
-    <div class="white-background py0" ncy-breadcrumb></div>
-    <h1>{{tipPickerCtrl.draft_dept_name}}</h1>
-    <div id="search-group">
-      <input id="tip-search" type="search" placeholder="Search">
-    </div>
 
-    <div id="count-group">
-      <div id="result-count">0</div><span>results</span>
-      <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
-      <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a>
-    </div>
+  <div id="admin-header" class="outer" cc-admin-header></div>
 
-    <div id="tip-grid-sizing-container" cc-handsontable-container style="position:relative;">
-      <div id="tip-grid" style="overflow:scroll; visibility:hidden; padding-bottom:200px" class="handsontable"></div>
+    <div id="edit-page" class="container-fluid">
+    <div id="admin-main" class="horizontal-center" ng-controller="TipPickerCtrl as tipPickerCtrl">
+      <div id="tippicker-status" class="floating-status" ng-model="tipPickerCtrl.status">{{tipPickerCtrl.status}}</div>
+      <div class="white-background py0" ncy-breadcrumb></div>
+      <h1>{{tipPickerCtrl.draft_dept_name}}</h1>
+      <div id="search-group">
+        <input id="tip-search" type="search" placeholder="Search">
+      </div>
+
+      <div id="count-group">
+        <div id="result-count">0</div><span>results</span>
+        <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
+        <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a>
+      </div>
+
+      <div id="tip-grid-sizing-container" cc-handsontable-container style="position:relative;">
+        <div id="tip-grid" style="overflow:scroll; visibility:hidden; padding-bottom:200px" class="handsontable"></div>
+      </div>
+      <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>
     </div>
-    <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>
   </div>
-</div>

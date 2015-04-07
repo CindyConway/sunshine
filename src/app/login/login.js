@@ -14,7 +14,7 @@ angular.module( 'sunshine.login', [
                 templateUrl: 'login/login.tpl.html'
             }
         },
-        data:{ pageTitle: 'Login', authorizedRoles: ['Everyone'] }
+        data:{ pageTitle: 'Login', authorizedRoles: ['Everyone'], footer: false }
     });
 })
 

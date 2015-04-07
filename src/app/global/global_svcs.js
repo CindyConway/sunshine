@@ -8,10 +8,10 @@ angular.module( 'sunshine.global_svcs', [])
 ==================================*/
 .value('GlobalVariables',
   {
-    "showFooter" : true,
-    "api_url": 'http://localhost:1971',
-    "user_dept": null,
-    "selected_dept": null
+    //"showFooter" : true,
+    "api_url": 'http://localhost:1971' //,
+    //"user_dept": null,
+    //"selected_dept": null
   }
 )
 

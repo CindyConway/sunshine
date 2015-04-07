@@ -12,7 +12,7 @@ angular.module( 'sunshine.schedule', ['ui.router'])
                 templateUrl: 'schedule/schedule.tpl.html'
             }
         },
-        data:{ pageTitle: 'Schedule', authorizedRoles: ['printer'] }
+        data:{ pageTitle: 'Schedule', authorizedRoles: ['printer'], footer:false }
     });
 })
 
@@ -20,8 +20,6 @@ angular.module( 'sunshine.schedule', ['ui.router'])
   //This areas of the application is used to build pdfs
     var self = this;
     self._id = $stateParams.schedule_id;
-
-    GlobalVariables.showFooter = false;
 
     Schedule.get_draft(self._id).then(function (data){
         self.draft =  data.draft;

@@ -18,7 +18,10 @@ angular.module( 'sunshine.tip_picker', [
                 templateUrl: 'tip/tip_picker.tpl.html'
             }
         },
-        data:{ pageTitle: 'Administration - Dashboard', authorizedRoles: ['Administrator', 'Publisher', 'Editor'] }
+        data:{ pageTitle: 'Administration - Dashboard',
+        authorizedRoles: ['Administrator', 'Publisher', 'Editor'],
+        footer:false
+        }
     });
 })
 

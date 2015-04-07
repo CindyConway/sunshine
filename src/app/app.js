@@ -120,14 +120,12 @@ angular
 
 .controller( 'AppCtrl', function AppCtrl ( $scope, $location, Login, UserAuth, $window,
   $rootScope, GlobalVariables ) {
-    $scope.GlobalVariables = GlobalVariables;
-  //  $rootScope.API_URL = 'http://localhost:1971';
-  //  $rootScope.USERS_DEPT_ID = '54331f1023fe388f037119c6';
-  //  GlobalVariables.user_dept = '550c50ce4e4472c01bf2c2f4'; //Board of Supervisors
+    $scope.show_footer = GlobalVariables.showFooter;
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
         if ( angular.isDefined( toState.data.pageTitle ) ) {
           $scope.pageTitle = toState.data.pageTitle ;
+          $scope.show_footer = toState.data.footer;
         }
     });
 });

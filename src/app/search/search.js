@@ -14,7 +14,8 @@ angular.module('sunshine.search', ['ui.router'])
     },
     data: {
       pageTitle: 'Search Results',
-      authorizedRoles: ['anonymous']
+      authorizedRoles: ['Everyone'],
+      footer: true
     }
   });
 })
@@ -26,13 +27,13 @@ angular.module('sunshine.search', ['ui.router'])
   self.aggs = {};
   self.count = null;
   self.suggestion = '';
+  self.terms = Search.get_terms().terms;
 
   self.dept_sel = [];
   self.category_sel = [];
   self.retention_sel = [];
 
   Search.clear_filters();
-  GlobalVariables.showFooter = true;
 
   //WATCH DEPARTMENT
   $scope.$watch(
@@ -95,6 +96,7 @@ angular.module('sunshine.search', ['ui.router'])
         self.aggs = data.aggregations;
         self.suggest = Search.suggest_string(data.suggest);
         self.count = data.hits.total;
+        console.log(self.aggs);
       })
       .error(function(err, status) {});
   };
