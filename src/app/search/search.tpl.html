@@ -33,7 +33,7 @@
     </div>
       <form name="mainSearch" ng-submit="searchCtrl.search(searchCtrl.terms)" novalidate>
         <div class="search-box-sml mb1 mt3 px3">
-          <input required name="search" autofocus ng-model="searchCtrl.terms" type="text" size="50"
+          <input name="search" autofocus ng-model="searchCtrl.terms" type="text" size="50"
               maxlength="75" placeholder=" search ..."autocomplete="off"/>
           <button class="button yellow-gold-fade" ng-disabled="Search.$invalid">
             <i class="fa fa-search"></i></button>

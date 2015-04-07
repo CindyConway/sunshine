@@ -13,7 +13,7 @@ angular.module( 'sunshine.agency', ['ui.router'])
         templateUrl: 'agency/agency.tpl.html'
       }
     },
-    data:{ pageTitle: 'Schedule Table', authorizedRoles: ['Everyone'] }
+    data:{ pageTitle: 'Schedule Table', authorizedRoles: ['Everyone'], footer:true }
   });
 
   $stateProvider.state( 'agency_list', {
@@ -27,7 +27,7 @@ angular.module( 'sunshine.agency', ['ui.router'])
         templateUrl: 'agency/agency_list.tpl.html'
       }
     },
-    data:{ pageTitle: 'Schedule List', authorizedRoles: ['Everyone'] }
+    data:{ pageTitle: 'Schedule List', authorizedRoles: ['Everyone'], footer:true }
   });
 })
 
@@ -46,9 +46,6 @@ angular.module( 'sunshine.agency', ['ui.router'])
   self.on_site_fltr = '';
   self.off_site_fltr = '';
   self.total_fltr = '';
-
-
-  GlobalVariables.showFooter = true;
 
   self.agency_promise = Schedule.get_adopted(self.schedule_id)
   .then(function (data){

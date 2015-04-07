@@ -17,7 +17,7 @@ angular.module( 'sunshine.home', ['ui.router'])
                 templateUrl: 'home/home.tpl.html'
             }
         },
-        data:{ pageTitle: 'Home', authorizedRoles: ['Everyone'] }
+        data:{ pageTitle: 'Home', authorizedRoles: ['Everyone'], footer: true }
     });
 })
 

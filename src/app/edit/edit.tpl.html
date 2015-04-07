@@ -1,95 +1,101 @@
 <div id="admin-header" class="outer" cc-admin-header></div>
-<div ng-controller="EditCtrl as editCtrl">
-  <div id="admin-main" class="horizontal-center" >
-    <div id="edit-status" ng-model="editCtrl.status">{{editCtrl.status}}</div>
-    <div class="white-background py0" ncy-breadcrumb></div>
-      <div>
-        <span>{{editCtrl.errorMsg}}</span>
-        <select name="draftSelect"
-                class="navBarSelect"
-                ng-model="editCtrl.selected_dept"
-                ng-options="depts._id as depts.draft.department for depts in editCtrl.dept_list"
-                ng-change="editCtrl.populateGrid()">
-        </select>
-      </div>
-      <div id="schedule-status">
-        <div>schedule status:</div><span>{{editCtrl.draft.status}}</span>
-      </div>
+  <div class="blah-background" cc-fill-height>
+    <div ng-controller="EditCtrl as editCtrl">
+      <div id="admin-main" class="horizontal-center" >
+        <div id="edit-status" ng-model="editCtrl.status">{{editCtrl.status}}</div>
+        <div class="white-background py0" ncy-breadcrumb></div>
+          <div>
+            <span>{{editCtrl.errorMsg}}</span>
+            <select name="draftSelect"
+                    class="navBarSelect"
+                    ng-model="editCtrl.selected_dept"
+                    ng-options="depts._id as depts.draft.department for depts in editCtrl.dept_list"
+                    ng-change="editCtrl.populateGrid()">
+            </select>
+          </div>
+          <div id="schedule-status">
+            <div>schedule status:</div><span>{{editCtrl.draft.status}}</span>
+          </div>
 
-      <div id="search-group">
-        <input id="schedule-search" type="search" placeholder="Search">
+          <div id="search-group">
+            <input id="schedule-search" type="search" placeholder="Search">
 
-      </div>
-      <div id="count-group">
-        <div id="result-count">0</div><span>results</span>
-        <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
-        <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a>
-      </div>
+          </div>
+          <div id="count-group">
+            <div id="result-count">0</div><span>results</span>
+            <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
+            <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a>
+          </div>
 
-      <div id="action-group">
-        <button ng-click="editCtrl.lock()" ng-disabled="editCtrl.draft.status != 'DIRTY'" >Lock</button>
-        <button ng-click="editCtrl.tips()" ng-disabled="editCtrl.draft.status === 'LOCKED'">Recommendations</button>
-        <button ng-hide="!editCtrl.allow" ng-click="editCtrl.tip_edit()"
-          ng-disabled="editCtrl.draft.status === 'LOCKED'">Edit Recommendations</button>
-        <a href="{{editCtrl.pdf_link}}" target="_self" download>Generate PDF</a>
-        <button ng-hide="!editCtrl.allow" ng-click="editCtrl.publish()"
-            ng-disabled="editCtrl.draft.status != 'LOCKED'">Publish</button>
-        <button ng-hide="!editCtrl.allow" ng-click="editCtrl.unlock()" ng-disabled="editCtrl.draft.status != 'LOCKED'">Unlock</button>
-        <button ng-hide="!editCtrl.allow" ng-click="editCtrl.del()">Delete</button>
-        <button ng-hide="!editCtrl.allow" ng-click="editCtrl.add()">New</button>
+          <div id="action-group">
+            <button ng-click="editCtrl.lock()" ng-disabled="editCtrl.draft.status != 'DIRTY'" >Lock</button>
+            <button ng-click="editCtrl.tips()" ng-disabled="editCtrl.draft.status === 'LOCKED'">Recommendations</button>
+            <button ng-hide="!editCtrl.allow" ng-click="editCtrl.tip_edit()"
+              ng-disabled="editCtrl.draft.status === 'LOCKED'">Edit Recommendations</button>
+            <button ng-hide="!editCtrl.allow" ng-click="editCtrl.pdf()">Generate PDF</button>
+            <a href="{{editCtrl.pdf_link}}" target="_self" download>Generate PDF</a>
+            <button ng-hide="!editCtrl.allow" ng-click="editCtrl.publish()"
+                ng-disabled="editCtrl.draft.status != 'LOCKED'">Publish</button>
+            <button ng-hide="!editCtrl.allow" ng-click="editCtrl.unlock()" ng-disabled="editCtrl.draft.status != 'LOCKED'">Unlock</button>
+            <button ng-hide="!editCtrl.allow" ng-click="editCtrl.del()">Delete</button>
+            <button ng-hide="!editCtrl.allow" ng-click="editCtrl.add()">New</button>
+          </div>
       </div>
-    </div>
+      <div id="grid-background">
+        <div id="department-info" class="clearfix horizontal-center">
+        <form name="editCtrl.editDepartment" ng-submit="editCtrl.runValidation()" >
+          <div class="dept-left">
+              <input
+                id="department"
+                class="dept-input"
+                name="department"
+                ng-model="editCtrl.draft.department"
+                ng-change="editCtrl.save()"
+                ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                placeholder="Organization Name (required)"
+                required="">
+              <input
+                id="website"
+                name="website"
+                class="dept-input"
+                ng-model="editCtrl.draft.website"
+                ng-change="editCtrl.save()"
+                ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                placeholder="Organization Website (required)"
+                required="">
+          </div>
+          <div class="dept-right">
+              <label>Department Contact:</label>
+              <input
+                name="contact"
+                class="dept-input"
+                ng-model="editCtrl.draft.contact"
+                ng-change="editCtrl.save()"
+                ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                placeholder="Contact Person (required)"
+                required="">
+              <input
+                name="phone"
+                class="dept-input"
+                ng-model="editCtrl.draft.phone"
+                ng-change="editCtrl.save()"
+                ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                placeholder="Phone number (required)"
+                required="">
+              <input
+                name="email"
+                class="dept-input"
+                ng-model="editCtrl.draft.email"
+                ng-change="editCtrl.save()"
+                ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                placeholder="Email">
+            </div>
+          </form>
+        </div>
 
-  <div id="department-info" class="clearfix">
-  <form name="editCtrl.editDepartment" ng-submit="editCtrl.runValidation()" >
-    <div class="dept-left">
-        <input
-          id="department"
-          class="dept-input"
-          name="department"
-          ng-model="editCtrl.draft.department"
-          ng-change="editCtrl.save()"
-          ng-disabled="editCtrl.draft.status == 'LOCKED'"
-          placeholder="Organization Name (required)"
-          required="">
-        <input
-          id="website"
-          name="website"
-          class="dept-input"
-          ng-model="editCtrl.draft.website"
-          ng-change="editCtrl.save()"
-          ng-disabled="editCtrl.draft.status == 'LOCKED'"
-          placeholder="Organization Website (required)"
-          required="">
-    </div>
-    <div class="dept-right">
-        <label>Department Contact:</label>
-        <input
-          name="contact"
-          class="dept-input"
-          ng-model="editCtrl.draft.contact"
-          ng-change="editCtrl.save()"
-          ng-disabled="editCtrl.draft.status == 'LOCKED'"
-          placeholder="Contact Person (required)"
-          required="">
-        <input
-          name="phone"
-          class="dept-input"
-          ng-model="editCtrl.draft.phone"
-          ng-change="editCtrl.save()"
-          ng-disabled="editCtrl.draft.status == 'LOCKED'"
-          placeholder="Phone number (required)"
-          required="">
-        <input
-          name="email"
-          class="dept-input"
-          ng-model="editCtrl.draft.email"
-          ng-change="editCtrl.save()"
-          ng-disabled="editCtrl.draft.status == 'LOCKED'"
-          placeholder="Email">
-      </div>
-    </form>
+      <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>
+
+      <div id="schedule-grid" class="handsontable horizontal-center"></div>
+    <div>
   </div>
-</div>
-<span id="ruler" style="visibility:hidden; white-space: nowrap"></span>
-<div id="schedule-grid" class="handsontable" cc-handsontable-container></div>
+<div>

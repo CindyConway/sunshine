@@ -13,12 +13,15 @@ angular.module( 'sunshine.tip_picker', [
           parent: 'edit'
         },
         views: {
-            "main": {
+            "admin": {
                 //controller: 'DashBoardCtrl',
                 templateUrl: 'tip/tip_picker.tpl.html'
             }
         },
-        data:{ pageTitle: 'Administration - Dashboard', authorizedRoles: ['Administrator', 'Publisher', 'Editor'] }
+        data:{ pageTitle: 'Administration - Dashboard',
+        authorizedRoles: ['Administrator', 'Publisher', 'Editor'],
+        footer:false
+        }
     });
 })
 

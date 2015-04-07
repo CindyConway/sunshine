@@ -8,10 +8,10 @@ angular.module( 'sunshine.global_svcs', [])
 ==================================*/
 .value('GlobalVariables',
   {
-    "showFooter" : true,
-    "api_url": 'http://localhost:1971',
-    "user_dept": null,
-    "selected_dept": null
+    //"showFooter" : true,
+    "api_url": 'http://localhost:1971' //,
+    //"user_dept": null,
+    //"selected_dept": null
   }
 )
 
@@ -335,6 +335,23 @@ angular.module( 'sunshine.global_svcs', [])
   self.records = null;
 
   /*****************************************
+  METHOD: get_pdf
+
+  This method downloads the pdf of a schedule
+  for a department
+  ******************************************/
+
+  this.get_pdf = function(dept_id){
+    var url = apiUrl + '/v1/pdf/' + dept_id;
+    return $http
+      .get(url)
+      .then(function(err, res) {
+        return res;
+      });
+  };
+
+
+  /*****************************************
   METHOD: get_draft
 
   This method returns all the DRAFT data
@@ -344,7 +361,7 @@ angular.module( 'sunshine.global_svcs', [])
   ******************************************/
 
   this.get_draft = function(dept_id) {
-    var url = apiUrl + '/v1/edit/schedule/' + dept_id;
+    var url = apiUrl + '/v1/temp/schedule/' + dept_id;
     //console.log(url);
     return $http
       .get(url)

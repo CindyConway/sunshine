@@ -36,7 +36,14 @@ angular
 
 
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+
     Authentication.check();
+
+    //This is the damned pdf printing. Still need to figue out security
+    if(toState.data.authorizedRoles.indexOf("printer") > -1){
+        return;
+    }
+
 
     //This is a public page, allow routing
     if(toState.data.authorizedRoles.indexOf("Everyone") > -1){
@@ -103,36 +110,24 @@ angular
   $httpProvider.defaults.transformRequest.push(spinnerFunction);
 })
 
-.config( function ( $provide, $stateProvider, $urlRouterProvider){
-  $urlRouterProvider.otherwise( '/home' );
-}, function(USER_ROLESProvider){} )
-//Using the main application's run method to execute any code after services have been started
-.run( function run ($rootScope) {
-
-})
+// .config( function ( $provide, $stateProvider, $urlRouterProvider){
+//   $urlRouterProvider.otherwise( '/home' );
+// }, function(USER_ROLESProvider){} )
+// //Using the main application's run method to execute any code after services have been started
+// .run( function run ($rootScope) {
+//
+// })
 
 .controller( 'AppCtrl', function AppCtrl ( $scope, $location, Login, UserAuth, $window,
   $rootScope, GlobalVariables ) {
-    $scope.GlobalVariables = GlobalVariables;
-  //  $rootScope.API_URL = 'http://localhost:1971';
-    $rootScope.USERS_DEPT_ID = '54331f1023fe388f037119c6';
-    GlobalVariables.user_dept = '550c50ce4e4472c01bf2c2f4'; //Board of Supervisors
+    $scope.show_footer = GlobalVariables.showFooter;
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
         if ( angular.isDefined( toState.data.pageTitle ) ) {
           $scope.pageTitle = toState.data.pageTitle ;
+          $scope.show_footer = toState.data.footer;
         }
     });
-
-    /*** START TEST CODE *****/
-    $scope.login = Login;
-    $scope.logout = function () {
-      UserAuth.logout();
-    };
-
-    $scope.testuser = $window.sessionStorage.user;
-    /**** END TEST CODE *****/
-
 });
 
 // ============= JS added globally ===================]

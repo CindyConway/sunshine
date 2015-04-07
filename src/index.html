@@ -13,19 +13,10 @@
 </head>
 <body>
 
-  <!-- START TEST CODE ---->
-  <!-- <button ng-click="logout()">Logout</button>
-  <button ng-click="login('j.sisko@sfgov.org', 'JakeSisko')">Editor</button>
-  <button ng-click="login('ro.laren@sfgov.org', 'RoLaren')">Publisher</button>
-  <button ng-click="login('chris.pike@sfgov.org', 'ChristopherPike')">Admin</button>
-  {{testuser}} -->
-  <!-- END TEST CODE ---->
-
-  <!- ------------------Main UI View ------------------------ -->
-  <!- removed overflow-hidden class from ui-view=main because it messes with native scrolling in handsontable -->
   <div class="container-fluid pad0 marg0"  ui-view="main"></div>
+  <div class="container-fluid pad0 marg0"  ui-view="admin"></div>
 
-  <footer class="blue-background py4" ng-if="GlobalVariable.showfooter">
+  <footer class="blue-background py4" ng-if="show_footer">
     <div class="clearfix footer-content">
 
         <div class="footer-address">

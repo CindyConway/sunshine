@@ -9,12 +9,12 @@ angular.module( 'sunshine.login', [
     $stateProvider.state( 'login', {
         url: '/login',
         views: {
-            "main": {
+            "admin": {
                 controller: 'LoginCtrl',
                 templateUrl: 'login/login.tpl.html'
             }
         },
-        data:{ pageTitle: 'Login', authorizedRoles: ['Everyone'] }
+        data:{ pageTitle: 'Login', authorizedRoles: ['Everyone'], footer: false }
     });
 })
 

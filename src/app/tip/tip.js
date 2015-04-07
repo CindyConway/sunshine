@@ -13,13 +13,14 @@ angular.module( 'sunshine.tip', [
           parent: 'edit'
         },
         views: {
-            "main": {
+            "admin": {
                 //controller: 'DashBoardCtrl',
                 templateUrl: 'tip/tip.tpl.html'
             }
         },
         data:{ pageTitle: 'Administration - Dashboard',
-        authorizedRoles: ['Administrator', 'Publisher'] }
+        authorizedRoles: ['Administrator', 'Publisher'],
+        footer:false}
     });
 })
 
@@ -211,13 +212,11 @@ angular.module( 'sunshine.tip', [
         // On-site Column
         var onSiteConfig = {};
         onSiteConfig.data = "on_site";
-        onSiteConfig.validator = HOTHelper.isRequired;
         config.columns.push(onSiteConfig);
 
         // Off-site Column
         var offSiteConfig = {};
         offSiteConfig.data = "off_site";
-        offSiteConfig.validator = HOTHelper.isRequired;
         config.columns.push(offSiteConfig);
         // Total Column
         config.columns.push({"data":"total"});

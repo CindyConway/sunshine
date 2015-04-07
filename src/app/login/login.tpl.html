@@ -1,19 +1,21 @@
 <div id="admin-header" class="outer" cc-admin-header></div>
 
-<div id="admin-main" class="horizontal-center login" ng-controller="LoginCtrl as loginCtrl">
+<div class="blah-background" cc-fill-height>
+  <div id="admin-main" class="horizontal-center login" ng-controller="LoginCtrl as loginCtrl">
 
-  <div class="py2">{{loginCtrl.login_status}}</div>
+    <div class="py2">{{loginCtrl.login_status}}</div>
 
-  <form name="login" ng-submit="loginCtrl.login(loginCtrl.email,loginCtrl.password)">
-    <div class="form-group">
-      <input type="text" id="username" class="three-quarter-width" placeholder="email" ng-model="loginCtrl.email">
-    </div>
+    <form name="login" ng-submit="loginCtrl.login(loginCtrl.email,loginCtrl.password)">
+      <div class="form-group">
+        <input type="text" id="username" class="three-quarter-width" placeholder="email" ng-model="loginCtrl.email">
+      </div>
 
-    <div class="form-group">
-      <input type="password" class="three-quarter-width" id="password" placeholder="Password" ng-model="loginCtrl.password">
-    </div>
+      <div class="form-group">
+        <input type="password" class="three-quarter-width" id="password" placeholder="Password" ng-model="loginCtrl.password">
+      </div>
 
-    <input id="submit" type="submit" class="btn blue-fade btn-default white-text p1" value="Login" />
-  </form>
+      <input id="submit" type="submit" class="btn blue-fade btn-default white-text p1" value="Login" />
+    </form>
 
+  </div>
 </div>
