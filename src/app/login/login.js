@@ -9,7 +9,7 @@ angular.module( 'sunshine.login', [
     $stateProvider.state( 'login', {
         url: '/login',
         views: {
-            "main": {
+            "admin": {
                 controller: 'LoginCtrl',
                 templateUrl: 'login/login.tpl.html'
             }

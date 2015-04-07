@@ -13,7 +13,7 @@ angular.module( 'sunshine.tip', [
           parent: 'edit'
         },
         views: {
-            "main": {
+            "admin": {
                 //controller: 'DashBoardCtrl',
                 templateUrl: 'tip/tip.tpl.html'
             }

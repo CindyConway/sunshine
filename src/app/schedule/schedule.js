@@ -12,7 +12,7 @@ angular.module( 'sunshine.schedule', ['ui.router'])
                 templateUrl: 'schedule/schedule.tpl.html'
             }
         },
-        data:{ pageTitle: 'Schedule', authorizedRoles: ['Everyone'] }
+        data:{ pageTitle: 'Schedule', authorizedRoles: ['printer'] }
     });
 })
 

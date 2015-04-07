@@ -65,7 +65,7 @@ angular.module( 'sunshine.auth_svcs', [])
         delete $window.sessionStorage.userDeptName;
         delete $window.sessionStorage.user;
 
-        $location.path("/admin.login");
+        $location.path("/home");
       }
 
     }
@@ -75,7 +75,6 @@ angular.module( 'sunshine.auth_svcs', [])
 .factory('TokenInterceptor', function($q, $window) {
   return {
     request: function(config) {
-    //  console.log(config);
       config.headers = config.headers || {};
       if ($window.sessionStorage.token) {
         config.headers['X-Access-Token'] = $window.sessionStorage.token;

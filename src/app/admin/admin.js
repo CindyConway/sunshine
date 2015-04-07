@@ -39,7 +39,7 @@ angular.module( 'sunshine.admin', [
         scope.isLogged = Authentication.isLogged;
         scope.allowPublisher = false;
         scope.allowAdmin = false;
-        scope.log = UserAuth.logout;
+        scope.logout = UserAuth.logout;
 
         scope.$watch(function () {
                 return Authentication.userRoles;
@@ -57,6 +57,28 @@ angular.module( 'sunshine.admin', [
           }, true);
       }
     };
+}])
+.directive("ccFillHeight", ["$window", "Debounce", function($window, Debounce){
+  return{
+    restrict: 'A',
+    scope:true,
+    link: function(scope, elem, attr){
+
+          function setHeight (){
+            var header_height = angular.element(document.querySelector('#admin-header'))[0].offsetHeight;
+            elem.css("height", $window.innerHeight - header_height + "px");
+          }
+
+          setHeight();
+
+         angular.element($window).bind('resize', Debounce.debounce(function() {
+           // must apply since the browser resize event is not seen by the digest process
+           scope.$apply(function() {
+             setHeight();
+           });
+         }, 50));
+    }
+  };
 }])
 ;
 })();

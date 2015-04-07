@@ -15,7 +15,7 @@ angular.module( 'sunshine.edit', [
       label: 'Edit Schedule'
     },
     views: {
-      "main": {
+      "admin": {
         templateUrl: 'edit/edit.tpl.html'
       }
     },
@@ -25,7 +25,7 @@ angular.module( 'sunshine.edit', [
 
 .controller('EditCtrl', function EditCtrl($scope, GlobalVariables, ScheduleDelete, PopulateGrid, Department,
     ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, SearchNext, SearchPrevious,
-    Authentication, TipGo, TipEditGo) {
+    Authentication, TipGo, TipEditGo) { //SchedulePDF
 
     GlobalVariables.showFooter = false;
     var self = this;
@@ -33,6 +33,7 @@ angular.module( 'sunshine.edit', [
     self.searchCount = document.getElementById('result-count');
     self.searchResults = [];
     self.selSearchResult = -1;
+  //  self.pdf = SchedulePDF;
     self.del = ScheduleDelete;
     self.save = ScheduleSave;
     self.add = ScheduleAdd;
@@ -102,7 +103,7 @@ angular.module( 'sunshine.edit', [
                     // put the data on the controller's scope
                     self.draft = Schedule.draft;
                     self._id = Schedule._id;
-                    self.pdf_link = GlobalVariables.api_url + "/pdf/" + self._id;
+                    self.pdf_link = GlobalVariables.api_url + "/v1/pdf/" + self._id;
 
                     //setup configuration
                     var settings = HOTHelper.config(ScheduleEdit.config());
@@ -114,24 +115,22 @@ angular.module( 'sunshine.edit', [
 
                     settings.data = Schedule.records;
 
-//console.log(typeof thisHandsontable);
+
                     if(typeof thisHandsontable != 'undefined'){
-                      console.log("DESTROY");
                         thisHandsontable.destroy();
                     }
-console.log(settings);
-                      thisHandsontable = new Handsontable(self.schedule_grid, settings);
-                      thisHandsontable.render();
 
-                      //add event to monitor seach input element
-                      var schedule_search = document.getElementById('schedule-search');
-                      Handsontable.Dom.addEvent(schedule_search, 'keyup', Debounce.debounce(function(){
+                    thisHandsontable = new Handsontable(self.schedule_grid, settings);
+                    thisHandsontable.render();
 
-                          //var thisHandsontable = self.getHandsontable();
-                          self.searchResults = thisHandsontable.search.query(this.value);
-                          self.searchCount.innerHTML = self.searchResults.length;
-                          thisHandsontable.render();
-                      },667));
+                    //add event to monitor seach input element
+                    var schedule_search = document.getElementById('schedule-search');
+                    Handsontable.Dom.addEvent(schedule_search, 'keyup', Debounce.debounce(function(){
+
+                        self.searchResults = thisHandsontable.search.query(this.value);
+                        self.searchCount.innerHTML = self.searchResults.length;
+                        thisHandsontable.render();
+                    },667));
                 });
             };
 
@@ -377,6 +376,25 @@ console.log(settings);
   return add;
 }])
 
+
+// .factory("SchedulePDF", ["Schedule", "Debounce", function(Schedule, Debounce){
+//
+//   var pdf = Debounce.debounce(function(){
+//     var content = 'file content';
+// var blob = new Blob([ content ], { type : 'text/plain' });
+// $scope.url = (window.URL || window.webkitURL).createObjectURL( blob );
+//
+//
+//             var self = this;
+//             Schedule.get_pdf(self.selected_dept)
+//             .then(function(data){
+//             });
+//
+//   },667, false, "saving");
+//
+//   return pdf;
+// }])
+
 .factory("ScheduleDelete", ["Department", "Debounce", "HttpQueue", "dialogs",
   function(Department, Debounce, HttpQueue, dialogs){
 
@@ -500,9 +518,8 @@ console.log(settings);
   };
 
   var colWidth = function(index){
-    var win_width = Math.max(document.documentElement.clientWidth, $window.innerWidth || 0) ;
-    win_width = win_width - 99;
-
+    var win_width = Math.max(document.documentElement.clientWidth, $window.innerWidth || 0);
+    win_width = ((win_width * 0.97) * 0.97) - 71;
     var fivePct = win_width * 0.05;
     var tenPct = win_width * 0.1;
     var fifteenPct = win_width * 0.15;
@@ -632,11 +649,11 @@ console.log(settings);
     scope: true,
     link: function(scope, elem, attr){
 
-        angular.element($window).bind('resize', Debounce.debounce(function() {
+        angular.element($window).bind('resize', function() {
           console.log('resize');
           var hot = PopulateGrid.getHandsontable();
           hot.render();
-        }, 633));
+        });
     }
   };
 
