@@ -409,6 +409,25 @@ angular.module( 'sunshine.global_svcs', [])
       });
   };
 
+  /*****************************************
+  METHOD: add_tip
+
+  Adds a record class from the list of
+  recommendations (aka tips) to
+  a schedule
+  ******************************************/
+  this.add_tip = function(record) {
+    var url = apiUrl + '/v1/edit/add_template/';
+    return $http.put(url, record)
+      .success(function(data) {
+      //  $log.log(data);
+        // this.get.push(data);
+      })
+      .error(function(data) {
+        //$log.log(data);
+      });
+  };
+
 
   /*****************************************
   METHOD: delete_draft_record

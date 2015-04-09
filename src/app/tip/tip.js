@@ -101,6 +101,14 @@ angular.module( 'sunshine.tip', [
 .factory('TipEdit', ["Template", "RetentionCategories", "HOTHelper",
   function (Template, RetentionCategories, HOTHelper) {
 
+    // Division Autocomplete Function
+    var categoryAutoComplete = function(query, process){
+       var vals = this.instance.getDataAtCol(1);
+       var uniqueVals = vals.unique().sort().nulless();
+
+       process(uniqueVals);
+     };
+
     //Before Save
     var beforeSave = function(change, source){
       var tip_status = document.getElementById("tip-status");
@@ -173,6 +181,7 @@ angular.module( 'sunshine.tip', [
         var config = {};
         config.columns = [];
         config.minSpareRows = 1;
+        //config.contextMenu = false;
         config.contextMenu = ["row_above", "row_below", "remove_row"];
         config.colHeaders = ["_id","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "Visibility"];
 
@@ -186,7 +195,7 @@ angular.module( 'sunshine.tip', [
         var categoryConfig = {};
         categoryConfig.data = "category";
         categoryConfig.type = "autocomplete";
-        categoryConfig.source = HOTHelper.categoryAutoComplete;
+        categoryConfig.source = categoryAutoComplete;
         categoryConfig.strict = false;
         categoryConfig.validator = HOTHelper.isRequired;
         config.columns.push(categoryConfig);
@@ -248,19 +257,6 @@ angular.module( 'sunshine.tip', [
   // throughout this app.
    return{
 
-      // Division Autocomplete Function
-      divisionAutoComplete : function(query, process){
-          var vals = this.instance.getDataAtCol(1);
-          var uniqueVals = vals.unique().sort().nulless();
-          process(uniqueVals);
-       },
-      // Division Autocomplete Function
-      categoryAutoComplete : function(query, process){
-         var vals = this.instance.getDataAtCol(2);
-         var uniqueVals = vals.unique().sort().nulless();
-
-         process(uniqueVals);
-       },
       retentionValidator : function(value, callback){
        //Had to write custom function for strict autocomplete
        //because the built in validation does not skip the spare row

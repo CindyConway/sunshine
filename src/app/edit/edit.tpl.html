@@ -5,7 +5,6 @@
         <div id="edit-status" ng-model="editCtrl.status">{{editCtrl.status}}</div>
         <div class="white-background py0" ncy-breadcrumb></div>
           <div>
-            <span>{{editCtrl.errorMsg}}</span>
             <select name="draftSelect"
                     class="navBarSelect"
                     ng-model="editCtrl.selected_dept"
@@ -28,11 +27,10 @@
           </div>
 
           <div id="action-group">
+            <span class="horizontal-center">{{editCtrl.errorMsg}}</span>
             <button ng-click="editCtrl.lock()" ng-disabled="editCtrl.draft.status != 'DIRTY'" >Lock</button>
             <button ng-click="editCtrl.tips()" ng-disabled="editCtrl.draft.status === 'LOCKED'">Recommendations</button>
-            <button ng-hide="!editCtrl.allow" ng-click="editCtrl.tip_edit()"
-              ng-disabled="editCtrl.draft.status === 'LOCKED'">Edit Recommendations</button>
-            <button ng-hide="!editCtrl.allow" ng-click="editCtrl.pdf()">Generate PDF</button>
+            <button ng-hide="!editCtrl.allow" ng-click="editCtrl.tip_edit()">Edit Recommendations</button>
             <a href="{{editCtrl.pdf_link}}" target="_self" download>Generate PDF</a>
             <button ng-hide="!editCtrl.allow" ng-click="editCtrl.publish()"
                 ng-disabled="editCtrl.draft.status != 'LOCKED'">Publish</button>
@@ -63,6 +61,16 @@
                 ng-disabled="editCtrl.draft.status == 'LOCKED'"
                 placeholder="Organization Website (required)"
                 required="">
+                <label>Ratified on:</label>
+                <input
+                  id="ratified_on"
+                  name="ratified_on"
+                  class="dept-input inline-block"
+                  ng-model="editCtrl.draft.ratified_on"
+                  ng-change="editCtrl.save()"
+                  ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                  placeholder="Date schedule was ratified"
+                  required="">
           </div>
           <div class="dept-right">
               <label>Department Contact:</label>

@@ -21,7 +21,7 @@ angular.module( 'sunshine.admin', [
       '</div>',
       '<div class="admin-title">',
       '<div class="county">City &amp; County of San Francisco</div>',
-      '<div class="IOR">Index <span class="small-italic">of</span> Records</div>',
+      '<div class="IOR">Index <span class="small-italic">to</span> Records</div>',
       '</div>',
       '</div>'];
     $templateCache.put('adminHeader',  template.join('\n'));
