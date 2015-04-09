@@ -133,7 +133,7 @@ angular.module( 'sunshine.tip_picker', [
       dept.draft.record = row;
 
       if(!!row.selected ){
-        Schedule.save_draft_record(dept)
+        Schedule.add_tip(dept)
         .then(function(res){
           self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
           setStatus("saved");

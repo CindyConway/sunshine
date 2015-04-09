@@ -33,7 +33,6 @@ angular.module( 'sunshine.edit', [
     self.searchCount = document.getElementById('result-count');
     self.searchResults = [];
     self.selSearchResult = -1;
-  //  self.pdf = SchedulePDF;
     self.del = ScheduleDelete;
     self.save = ScheduleSave;
     self.add = ScheduleAdd;
@@ -430,21 +429,37 @@ angular.module( 'sunshine.edit', [
   return del;
 }])
 
-.factory("ScheduleEdit",["Schedule", "RetentionCategories", "Debounce", "HttpQueue", "HOTHelper", "Authentication", "$window",
+.factory("ScheduleEdit",["Schedule", "RetentionCategories", "Debounce", "HttpQueue", "HOTHelper",
+  "Authentication", "$window",
   function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper, Authentication, $window){
 
   function callback(res){}
 
+  // Division Autocomplete Function
+  var divisionAutoComplete = function(query, process){
+      var vals = this.instance.getDataAtCol(1);
+      var uniqueVals = vals.unique().sort().nulless();
+      process(uniqueVals);
+   };
+
+  // Category Autocomplete Function
+  var categoryAutoComplete = function(query, process){
+     var vals = this.instance.getDataAtCol(2);
+     var uniqueVals = vals.unique().sort().nulless();
+
+     process(uniqueVals);
+   };
+
   var setStatus = function(str){
-    console.log("set status");
     var status = document.getElementById("edit-status");
     status.innerHTML = str;
   };
 
   var cellFmt =  function(row, col, prop){
      var props = {};
+     var test = this.instance.getData()[row];
      var is_template = this.instance.getData()[row]["is_template"];
-      if (is_template) {
+      if (is_template && prop == "title") {
         props.readOnly = true;
       }
      return props;
@@ -563,7 +578,6 @@ angular.module( 'sunshine.edit', [
         config.colHeaders = ["_id","Division","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
         config.colWidths = colWidth;
 
-
         //schema for empty row
         // NB: A bad dataSchema causes minSpareRows to double
         config.dataSchema={_id:null, division:null, category:null, title:null, link: null, retention:null, on_site:null, off_site:null, total:null, remarks:null, is_template:null};
@@ -575,7 +589,7 @@ angular.module( 'sunshine.edit', [
         var divisionConfig = {};
         divisionConfig.data = "division";
         divisionConfig.type = "autocomplete";
-        divisionConfig.source = HOTHelper.divisionAutoComplete;
+        divisionConfig.source = divisionAutoComplete;
         divisionConfig.strict = false;
         config.columns.push(divisionConfig);
 
@@ -584,7 +598,7 @@ angular.module( 'sunshine.edit', [
         var categoryConfig = {};
         categoryConfig.data = "category";
         categoryConfig.type = "autocomplete";
-        categoryConfig.source = HOTHelper.categoryAutoComplete;
+        categoryConfig.source = categoryAutoComplete;
         categoryConfig.strict = false;
         categoryConfig.validator = HOTHelper.isRequired;
         config.columns.push(categoryConfig);

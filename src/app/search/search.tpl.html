@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="admin-btn">
-      <button class="btn blue-fade btn-default white-text">Administrators</button>
+      <button ui-sref="edit" class="btn blue-fade btn-default white-text">Administrators</button>
     </div>
   </header>
 
@@ -23,7 +23,7 @@
 
   <div ng-controller="SearchCtrl as searchCtrl">
 
-  <div ng-if="searchCtrl.count > 0" class="three-quarter-width mt3 mb3 horizontal-center sm-full-width">You can request any of the following records. When possible, a link is included so you can access the document directly. If there is no link, please contact the department that owns the record. Deparmtent contact information is provided with each record. If a division contact is given for a record, it is the preferred way to request access.</div>
+  <div ng-if="searchCtrl.count > 0" class="three-quarter-width mt3 mb3 horizontal-center sm-full-width">You may submit a request for any of the following records in accordance with applicable public records laws. The departments have included a direct link to some of the records; if there is no link for the record you are seeking, and/or you would like to request additional information regarding that record, please contact the department or division directly using the contact information provided for that specific record.</div>
 
   <!-------------------- Search Filters -------------------->
     <cc-menu cc-placement="right" cc-width="300px" class="grey-background
