@@ -14,7 +14,10 @@ angular.module( 'sunshine.admin', [
       '</button>',
       '<ul  class="dropdown-menu" role="menu">',
       '<li><a href="#" ng-show="allowPublisher"><i class="fa fa-tachometer"></i>Dashboard</a></li>',
-      '<li><a href="#" ng-show="allowAdmin"><i class="fa fa-user"></i>All Users</a></li>',
+      '<li><a href="#" ng-click="tip_edit()" ng-show="allowAdmin"><i class="fa fa-check"></i>Recommendations</a></li>',
+      '<li><a href="#" ng-click="add_schedule()" ng-show="allowAdmin"><i class="fa fa-plus-square"></i>New Schedule</a></li>',
+      '<li class="divider"></li> ',
+      '<li><a href="#" ng-show="allowAdmin"><i class="fa fa-user"></i>Users</a></li>',
       '<li class="divider"></li> ',
       '<li><a href="#" ng-click="logout()"><i class="fa fa-sign-out"></i>Logout</a></li>',
       '</ul> ',
@@ -27,9 +30,35 @@ angular.module( 'sunshine.admin', [
     $templateCache.put('adminHeader',  template.join('\n'));
 }])
 
-.directive('ccAdminHeader', ['$window', 'Debounce', 'Authentication', 'UserAuth', '$templateCache',
+.factory("ScheduleAdd", ["Department", "Debounce", "HttpQueue", "Authentication", "$state",
+  function(Department, Debounce, HttpQueue, Authentication, $state){
 
-  function ($window, Debounce, Authentication, UserAuth, $templateCache) {
+  var add = Debounce.debounce(function(){
+            var self = this;
+            Department.add()
+            .then(function(data){
+                Authentication.setValue("selDept", data._id);
+                Authentication.setValue("selDeptName", data.draft.department);
+
+              $state.go('edit', {}, {reload: true});
+
+              });
+          },667, false, "saving");
+
+  return add;
+}])
+
+.factory("TipEditGo",["$state", function($state){
+  var  go_picker = function(){
+    var self = this;
+    $state.go('tip');
+  };
+  return go_picker;
+}])
+
+.directive('ccAdminHeader', ['$window', 'Debounce', 'Authentication', 'UserAuth', '$templateCache', 'TipEditGo',
+'ScheduleAdd',
+  function ($window, Debounce, Authentication, UserAuth, $templateCache, TipEditGo, ScheduleAdd) {
   return {
     restrict : 'A',
     scope: true,
@@ -40,6 +69,8 @@ angular.module( 'sunshine.admin', [
         scope.allowPublisher = false;
         scope.allowAdmin = false;
         scope.logout = UserAuth.logout;
+        scope.tip_edit = TipEditGo;
+        scope.add_schedule = ScheduleAdd;
 
         scope.$watch(function () {
                 return Authentication.userRoles;
@@ -67,6 +98,7 @@ angular.module( 'sunshine.admin', [
           function setHeight (){
             var header_height = angular.element(document.querySelector('#admin-header'))[0].offsetHeight;
             elem.css("height", $window.innerHeight - header_height + "px");
+            console.log($window.innerHeight - header_height + "px");
           }
 
           setHeight();

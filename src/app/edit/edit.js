@@ -25,7 +25,7 @@ angular.module( 'sunshine.edit', [
 
 .controller('EditCtrl', function EditCtrl($scope, GlobalVariables, ScheduleDelete, PopulateGrid, Department,
     ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, SearchNext, SearchPrevious,
-    Authentication, TipGo, TipEditGo) { //SchedulePDF
+    Authentication, TipGo, ViewPublished) { //SchedulePDF
 
     GlobalVariables.showFooter = false;
     var self = this;
@@ -35,12 +35,11 @@ angular.module( 'sunshine.edit', [
     self.selSearchResult = -1;
     self.del = ScheduleDelete;
     self.save = ScheduleSave;
-    self.add = ScheduleAdd;
     self.publish = SchedulePublish;
     self.lock = ScheduleLock;
     self.unlock = ScheduleUnlock;
     self.tips = TipGo;
-    self.tip_edit = TipEditGo;
+    self.view_published = ViewPublished;
     self.next = SearchNext;
     self.previous = SearchPrevious;
     self.populateGrid = PopulateGrid.populateGrid;
@@ -72,12 +71,12 @@ angular.module( 'sunshine.edit', [
   return go;
 }])
 
-.factory("TipEditGo",["$state", function($state){
-  var  go_picker = function(){
+.factory("ViewPublished",["$state", function($state){
+  var  go = function(){
     var self = this;
-    $state.go('tip');
+    $state.go('agency',{dept_id : self.selected_dept});
   };
-  return go_picker;
+  return go;
 }])
 
 .factory("PopulateGrid",["Schedule", "HOTHelper", "ScheduleEdit", "Debounce", "GlobalVariables", "Authentication",
@@ -343,38 +342,6 @@ angular.module( 'sunshine.edit', [
       return save;
 
 }])
-
-.factory("ScheduleAdd", ["Department", "Debounce", "HttpQueue",
-  function(Department, Debounce, HttpQueue){
-
-  var add = Debounce.debounce(function(){
-
-            var self = this;
-
-            Department.add()
-            .then(function(data){
-                var new_id = data._id;
-
-                Department.get_draft()
-                .then(function (data){
-                  //  var hold_selected = self.selected_dept;
-
-                    draft_depts = data;
-                    self.dept_list = data;
-                    self.selected_dept = new_id;
-                    self.populateGrid();
-
-                    if(HttpQueue.count === 0){
-                      self.status = "saved";
-                    }
-                });
-              });
-
-          },667, false, "saving");
-
-  return add;
-}])
-
 
 // .factory("SchedulePDF", ["Schedule", "Debounce", function(Schedule, Debounce){
 //
