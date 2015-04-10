@@ -36,7 +36,7 @@
           <input name="search" autofocus ng-model="searchCtrl.terms" type="text" size="50"
               maxlength="75" placeholder=" search ..."autocomplete="off"/>
           <button class="button yellow-gold-fade" ng-disabled="Search.$invalid">
-            <i class="fa fa-search"></i></button>
+            <i id="search_button" class="fa fa-search"></i></button>
         </div>
         <div class="center small mb2 blue-text" ng-if="searchCtrl.suggest">
           Did you mean : <a href="" class="underline"

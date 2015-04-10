@@ -96,7 +96,6 @@ angular.module('sunshine.search', ['ui.router'])
         self.aggs = data.aggregations;
         self.suggest = Search.suggest_string(data.suggest);
         self.count = data.hits.total;
-        console.log(self.aggs);
       })
       .error(function(err, status) {});
   };

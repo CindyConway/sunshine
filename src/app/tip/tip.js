@@ -9,8 +9,7 @@ angular.module( 'sunshine.tip', [
     $stateProvider.state( 'tip', {
         url: '/tip',
         ncyBreadcrumb: {
-          label: 'Recommendations Edit',
-          parent: 'edit'
+          label: 'Recommendations'
         },
         views: {
             "admin": {

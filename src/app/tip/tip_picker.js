@@ -9,7 +9,7 @@ angular.module( 'sunshine.tip_picker', [
     $stateProvider.state( 'tip_picker', {
         url: '/tip_picker/:schedule_id',
         ncyBreadcrumb: {
-          label: 'Recommendations',
+          label: 'Add Recommendations',
           parent: 'edit'
         },
         views: {
