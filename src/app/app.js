@@ -29,7 +29,8 @@ angular
   'angular-ellipsis',
   'cgBusy',
   'ncy-angular-breadcrumb',
-  'debounce'
+  'debounce',
+  'sticky'
 ])
 
 .run(function($rootScope, $window, $location, Authentication, $state) {
