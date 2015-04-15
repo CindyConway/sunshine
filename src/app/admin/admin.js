@@ -98,7 +98,7 @@ angular.module( 'sunshine.admin', [
           function setHeight (){
             var header_height = angular.element(document.querySelector('#admin-header'))[0].offsetHeight;
             elem.css("height", $window.innerHeight - header_height + "px");
-            console.log($window.innerHeight - header_height + "px");
+
           }
 
           setHeight();

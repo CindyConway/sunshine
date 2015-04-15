@@ -24,14 +24,14 @@ angular.module( 'sunshine.edit', [
 })
 
 .controller('EditCtrl', function EditCtrl($scope, GlobalVariables, ScheduleDelete, PopulateGrid, Department,
-    ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, SearchNext, SearchPrevious,
-    Authentication, TipGo, ViewPublished) { //SchedulePDF
+    ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, Authentication, TipGo,
+    ViewPublished, RunSearch) { //SchedulePDF
 
     GlobalVariables.showFooter = false;
     var self = this;
     self.schedule_grid = document.getElementById('schedule-grid');
-    self.searchCount = document.getElementById('result-count');
     self.searchResults = [];
+    self.searchValue = "";
     self.selSearchResult = -1;
     self.del = ScheduleDelete;
     self.save = ScheduleSave;
@@ -40,13 +40,14 @@ angular.module( 'sunshine.edit', [
     self.unlock = ScheduleUnlock;
     self.tips = TipGo;
     self.view_published = ViewPublished;
-    self.next = SearchNext;
-    self.previous = SearchPrevious;
+  //  self.next = SearchNext;
+  //  self.previous = SearchPrevious;
     self.populateGrid = PopulateGrid.populateGrid;
     self.status = "saved";
     self.allow = false;
-    self.allow=(Authentication.userRoles.indexOf("Administrator") > -1 ||
+    self.allow = (Authentication.userRoles.indexOf("Administrator") > -1 ||
       Authentication.userRoles.indexOf("Publisher") > -1);
+    self.run_search = RunSearch;
 
     Department
     .get_draft()
@@ -77,6 +78,23 @@ angular.module( 'sunshine.edit', [
     $state.go('agency',{dept_id : self.selected_dept});
   };
   return go;
+}])
+
+.factory("RunSearch",["PopulateGrid", "Debounce", function(PopulateGrid, Debounce){
+
+  var run_search = Debounce.debounce(function(){
+                    var self = this;
+                    var hot = PopulateGrid.getHandsontable();
+                    self.searchResults = hot.search.query(self.searchValue);
+                    var searchCounter = self.searchResults.length;
+                    var count = document.getElementById('result-count');
+                    var count_clone = document.getElementById('result-count-clone');
+                    count.innerHTML = searchCounter;
+                    count_clone.innerHTML = searchCounter;
+                    hot.render();
+                  },669, false);
+
+  return run_search;
 }])
 
 .factory("PopulateGrid",["Schedule", "HOTHelper", "ScheduleEdit", "Debounce", "GlobalVariables", "Authentication",
@@ -123,12 +141,8 @@ angular.module( 'sunshine.edit', [
 
                     //add event to monitor seach input element
                     var schedule_search = document.getElementById('schedule-search');
-                    Handsontable.Dom.addEvent(schedule_search, 'keyup', Debounce.debounce(function(){
+                    var schedule_search_clone = document.getElementById('schedule-search-clone');
 
-                        self.searchResults = thisHandsontable.search.query(this.value);
-                        self.searchCount.innerHTML = self.searchResults.length;
-                        thisHandsontable.render();
-                    },667));
                 });
             };
 
@@ -139,49 +153,51 @@ angular.module( 'sunshine.edit', [
   };
 }])
 
-.factory("SearchPrevious", ["PopulateGrid", function(PopulateGrid){
-  var searchPrevious = function(){
-              var self = this;
-              var thisHandsontable = PopulateGrid.getHandsontable();
+// .factory("SearchPrevious", ["PopulateGrid", function(PopulateGrid){
+//   var searchPrevious = function(){
+//               var self = this;
+//               var thisHandsontable = PopulateGrid.getHandsontable();
+//
+//               if (self.searchResults.length < 1 ){return;}
+//
+//               self.selSearchResult--;
+//
+//               if(self.selSearchResult < 0 )
+//               {
+//                 self.selSearchResult = self.searchResults.length - 1;
+//               }
+//
+//               var sel = self.searchResults[self.selSearchResult];
+//
+//               thisHandsontable.selectCell(sel.row, sel.col);
+//             };
+//
+//       return searchPrevious;
+// }])
 
-              if (self.searchResults.length < 1 ){return;}
-
-              self.selSearchResult--;
-
-              if(self.selSearchResult < 0 )
-              {
-                self.selSearchResult = self.searchResults.length - 1;
-              }
-
-              var sel = self.searchResults[self.selSearchResult];
-
-              thisHandsontable.selectCell(sel.row, sel.col);
-            };
-
-      return searchPrevious;
-}])
-
-.factory("SearchNext", ["PopulateGrid", function(PopulateGrid){
-
-    var searchNext = function(){
-      var self = this;
-      var thisHandsontable = PopulateGrid.getHandsontable();
-
-        if (self.searchResults.length < 1 ){return;}
-
-        self.selSearchResult++;
-
-        if(self.selSearchResult > (self.searchResults.length - 1))
-        {
-          self.selSearchResult = 0;
-        }
-
-        var sel = self.searchResults[self.selSearchResult];
-        thisHandsontable.selectCell(sel.row, sel.col);
-      };
-
-      return searchNext;
-}])
+// .factory("SearchNext", ["PopulateGrid", function(PopulateGrid){
+//
+//     var searchNext = function(){
+//       var self = this;
+//       var thisHandsontable = PopulateGrid.getHandsontable();
+//
+//         if (self.searchResults.length < 1 ){return;}
+//
+//         self.selSearchResult++;
+//         console.log(self.selSearchResult);
+//
+//         if(self.selSearchResult > (self.searchResults.length - 1))
+//         {
+//           self.selSearchResult = 0;
+//         }
+//
+//         var sel = self.searchResults[self.selSearchResult];
+//         console.log(sel);
+//         thisHandsontable.selectCell(sel.row, sel.col);
+//       };
+//
+//       return searchNext;
+// }])
 
 .factory("ScheduleUnlock",["Schedule", "Debounce", "HttpQueue", "PopulateGrid", "$rootScope",
   function(Schedule, Debounce, HttpQueue, PopulateGrid, $rootScope){
@@ -540,8 +556,10 @@ angular.module( 'sunshine.edit', [
         config.columns = [];
         config.minSpareRows = 1;
         config.fixedRowsTop = 0;
+        config.fixedRowsOffset = 66;
         config.autoColumnSize = false;
-        config.contextMenu = ["row_above", "row_below", "remove_row"];
+        config.contextMenu = false;
+      //  config.contextMenu = ["row_above", "row_below", "remove_row"];
         config.colHeaders = ["_id","Division","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
         config.colWidths = colWidth;
 

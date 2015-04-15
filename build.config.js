@@ -75,13 +75,17 @@ module.exports = {
       'vendor/checklist-model/checklist-model.js',
       'vendor/angular-busy/dist/angular-busy.js',
       'vendor/angular-breadcrumb/dist/angular-breadcrumb.js',
-      'vendor/handsontable/dist/handsontable.full.min.js',
+      //'vendor/handsontable/dist/handsontable.full.min.js',
+      'vendor/handsontable/dist/handsontable.full.js',
       'vendor/ng-debounce/angular-debounce.js',
       'vendor/zeroclipboard/dist/ZeroClipboard.min.js',
       'vendor/zeroclipboard/dist/ZeroClipboard.min.map',
       'vendor/zeroclipboard/dist/ZeroClipboard.swf',
       'vendor/angular-dialog-service/dist/dialogs.min.js',
-      'vendor/bootstrap/dist/bootstrap.min.js'
+      'vendor/bootstrap/dist/bootstrap.min.js',
+    //  'vendor/ngSticky/dist/sticky.min.js'
+      'vendor/ngSticky/lib/sticky.js',
+      'vendor/headhesive.js/dist/headhesive.min.js'
 
     ],
     css: [

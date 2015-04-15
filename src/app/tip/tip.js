@@ -315,7 +315,7 @@ angular.module( 'sunshine.tip', [
      // basic config
       var config = {};
       config.colHeaders = true;
-      config.rowHeaders = true;
+      //config.rowHeaders = true;
       config.autoColumnSize = false;
       config.manualColumnResize = true;
       config.currentRowClassName = "current-row";
