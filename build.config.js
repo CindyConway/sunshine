@@ -84,7 +84,8 @@ module.exports = {
       'vendor/angular-dialog-service/dist/dialogs.min.js',
       'vendor/bootstrap/dist/bootstrap.min.js',
     //  'vendor/ngSticky/dist/sticky.min.js'
-      'vendor/ngSticky/lib/sticky.js'
+      'vendor/ngSticky/lib/sticky.js',
+      'vendor/headhesive.js/dist/headhesive.min.js'
 
     ],
     css: [

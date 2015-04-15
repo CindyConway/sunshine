@@ -92,14 +92,26 @@
           </form>
         </div>
 
-        <div id="search-group" sticky sticky-class="sticky-search" class="not-sticky">
-            <input id="schedule-search" type="search" placeholder="Search">
-          <div id="count-group">
-            <div id="result-count">0</div><span>results</span>
-            <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
-            <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a>
+        <div id="search-group"  sticky menu="true" class="sticky-menu">
+          <div class="horizontal-center">
+            <input id="schedule-search" ng-model="editCtrl.searchValue"
+                ng-change="editCtrl.run_search()" type="search" placeholder="Search">
+            <span id="result-count">0</span><span>results</span>
+            <!-- <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
+            <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a> -->
           </div>
         </div>
+
+        <div id="search-group" sticky clone="true" class="sticky-search-clone display-none">
+          <div class="horizontal-center">
+            <input id="schedule-search-clone" ng-model="editCtrl.searchValue" ng-change="editCtrl.run_search()"
+                type="search" placeholder="Search">
+            <span id="result-count-clone">0</span><span>results</span>
+            <!-- <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
+            <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a> -->
+          </div>
+        </div>
+
       <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>
 
       <div id="schedule-grid" class="handsontable horizontal-center"></div>

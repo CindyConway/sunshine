@@ -677,6 +677,15 @@ button:focus{outline:none;}
   display: none !important;
 }
 
+.is-visible{
+  visibility:visible;
+}
+
+.not-visible{
+  visibility: hidden;
+}
+
+
 .hide {
   position: absolute !important;
   height: 1px;
@@ -1241,29 +1250,43 @@ strong {
   background-color:#EEEEEE;
 }
 
-.sticky-search,
-.not-sticky{
+.sticky-search-clone{
+  border-left:solid 1px #d7d7d7;
+  border-right: solid 1px #d7d7d7;
+  padding: 20px;
+  background-color:white;
+  z-index:500;
+  margin: auto;
+  display: table;
+  top:0;
+  position:fixed;
+}
+
+.sticky-menu{
   width: 97%;
   border-left:solid 1px #d7d7d7;
   border-right: solid 1px #d7d7d7;
   padding: 20px;
   background-color:white;
-  z-index:999999;
   margin: auto;
   display: table;
 }
 
-.not-sticky{
-  position:relative
-}
-
 #search-group input{
-  background-color:#EEEEEE;
   border: solid 1px #d7d7d7;
-  width: 700px;
+  width: 350px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
   padding:3px;
+}
+
+#search-group span{
+  padding-right:5px;
+  padding-left: 5px;
+}
+
+#search-group a{
+  padding-right:5px;
 }
 
 #admin-main input{
@@ -1278,25 +1301,6 @@ strong {
   padding-right:15px;
   padding-left:15px;
 }
-
-// #count-group{
-//   vertical-align:top;
-//   margin:0px;
-//   padding:0px;
-// }
-//
-// #count-group{
-//   font-size:0.8em;
-// }
-//
-// #count-group a{
-//   font-size: 1.5em;
-// }
-
-// #count-group #previous{
-//   padding-left: 5px;
-//   padding-right:5px;
-// }
 
 #admin-page .county{
   font-size: 1em;
@@ -1345,12 +1349,6 @@ strong {
   padding-top: 30px;
   padding-left: 30px;
 }
-
-// #result-count{
-//   display:inline-block;
-//   margin-right:5px;
-//   margin-bottom:10px
-// }
 
 #tip-count{
   display:inline-block;
