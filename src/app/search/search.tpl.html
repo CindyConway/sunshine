@@ -19,11 +19,9 @@
     </div>
   </header>
 
-  <div class="white-background" ncy-breadcrumb></div>
+
 
   <div ng-controller="SearchCtrl as searchCtrl">
-
-  <div ng-if="searchCtrl.count > 0" class="three-quarter-width mt3 mb3 horizontal-center sm-full-width">You may submit a request for any of the following records in accordance with applicable public records laws. The departments have included a direct link to some of the records; if there is no link for the record you are seeking, and/or you would like to request additional information regarding that record, please contact the department or division directly using the contact information provided for that specific record.</div>
 
   <!-------------------- Search Filters -------------------->
     <cc-menu cc-placement="right" cc-width="300px" class="grey-background
@@ -63,15 +61,6 @@
                 <input type="checkbox" checklist-model="searchCtrl.dept_sel" checklist-value="department.key"
                                                                             ng-model= "searchCtrl.dept_sel" >
                 <label class="regular">{{department.key}}</label>
-
-  <!--               <ul>
-    <li class="no-bullet">
-      <div ng-repeat="division in department.division.buckets" class="lh20 regular">
-        <input type="checkbox" checklist-model="searchCtrl.division_sel" checklist-value="division.key">
-        <label class="regular small">{{division.key}}</label>
-      </div>
-    </li>
-  </ul> -->
               </div>
             </li>
           </ul>
@@ -108,6 +97,10 @@
       Please check your spelling or return to the <a ui-sref="home">home</a> page and click on one of the agencies.
       This can help you get an idea of the types of records that are in the Index.
     </div>
+
+    <!------------ Breadcrumb and Text ------------------>
+    <div class="white-background" ncy-breadcrumb></div>
+    <div ng-if="searchCtrl.count > 0" class="three-quarter-width mt3 mb3 horizontal-center sm-full-width">You may submit a request for any of the following records in accordance with applicable public records laws. The departments have included a direct link to some of the records; if there is no link for the record you are seeking, and/or you would like to request additional information regarding that record, please contact the department or division directly using the contact information provided for that specific record.</div>
 
     <!------------ Search Result ------------------>
     <cc-content  style="min-height:400px">

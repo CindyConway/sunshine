@@ -180,8 +180,12 @@ angular.module( 'sunshine.tip', [
         var config = {};
         config.columns = [];
         config.minSpareRows = 1;
-        //config.contextMenu = false;
-        config.contextMenu = ["row_above", "row_below", "remove_row"];
+
+        config.contextMenu =   {};
+        config.contextMenu.items = {};
+        config.contextMenu.items.row_above = {name:"Insert row"};
+        config.contextMenu.items.remove_row = {name:"Remove row"};
+        
         config.colHeaders = ["_id","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "Visibility"];
 
         //schema for empty row

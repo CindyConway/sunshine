@@ -25,7 +25,7 @@ angular.module( 'sunshine.edit', [
 
 .controller('EditCtrl', function EditCtrl($scope, GlobalVariables, ScheduleDelete, PopulateGrid, Department,
     ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, Authentication, TipGo,
-    ViewPublished, RunSearch) { //SchedulePDF
+    ViewPublished, RunSearch, SetStatus) { //SchedulePDF
 
     GlobalVariables.showFooter = false;
     var self = this;
@@ -48,6 +48,34 @@ angular.module( 'sunshine.edit', [
     self.allow = (Authentication.userRoles.indexOf("Administrator") > -1 ||
       Authentication.userRoles.indexOf("Publisher") > -1);
     self.run_search = RunSearch;
+
+    //format date picker
+    self.dateOptions = {
+      formatYear: 'yy',
+      startingDay: 1,
+      showWeeks:false
+    };
+
+    self.open = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      self.opened = true;
+    };
+
+    //WATCH RETENTION
+    $scope.$watch(
+      function() {
+        return self.status;
+      },
+      function(newVal, oldVal) {
+        console.log(newVal);
+        console.log(oldVal);
+        console.log("HHHHHHH");
+        var setStatus = SetStatus;
+        setStatus(newVal);
+      }
+    );
 
     Department
     .get_draft()
@@ -412,9 +440,39 @@ angular.module( 'sunshine.edit', [
   return del;
 }])
 
+.factory("SetStatus", function(){
+  var setStatus = function(str){
+    console.log(str);
+    console.log("JJJJ");
+    var status = document.getElementById("edit-status");
+    var status_clone = document.getElementById("edit-status-clone");
+    var status_spinner = document.getElementById("status-spinner");
+    var status_spinner_clone = document.getElementById("status-spinner-clone");
+
+    if(status_spinner){
+      if(str == 'saving'){
+        status_spinner.className = status_spinner.className.replace("off-side", '');
+        status_spinner_clone.className = status_spinner.className.replace("off-side", '');
+      }
+
+      if(str == 'saved'){
+        console.log("in saved");
+        status_spinner.className += " off-side";
+        status_spinner_clone.className += " off-side";
+      }
+    }
+
+    status.innerHTML = str;
+    status_clone.innerHTML = str;
+  };
+
+  return setStatus;
+
+})
+
 .factory("ScheduleEdit",["Schedule", "RetentionCategories", "Debounce", "HttpQueue", "HOTHelper",
-  "Authentication", "$window",
-  function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper, Authentication, $window){
+  "Authentication", "$window", "SetStatus",
+  function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper, Authentication, $window, SetStatus){
 
   function callback(res){}
 
@@ -433,10 +491,29 @@ angular.module( 'sunshine.edit', [
      process(uniqueVals);
    };
 
-  var setStatus = function(str){
-    var status = document.getElementById("edit-status");
-    status.innerHTML = str;
-  };
+   var setStatus = SetStatus;
+
+  // var setStatus = function(str){
+  //   var status = document.getElementById("edit-status");
+  //   var status_clone = document.getElementById("edit-status-clone");
+  //   var status_spinner = document.getElementById("status-spinner");
+  //   var status_spinner_clone = document.getElementById("status-spinner-clone");
+  //
+  //   if(status_spinner){
+  //     if(str == 'saving'){
+  //       status_spinner.className = status_spinner.className.replace("off-side", '');
+  //       status_spinner_clone.className = status_spinner.className.replace("off-side", '');
+  //     }
+  //
+  //     if(str == 'saved'){
+  //       status_spinner.className += "off-side";
+  //       status_spinner_clone.className += "off-side";
+  //     }
+  //   }
+  //
+  //   status.innerHTML = str;
+  //   status_clone.innerHTML = str;
+  // };
 
   var cellFmt =  function(row, col, prop){
      var props = {};
@@ -450,15 +527,14 @@ angular.module( 'sunshine.edit', [
 
   //Before Save
   var beforeSave = function(change, source){
-    var edit_status = document.getElementById("edit-status");
-    edit_status.innerHTML = "saving";
+    if(source == "insertId"){return;}
+    setStatus("saving");
   };
 
   //Autosave function
   var autoSave = function(change,source){
 
     var self = this;
-    var edit_status = document.getElementById("edit-status");
     if (source === 'loadData') {return;} //dont' save this change
     if (source === 'insertId') {return;} // stops an endless loop when the new record id is added after an insert
 
@@ -558,8 +634,12 @@ angular.module( 'sunshine.edit', [
         config.fixedRowsTop = 0;
         config.fixedRowsOffset = 66;
         config.autoColumnSize = false;
-        config.contextMenu = false;
-      //  config.contextMenu = ["row_above", "row_below", "remove_row"];
+
+        config.contextMenu =   {};
+        config.contextMenu.items = {};
+        config.contextMenu.items.row_above = {name:"Insert row"};
+        config.contextMenu.items.remove_row = {name:"Remove row"};
+
         config.colHeaders = ["_id","Division","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
         config.colWidths = colWidth;
 

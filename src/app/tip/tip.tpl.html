@@ -2,7 +2,8 @@
   <div id="edit-page" class="container-fluid">
     <div id="admin-main" class="horizontal-center" ng-controller="TipCtrl as tipCtrl">
 
-      <div id="tip-status" class="floating-status" ng-model="tipCtrl.status">{{tipCtrl.status}}</div>
+      <div id="tip-status" class="floating-status" ng-model="tipCtrl.status">{{tipCtrl.status}}
+        <i class="fa fa-spinner fa-spin display-none"></i></div>
       <div class="white-background py0" ncy-breadcrumb></div>
       <div id="search-group">
         <input id="tip-search" type="search" placeholder="Search">
