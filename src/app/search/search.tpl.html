@@ -114,7 +114,7 @@
                 <a ui-sref="agency/({schedule_id:'{{result._source.schedule_id}}'})">
                   <span ng-bind-html="result.highlight.department[0]"</span></a> </td>
               <td ng-if="!result.highlight.department[0]">
-                <a ui-sref="agency_list({schedule_id:'{{result._source.schedule_id}}'})">{{result._source.department}}</a></td>
+                <a ui-sref="agency_list({dept_id:'{{result._source.schedule_id}}'})">{{result._source.department}}</a></td>
             </tr>
             <tr class="lh20">
               <td ng-if="result._source.category" class="bold vertical-align-top">Category:</td>

@@ -2,8 +2,14 @@
   <div id="edit-page" class="container-fluid">
     <div id="admin-main" class="horizontal-center" ng-controller="TipCtrl as tipCtrl">
 
-      <div id="tip-status" class="floating-status" ng-model="tipCtrl.status">{{tipCtrl.status}}
-        <i class="fa fa-spinner fa-spin display-none"></i></div>
+      <!-- <div id="tip-status" class="floating-status" ng-model="tipCtrl.status">{{tipCtrl.status}}
+        <i class="fa fa-spinner fa-spin display-none"></i></div> -->
+
+        <div id="tip-status">
+          <span ng-model="tipCtrl.status">{{tipCtrl.status}}</span>
+        </div>
+        <i id="status-spinner" class="fa fa-spinner fa-spin off-side"></i>
+
       <div class="white-background py0" ncy-breadcrumb></div>
       <div id="search-group">
         <input id="tip-search" type="search" placeholder="Search">
@@ -14,10 +20,6 @@
         <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
         <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a>
       </div>
-<!--
-      <div id="tip-grid-sizing-container" cc-handsontable-container style="position:relative;">
-        <div id="tip-grid" style="overflow:scroll; visibility:hidden; padding-bottom:200px" class="handsontable"></div>
-      </div> -->
       <div id="tip-grid" class="handsontable horizontal-center"></div>
       <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>
     </div>

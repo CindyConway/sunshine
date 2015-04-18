@@ -110,13 +110,23 @@ angular.module( 'sunshine.tip', [
 
     //Before Save
     var beforeSave = function(change, source){
-      var tip_status = document.getElementById("tip-status");
-      tip_status.innerHTML = "saving";
+        setStatus("saving");
     };
 
     var setStatus = function(str){
-      var tip_status = document.getElementById("tip-status");
-      tip_status.innerHTML = str;
+        var status = document.getElementById("tip-status");
+        var status_spinner = document.getElementById("status-spinner");
+        if(status_spinner){
+          if(str == 'saving'){
+            status_spinner.className = status_spinner.className.replace("off-side", '');
+          }
+
+          if(str == 'saved'){
+            status_spinner.className += " off-side";
+          }
+        }
+
+        status.innerHTML = str;
     };
 
     //Autosave function
@@ -185,7 +195,7 @@ angular.module( 'sunshine.tip', [
         config.contextMenu.items = {};
         config.contextMenu.items.row_above = {name:"Insert row"};
         config.contextMenu.items.remove_row = {name:"Remove row"};
-        
+
         config.colHeaders = ["_id","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "Visibility"];
 
         //schema for empty row

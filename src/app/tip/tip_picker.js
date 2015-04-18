@@ -109,8 +109,19 @@ angular.module( 'sunshine.tip_picker', [
     };
 
     var setStatus = function(str){
-      var tip_status = document.getElementById("tippicker-status");
-      tip_status.innerHTML = str;
+        var status = document.getElementById("tippicker-status");
+        var status_spinner = document.getElementById("status-spinner");
+        if(status_spinner){
+          if(str == 'saving'){
+            status_spinner.className = status_spinner.className.replace("off-side", '');
+          }
+
+          if(str == 'saved'){
+            status_spinner.className += " off-side";
+          }
+        }
+
+        status.innerHTML = str;
     };
 
 

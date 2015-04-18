@@ -25,7 +25,7 @@ angular.module( 'sunshine.edit', [
 
 .controller('EditCtrl', function EditCtrl($scope, GlobalVariables, ScheduleDelete, PopulateGrid, Department,
     ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, Authentication, TipGo,
-    ViewPublished, RunSearch, SetStatus) { //SchedulePDF
+    RunSearch, SetStatus) { //SchedulePDF
 
     GlobalVariables.showFooter = false;
     var self = this;
@@ -39,7 +39,6 @@ angular.module( 'sunshine.edit', [
     self.lock = ScheduleLock;
     self.unlock = ScheduleUnlock;
     self.tips = TipGo;
-    self.view_published = ViewPublished;
   //  self.next = SearchNext;
   //  self.previous = SearchPrevious;
     self.populateGrid = PopulateGrid.populateGrid;
@@ -69,9 +68,6 @@ angular.module( 'sunshine.edit', [
         return self.status;
       },
       function(newVal, oldVal) {
-        console.log(newVal);
-        console.log(oldVal);
-        console.log("HHHHHHH");
         var setStatus = SetStatus;
         setStatus(newVal);
       }
@@ -96,14 +92,6 @@ angular.module( 'sunshine.edit', [
   var  go = function(){
     var self = this;
     $state.go('tip_picker',{schedule_id : self.selected_dept});
-  };
-  return go;
-}])
-
-.factory("ViewPublished",["$state", function($state){
-  var  go = function(){
-    var self = this;
-    $state.go('agency',{dept_id : self.selected_dept});
   };
   return go;
 }])
@@ -442,8 +430,6 @@ angular.module( 'sunshine.edit', [
 
 .factory("SetStatus", function(){
   var setStatus = function(str){
-    console.log(str);
-    console.log("JJJJ");
     var status = document.getElementById("edit-status");
     var status_clone = document.getElementById("edit-status-clone");
     var status_spinner = document.getElementById("status-spinner");
@@ -456,7 +442,6 @@ angular.module( 'sunshine.edit', [
       }
 
       if(str == 'saved'){
-        console.log("in saved");
         status_spinner.className += " off-side";
         status_spinner_clone.className += " off-side";
       }
@@ -492,28 +477,6 @@ angular.module( 'sunshine.edit', [
    };
 
    var setStatus = SetStatus;
-
-  // var setStatus = function(str){
-  //   var status = document.getElementById("edit-status");
-  //   var status_clone = document.getElementById("edit-status-clone");
-  //   var status_spinner = document.getElementById("status-spinner");
-  //   var status_spinner_clone = document.getElementById("status-spinner-clone");
-  //
-  //   if(status_spinner){
-  //     if(str == 'saving'){
-  //       status_spinner.className = status_spinner.className.replace("off-side", '');
-  //       status_spinner_clone.className = status_spinner.className.replace("off-side", '');
-  //     }
-  //
-  //     if(str == 'saved'){
-  //       status_spinner.className += "off-side";
-  //       status_spinner_clone.className += "off-side";
-  //     }
-  //   }
-  //
-  //   status.innerHTML = str;
-  //   status_clone.innerHTML = str;
-  // };
 
   var cellFmt =  function(row, col, prop){
      var props = {};

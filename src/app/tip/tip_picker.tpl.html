@@ -3,8 +3,13 @@
 
     <div id="edit-page" class="container-fluid">
     <div id="admin-main" class="horizontal-center" ng-controller="TipPickerCtrl as tipPickerCtrl">
-      <div id="tippicker-status" class="floating-status" ng-model="tipPickerCtrl.status">{{tipPickerCtrl.status}}
-        <i class="fa fa-spinner fa-spin display-none"></i></div>
+      <!-- <div id="tippicker-status" class="floating-status" ng-model="tipPickerCtrl.status">{{tipPickerCtrl.status}}
+        <i class="fa fa-spinner fa-spin display-none"></i></div> -->
+      <div id="tippicker-status">
+        <span ng-model="tipPickerCtrl.status">{{tipPickerCtrl.status}}</span>
+      </div>
+      <i id="status-spinner" class="fa fa-spinner fa-spin off-side"></i>
+
       <div class="white-background py0" ncy-breadcrumb></div>
       <h1>{{tipPickerCtrl.draft_dept_name}}</h1>
       <div id="search-group">

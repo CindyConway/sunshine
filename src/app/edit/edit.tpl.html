@@ -26,7 +26,7 @@
                 ng-disabled="editCtrl.draft.status != 'LOCKED'">Publish</button>
             <button ng-hide="!editCtrl.allow" ng-click="editCtrl.unlock()" ng-disabled="editCtrl.draft.status != 'LOCKED'">Unlock</button>
             <button ng-hide="!editCtrl.allow" ng-click="editCtrl.del()">Delete</button>
-            <button ng-click="editCtrl.view_published()">View Published</button>
+            <a href="#/agency/{{editCtrl._id}}" target="_blank">View Published</a>
           </div>
       </div>
       <div id="grid-background">
