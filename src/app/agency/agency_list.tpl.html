@@ -20,8 +20,7 @@
     <div class="relative center"
         cg-busy="{promise:agencyCtrl2.agency_promise,templateUrl:'loading_msg.html',delay:30}"></div>
 
-    <div ng-if="::agencyCtrl2.adopted.department" class="full-width absolute-center p2-bottom intro"><p>You can request any of the following records. When possible, a link is included so you can access the document directly. If there is no link, please contact the department using the information provided in the header below. If a division contact is
-      given for a record, it is the preferred way to request access.</p></div>
+    <div ng-if="::agencyCtrl2.adopted.department" class="full-width absolute-center p2-bottom intro"><p>You may submit a request for any of the following records in accordance with applicable public records laws. The departments have included a direct link to some of the records; if there is no link for the record you are seeking, and/or you would like to request additional information regarding that record, please contact the department or division directly using the contact information provided for that specific record.</p></div>
 	<div ng-if="::agencyCtrl2.adopted.department" class="right view-link sm-hide">
       <a ui-sref="agency({dept_id:'{{::agencyCtrl2.schedule_id}}'})">table view </a>
     </div>
