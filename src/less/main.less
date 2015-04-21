@@ -1578,9 +1578,14 @@ span.colHeader{
 }
 .handsontable th,
 .handsontable td {
-    line-height: 3em;
+    line-height: 1.3em;
+	font-size: 13px;
 }
-
+.handsontable th,
+.handsontable td {
+    padding-top:10px;
+	padding-bottom: 10px;
+}
 .handsontable .handsontable table {
   -webkit-box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.4);
@@ -1602,3 +1607,140 @@ span.colHeader{
 .autocomplete table{
   border: solid 1px #000
 }
+
+#schedule-grid .htCore tr th:nth-child(1),
+#schedule-grid .htCore tr td:nth-child(1),
+#schedule-grid .htCore tr th:nth-child(11),
+#schedule-grid .htCore tr td:nth-child(11) {
+	border: none;
+}
+
+#schedule-grid .htCore tr th:nth-child(2),
+#schedule-grid .htCore tr td:nth-child(2) {
+	border-left: 1px solid #CCC;
+}
+
+#schedule-grid .htCore tr th {
+	border-bottom: 2px #afafaf solid;
+}
+
+#schedule-grid #department-info {
+	width: 95%;
+}
+
+.dept-right {
+	text-align: right;
+	margin-top: 40px;
+}
+
+.dept-right input {
+	text-align: right;
+}
+
+#schedule-grid td.htInvalid {
+	background: #f3dbd5 !important;
+}
+
+#action-group button,
+#action-group a {
+	display: inline-block;
+	padding: 5px 9px !important;
+	border: 1px solid #428bca;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	background-color: #fff !important;
+	color: #428bca;
+}
+
+#action-group button:hover,
+#action-group a:hover {
+	text-decoration: none;
+	background-color: #428bca !important;
+	color: #fff;
+}
+
+#action-group button[disabled=disabled], 
+#action-group button[disabled=disabled]:hover {
+	background-color: #bfbfbf !important;
+	color: #fff;
+	border: 1px solid #bfbfbf;
+	cursor: not-allowed;
+}
+
+#schedule-grid .autocompleteEditor {
+	border: 1px solid #afafaf;
+	border-bottom: 2px #afafaf solid;
+	background-color: #fff;
+}
+
+#schedule-grid .autocompleteEditor td {
+	background-color: #fff;
+}
+
+#schedule-grid .handsontable.listbox .ht_master table {
+	border: none;
+}
+
+strong {
+	color: inherit;
+}
+
+#action-group span {
+	display: block;
+	padding: 5px 10px;
+	text-align: center;
+	border: solid 1px #E62E00;
+	background-color: #f3dbd5;
+	margin-top: -20px;
+	margin-bottom: 20px;
+}
+
+#admin-header .admin-title {
+	width: 313px;
+	height: 53px;
+	padding: 0;
+	margin: 20px 0 0 30px;
+}
+
+.admin-title {
+	display: block;
+	width: 313px;
+	height: 53px;
+	background: #eee url(../assets/admin-logo.png)	no-repeat 0 0;
+	text-indent: -999999px;
+	margin: 30px 0 0 30px;
+}
+
+.logo {
+	margin-top: 3rem;
+	margin-left: 3rem;
+	margin-bottom: 2em;
+}
+
+#department-info input.ng-invalid {
+	background: #f3dbd5;
+}
+
+.search-highlight {
+	background-color: #ddecf8;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+#search-page .breadcrumb {
+	margin-left: 350px;
+	margin-top: 20px;
+}
+
+#search-page .three-quarter-width {
+	margin-left: 370px;
+	text-align: left;
+}
+
+#search-page .cc-menu {
+	margin-top: -170px;
+}
+
+
+

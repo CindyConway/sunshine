@@ -561,12 +561,12 @@ angular.module( 'sunshine.edit', [
   };
 
   var colWidth = function(index){
-    var win_width = Math.max(document.documentElement.clientWidth, $window.innerWidth || 0);
-    win_width = ((win_width * 0.97) * 0.97) - 71;
-    var fivePct = win_width * 0.05;
+    var info = angular.element(document.querySelector('#department-info')); 
+    win_width = info[0].clientWidth;
+    var fivePct = win_width * 0.07;
     var tenPct = win_width * 0.1;
-    var fifteenPct = win_width * 0.15;
-    var twentyPct = win_width * 0.2;
+    var fifteenPct = win_width * 0.13;
+    var twentyPct = win_width * 0.18;
 
     switch(index){
       case 0 :
