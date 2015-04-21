@@ -4,4 +4,6 @@ build/
 bin/
 node_modules/
 vendor/
+!vendor/ngSticky/*
+!vendor/handsontable/*
 src/app/app.js
