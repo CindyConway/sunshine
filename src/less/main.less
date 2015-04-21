@@ -7,6 +7,7 @@
 
 @import 'variables.less';
 @import 'fonts/font-awesome-4.2.0/css/font-awesome.css';
+@import '../../vendor/bootstrap/less/glyphicons.less';
 
 //** Common module'scss **/
 @import '../common/angular-slide-and-push/slide-and-push.less';
@@ -1371,9 +1372,24 @@ strong {
   width:700px;
 }
 
-#edit-status{
+#edit-status,
+#edit-status-clone,
+#tip-status,
+#tippicker-status{
   padding-right:30px;
   float:right;
+}
+
+#status-spinner,
+#status-spinner-clone{
+  float:right;
+  margin-right:5px;
+  maring-top:1px;
+}
+
+.off-side{
+  left: -999999px;
+  position:absolute;
 }
 
 .floating-status{
@@ -1478,6 +1494,24 @@ strong {
   display: inline-block;
 }
 
+#ratified_on input{
+  width:200px;
+}
+
+#department-info .btn{
+  border-color:#ccc;
+  border-top-right-radius:5px;
+  border-bottom-right-radius:5px;
+}
+
+#department-info .input-group{
+  width:201px;
+}
+
+#department-info .input-group input{
+  width:200px;
+}
+
 #ratified_on{
   display:inline-block !important;
 }
@@ -1505,9 +1539,7 @@ strong {
   width: 97%;
   margin: auto;
   padding-left: 10px;
-
 }
-
 
 .btn-default:hover{
   background-color:#FFF;

@@ -55,36 +55,36 @@ angular.module( 'sunshine.tip', [
       });
 
 
-  self.next = function(){
-
-      if (self.searchResults.length < 1 ){return;}
-
-      self.selSearchResult++;
-
-      if(self.selSearchResult > (self.searchResults.length - 1))
-      {
-        self.selSearchResult = 0;
-      }
-
-      var sel = self.searchResults[self.selSearchResult];
-      tip_Handsontable.selectCell(sel.row, sel.col);
-
-  };
-
-  self.previous = function(){
-      if (self.searchResults.length < 1 ){return;}
-
-      self.selSearchResult--;
-
-      if(self.selSearchResult < 0 )
-      {
-        self.selSearchResult = self.searchResults.length - 1;
-      }
-
-      var sel = self.searchResults[self.selSearchResult];
-      tip_Handsontable.selectCell(sel.row, sel.col);
-
-  };
+  // self.next = function(){
+  //
+  //     if (self.searchResults.length < 1 ){return;}
+  //
+  //     self.selSearchResult++;
+  //
+  //     if(self.selSearchResult > (self.searchResults.length - 1))
+  //     {
+  //       self.selSearchResult = 0;
+  //     }
+  //
+  //     var sel = self.searchResults[self.selSearchResult];
+  //     tip_Handsontable.selectCell(sel.row, sel.col);
+  //
+  // };
+  //
+  // self.previous = function(){
+  //     if (self.searchResults.length < 1 ){return;}
+  //
+  //     self.selSearchResult--;
+  //
+  //     if(self.selSearchResult < 0 )
+  //     {
+  //       self.selSearchResult = self.searchResults.length - 1;
+  //     }
+  //
+  //     var sel = self.searchResults[self.selSearchResult];
+  //     tip_Handsontable.selectCell(sel.row, sel.col);
+  //
+  // };
 
   // add listener to tip_search field to cause the grid to
   // be searched
@@ -110,13 +110,23 @@ angular.module( 'sunshine.tip', [
 
     //Before Save
     var beforeSave = function(change, source){
-      var tip_status = document.getElementById("tip-status");
-      tip_status.innerHTML = "saving";
+        setStatus("saving");
     };
 
     var setStatus = function(str){
-      var tip_status = document.getElementById("tip-status");
-      tip_status.innerHTML = str;
+        var status = document.getElementById("tip-status");
+        var status_spinner = document.getElementById("status-spinner");
+        if(status_spinner){
+          if(str == 'saving'){
+            status_spinner.className = status_spinner.className.replace("off-side", '');
+          }
+
+          if(str == 'saved'){
+            status_spinner.className += " off-side";
+          }
+        }
+
+        status.innerHTML = str;
     };
 
     //Autosave function
@@ -159,16 +169,23 @@ angular.module( 'sunshine.tip', [
 
     //remove one record from the database
     var beforeRemoveRow = function(index, amount){
+        setStatus("saving");
+
         var rowNumber = this.sortIndex[index] ? this.sortIndex[index][0] : index;
         var row = this.getSourceDataAtRow(rowNumber);
 
-        Template.del(row)
-        .success(function(res){
+        if(row._id){
+          Template.del(row)
+          .success(function(res){
+            setStatus("saved");
 
-        })
-        .error(function(err){
-          console.log(err);
-        });
+          })
+          .error(function(err){
+            console.log(err);
+          });
+        }else{
+          setStatus("saved");
+        }
     };
 
     var afterRender = function(){
@@ -180,8 +197,12 @@ angular.module( 'sunshine.tip', [
         var config = {};
         config.columns = [];
         config.minSpareRows = 1;
-        //config.contextMenu = false;
-        config.contextMenu = ["row_above", "row_below", "remove_row"];
+
+        config.contextMenu =   {};
+        config.contextMenu.items = {};
+        config.contextMenu.items.row_above = {name:"Insert row"};
+        config.contextMenu.items.remove_row = {name:"Remove row"};
+
         config.colHeaders = ["_id","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "Visibility"];
 
         //schema for empty row

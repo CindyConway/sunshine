@@ -1,10 +1,9 @@
-<div id="admin-header" class="outer" cc-admin-header></div>
+<div id="admin-header" class="outer" cc-admin-header ng-cloak></div>
   <div class="blah-background" cc-fill-height>
     <div ng-controller="EditCtrl as editCtrl">
       <div class="relative center"
           cg-busy="{promise:agencyCtrl2.agency_promise,templateUrl:'loading_msg.html',delay:30}"></div>
       <div id="admin-main" class="horizontal-center" >
-        <div id="edit-status" ng-model="editCtrl.status">{{editCtrl.status}}</div>
         <div class="white-background py0" ncy-breadcrumb></div>
           <div>
             <select name="draftSelect"
@@ -19,7 +18,7 @@
           </div>
 
           <div id="action-group">
-            <span class="horizontal-center">{{editCtrl.errorMsg}}</span>
+            <p class="horizontal-center">{{editCtrl.errorMsg}}</p>
             <button ng-click="editCtrl.lock()" ng-disabled="editCtrl.draft.status != 'DIRTY'" >Lock</button>
             <button ng-click="editCtrl.tips()" ng-disabled="editCtrl.draft.status === 'LOCKED'">Add Recommendations</button>
             <a href="{{editCtrl.pdf_link}}" target="_blank" download>Generate PDF</a>
@@ -27,7 +26,7 @@
                 ng-disabled="editCtrl.draft.status != 'LOCKED'">Publish</button>
             <button ng-hide="!editCtrl.allow" ng-click="editCtrl.unlock()" ng-disabled="editCtrl.draft.status != 'LOCKED'">Unlock</button>
             <button ng-hide="!editCtrl.allow" ng-click="editCtrl.del()">Delete</button>
-            <button ng-click="editCtrl.view_published()">View Published</button>
+            <a href="#/agency/{{editCtrl._id}}" target="_blank">View Published</a>
           </div>
       </div>
       <div id="grid-background">
@@ -52,16 +51,30 @@
                 ng-disabled="editCtrl.draft.status == 'LOCKED'"
                 placeholder="Organization Website (required)"
                 required="">
-                <label>Ratified on:</label>
-                <input
-                  id="ratified_on"
-                  name="ratified_on"
-                  class="dept-input inline-block"
-                  ng-model="editCtrl.draft.ratified_on"
-                  ng-change="editCtrl.save()"
-                  ng-disabled="editCtrl.draft.status == 'LOCKED'"
-                  placeholder="Date schedule was ratified"
-                  required="">
+              <label>Ratified on:</label>
+              <p class="input-group">
+                    <input id="ratified_on"
+                    type="text"
+                    show-weeks="false"
+                    class="form-control"
+                    datepicker-popup="dd/MM/yyyy"
+                    ng-model="editCtrl.draft.ratified_on"
+                    ng-change="editCtrl.save()"
+                    ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                    is-open="editCtrl.opened"
+                    datepicker-options="editCtrl.dateOptions"
+                    date-disabled="disabled(date, mode)"
+                    show-button-bar="false"
+                    ng-required="true"
+                    close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button"
+                              class="btn btn-default"
+                              ng-click="editCtrl.open($event)"
+                              ng-disabled="editCtrl.draft.status == 'LOCKED'">
+                              <i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </p>
           </div>
           <div class="dept-right">
               <label>Department Contact:</label>
@@ -91,24 +104,29 @@
             </div>
           </form>
         </div>
-
+        <!-------------- ORIGINAL STICKY SEARCH AREA ------------ -->
         <div id="search-group"  sticky menu="true" class="sticky-menu">
-          <div class="horizontal-center">
+          <div id="edit-status">
+            <span ng-model="editCtrl.status">{{editCtrl.status}}</span>
+          </div>
+          <i id="status-spinner" class="fa fa-spinner fa-spin"></i>
+          <div class="left">
             <input id="schedule-search" ng-model="editCtrl.searchValue"
                 ng-change="editCtrl.run_search()" type="search" placeholder="Search">
             <span id="result-count">0</span><span>results</span>
-            <!-- <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
-            <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a> -->
           </div>
         </div>
 
+        <!-------------- CLONED STICKY SEARCH AREA ------------ -->
         <div id="search-group" sticky clone="true" class="sticky-search-clone display-none">
-          <div class="horizontal-center">
+          <div id="edit-status-clone">
+            <span ng-model="editCtrl.status">{{editCtrl.status}}</span>
+          </div>
+          <i id="status-spinner-clone" class="fa fa-spinner fa-spin"></i>
+          <div class="left">
             <input id="schedule-search-clone" ng-model="editCtrl.searchValue" ng-change="editCtrl.run_search()"
                 type="search" placeholder="Search">
             <span id="result-count-clone">0</span><span>results</span>
-            <!-- <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
-            <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a> -->
           </div>
         </div>
 

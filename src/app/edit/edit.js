@@ -25,7 +25,7 @@ angular.module( 'sunshine.edit', [
 
 .controller('EditCtrl', function EditCtrl($scope, GlobalVariables, ScheduleDelete, PopulateGrid, Department,
     ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, Authentication, TipGo,
-    ViewPublished, RunSearch) { //SchedulePDF
+    RunSearch, SetStatus) { //SchedulePDF
 
     GlobalVariables.showFooter = false;
     var self = this;
@@ -39,7 +39,6 @@ angular.module( 'sunshine.edit', [
     self.lock = ScheduleLock;
     self.unlock = ScheduleUnlock;
     self.tips = TipGo;
-    self.view_published = ViewPublished;
   //  self.next = SearchNext;
   //  self.previous = SearchPrevious;
     self.populateGrid = PopulateGrid.populateGrid;
@@ -48,6 +47,31 @@ angular.module( 'sunshine.edit', [
     self.allow = (Authentication.userRoles.indexOf("Administrator") > -1 ||
       Authentication.userRoles.indexOf("Publisher") > -1);
     self.run_search = RunSearch;
+
+    //format date picker
+    self.dateOptions = {
+      formatYear: 'yy',
+      startingDay: 1,
+      showWeeks:false
+    };
+
+    self.open = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      self.opened = true;
+    };
+
+    //WATCH RETENTION
+    $scope.$watch(
+      function() {
+        return self.status;
+      },
+      function(newVal, oldVal) {
+        var setStatus = SetStatus;
+        setStatus(newVal);
+      }
+    );
 
     Department
     .get_draft()
@@ -67,15 +91,7 @@ angular.module( 'sunshine.edit', [
 .factory("TipGo",["$state", function($state){
   var  go = function(){
     var self = this;
-    $state.go('tip_picker',{schedule_id : self.selected_dept});
-  };
-  return go;
-}])
-
-.factory("ViewPublished",["$state", function($state){
-  var  go = function(){
-    var self = this;
-    $state.go('agency',{dept_id : self.selected_dept});
+    $state.go('tip_picker',{dept_id : self.selected_dept});
   };
   return go;
 }])
@@ -83,6 +99,7 @@ angular.module( 'sunshine.edit', [
 .factory("RunSearch",["PopulateGrid", "Debounce", function(PopulateGrid, Debounce){
 
   var run_search = Debounce.debounce(function(){
+
                     var self = this;
                     var hot = PopulateGrid.getHandsontable();
                     self.searchResults = hot.search.query(self.searchValue);
@@ -92,7 +109,7 @@ angular.module( 'sunshine.edit', [
                     count.innerHTML = searchCounter;
                     count_clone.innerHTML = searchCounter;
                     hot.render();
-                  },669, false);
+                  },669, false, "saved" );
 
   return run_search;
 }])
@@ -109,9 +126,9 @@ angular.module( 'sunshine.edit', [
             var self = this;
 
             var dept_id = self.selected_dept;
-            var dept_name = self.selected_dept_name;
             Authentication.setValue("selDept", dept_id);
-            Authentication.setValue("selDeptName", dept_name);
+            //var dept_name = self.selected_dept_name;
+            //Authentication.setValue("selDeptName", dept_name);
 
               Schedule.get_draft(dept_id)
                 .then(function (data){
@@ -120,6 +137,7 @@ angular.module( 'sunshine.edit', [
                     self.draft = Schedule.draft;
                     self._id = Schedule._id;
                     self.pdf_link = GlobalVariables.api_url + "/v1/pdf/" + self._id;
+                    Authentication.setValue("selDeptName", self.draft.department);
 
                     //setup configuration
                     var settings = HOTHelper.config(ScheduleEdit.config());
@@ -412,9 +430,36 @@ angular.module( 'sunshine.edit', [
   return del;
 }])
 
+.factory("SetStatus", function(){
+  var setStatus = function(str){
+    var status = document.getElementById("edit-status");
+    var status_clone = document.getElementById("edit-status-clone");
+    var status_spinner = document.getElementById("status-spinner");
+    var status_spinner_clone = document.getElementById("status-spinner-clone");
+
+    if(status_spinner){
+      if(str == 'saving'){
+        status_spinner.className = status_spinner.className.replace("off-side", '');
+        status_spinner_clone.className = status_spinner.className.replace("off-side", '');
+      }
+
+      if(str == 'saved'){
+        status_spinner.className += " off-side";
+        status_spinner_clone.className += " off-side";
+      }
+    }
+
+    status.innerHTML = str;
+    status_clone.innerHTML = str;
+  };
+
+  return setStatus;
+
+})
+
 .factory("ScheduleEdit",["Schedule", "RetentionCategories", "Debounce", "HttpQueue", "HOTHelper",
-  "Authentication", "$window",
-  function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper, Authentication, $window){
+  "Authentication", "$window", "SetStatus",
+  function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper, Authentication, $window, SetStatus){
 
   function callback(res){}
 
@@ -433,10 +478,7 @@ angular.module( 'sunshine.edit', [
      process(uniqueVals);
    };
 
-  var setStatus = function(str){
-    var status = document.getElementById("edit-status");
-    status.innerHTML = str;
-  };
+   var setStatus = SetStatus;
 
   var cellFmt =  function(row, col, prop){
      var props = {};
@@ -450,15 +492,14 @@ angular.module( 'sunshine.edit', [
 
   //Before Save
   var beforeSave = function(change, source){
-    var edit_status = document.getElementById("edit-status");
-    edit_status.innerHTML = "saving";
+    if(source == "insertId"){return;}
+    setStatus("saving");
   };
 
   //Autosave function
   var autoSave = function(change,source){
 
     var self = this;
-    var edit_status = document.getElementById("edit-status");
     if (source === 'loadData') {return;} //dont' save this change
     if (source === 'insertId') {return;} // stops an endless loop when the new record id is added after an insert
 
@@ -505,8 +546,12 @@ angular.module( 'sunshine.edit', [
       record.draft = {};
       record.draft.record = row;
 
-      Schedule.delete_draft_record(record)
-      .then(successCallback);
+      if(row._id){
+        Schedule.delete_draft_record(record)
+        .then(successCallback);
+      }else{
+        setStatus("saved");
+      }
       index++;
     }
   };
@@ -529,22 +574,24 @@ angular.module( 'sunshine.edit', [
       case 1 :
         return tenPct;
       case 2 :
-        return fifteenPct;
-      case 3 :
-        return twentyPct;
-      case 4 :
         return tenPct;
+      case 3 :
+        return fifteenPct;
+      case 4 :
+        return twentyPct;
       case 5 :
         return tenPct;
       case 6 :
-          return fivePct;
+        return tenPct;
       case 7 :
-        return fivePct;
+          return fivePct;
       case 8 :
         return fivePct;
       case 9 :
-        return twentyPct;
+        return fivePct;
       case 10 :
+        return tenPct;
+      case 11 :
         return  1;
     }
 
@@ -558,9 +605,13 @@ angular.module( 'sunshine.edit', [
         config.fixedRowsTop = 0;
         config.fixedRowsOffset = 66;
         config.autoColumnSize = false;
-        config.contextMenu = false;
-      //  config.contextMenu = ["row_above", "row_below", "remove_row"];
-        config.colHeaders = ["_id","Division","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
+
+        config.contextMenu =   {};
+        config.contextMenu.items = {};
+        config.contextMenu.items.row_above = {name:"Insert row"};
+        config.contextMenu.items.remove_row = {name:"Remove row"};
+
+        config.colHeaders = ["_id","Division", "Division Contact", "Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
         config.colWidths = colWidth;
 
         //schema for empty row
@@ -577,6 +628,11 @@ angular.module( 'sunshine.edit', [
         divisionConfig.source = divisionAutoComplete;
         divisionConfig.strict = false;
         config.columns.push(divisionConfig);
+
+        //Division Contact Column
+        var divisionContactConfig = {};
+        divisionContactConfig.data = "division_contact";
+        config.columns.push(divisionContactConfig);
 
 
          //Category Column

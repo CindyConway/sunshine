@@ -19,11 +19,9 @@
     </div>
   </header>
 
-  <div class="white-background" ncy-breadcrumb></div>
+
 
   <div ng-controller="SearchCtrl as searchCtrl">
-
-  <div ng-if="searchCtrl.count > 0" class="three-quarter-width mt3 mb3 horizontal-center sm-full-width">You may submit a request for any of the following records in accordance with applicable public records laws. The departments have included a direct link to some of the records; if there is no link for the record you are seeking, and/or you would like to request additional information regarding that record, please contact the department or division directly using the contact information provided for that specific record.</div>
 
   <!-------------------- Search Filters -------------------->
     <cc-menu cc-placement="right" cc-width="300px" class="grey-background
@@ -63,15 +61,6 @@
                 <input type="checkbox" checklist-model="searchCtrl.dept_sel" checklist-value="department.key"
                                                                             ng-model= "searchCtrl.dept_sel" >
                 <label class="regular">{{department.key}}</label>
-
-  <!--               <ul>
-    <li class="no-bullet">
-      <div ng-repeat="division in department.division.buckets" class="lh20 regular">
-        <input type="checkbox" checklist-model="searchCtrl.division_sel" checklist-value="division.key">
-        <label class="regular small">{{division.key}}</label>
-      </div>
-    </li>
-  </ul> -->
               </div>
             </li>
           </ul>
@@ -109,6 +98,10 @@
       This can help you get an idea of the types of records that are in the Index.
     </div>
 
+    <!------------ Breadcrumb and Text ------------------>
+    <div class="white-background" ncy-breadcrumb></div>
+    <div ng-if="searchCtrl.count > 0" class="three-quarter-width mt3 mb3 horizontal-center sm-full-width">You may submit a request for any of the following records in accordance with applicable public records laws. The departments have included a direct link to some of the records; if there is no link for the record you are seeking, and/or you would like to request additional information regarding that record, please contact the department or division directly using the contact information provided for that specific record.</div>
+
     <!------------ Search Result ------------------>
     <cc-content  style="min-height:400px">
         <div  ng-if="searchCtrl.results" class="px4 sm-full-width" ng-repeat="result in searchCtrl.results">
@@ -118,10 +111,10 @@
             <tr class="lh20">
               <td ng-if="result._source.department" class="bold vertical-align-top w110">Department: </td>
               <td ng-if="result.highlight.department[0]">
-                <a ui-sref="agency/({schedule_id:'{{result._source.schedule_id}}'})">
+                <a ui-sref="agency/({dept_id:'{{result._source.schedule_id}}'})">
                   <span ng-bind-html="result.highlight.department[0]"</span></a> </td>
               <td ng-if="!result.highlight.department[0]">
-                <a ui-sref="agency_list({schedule_id:'{{result._source.schedule_id}}'})">{{result._source.department}}</a></td>
+                <a ui-sref="agency_list({dept_id:'{{result._source.schedule_id}}'})">{{result._source.department}}</a></td>
             </tr>
             <tr class="lh20">
               <td ng-if="result._source.category" class="bold vertical-align-top">Category:</td>
