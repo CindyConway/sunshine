@@ -18,7 +18,7 @@
           </div>
 
           <div id="action-group">
-            <span class="horizontal-center">{{editCtrl.errorMsg}}</span>
+            <p class="horizontal-center">{{editCtrl.errorMsg}}</p>
             <button ng-click="editCtrl.lock()" ng-disabled="editCtrl.draft.status != 'DIRTY'" >Lock</button>
             <button ng-click="editCtrl.tips()" ng-disabled="editCtrl.draft.status === 'LOCKED'">Add Recommendations</button>
             <a href="{{editCtrl.pdf_link}}" target="_blank" download>Generate PDF</a>
