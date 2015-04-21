@@ -7,7 +7,7 @@ angular.module( 'sunshine.tip_picker', [
 .config(function config( $stateProvider ) {
 
     $stateProvider.state( 'tip_picker', {
-        url: '/tip_picker/:schedule_id',
+        url: '/tip_picker/:dept_id',
         ncyBreadcrumb: {
           label: 'Add Recommendations',
           parent: 'edit'
@@ -58,36 +58,36 @@ angular.module( 'sunshine.tip_picker', [
         self.tip_grid.style.visibility = 'visible';
       });
 
-  self.next = function(){
-
-      if (self.searchResults.length < 1 ){return;}
-
-      self.selSearchResult++;
-
-      if(self.selSearchResult > (self.searchResults.length - 1))
-      {
-        self.selSearchResult = 0;
-      }
-
-      var sel = self.searchResults[self.selSearchResult];
-      tip_Handsontable.selectCell(sel.row, sel.col);
-
-  };
-
-  self.previous = function(){
-      if (self.searchResults.length < 1 ){return;}
-
-      self.selSearchResult--;
-
-      if(self.selSearchResult < 0 )
-      {
-        self.selSearchResult = self.searchResults.length - 1;
-      }
-
-      var sel = self.searchResults[self.selSearchResult];
-      tip_Handsontable.selectCell(sel.row, sel.col);
-
-  };
+  // self.next = function(){
+  //
+  //     if (self.searchResults.length < 1 ){return;}
+  //
+  //     self.selSearchResult++;
+  //
+  //     if(self.selSearchResult > (self.searchResults.length - 1))
+  //     {
+  //       self.selSearchResult = 0;
+  //     }
+  //
+  //     var sel = self.searchResults[self.selSearchResult];
+  //     tip_Handsontable.selectCell(sel.row, sel.col);
+  //
+  // };
+  //
+  // self.previous = function(){
+  //     if (self.searchResults.length < 1 ){return;}
+  //
+  //     self.selSearchResult--;
+  //
+  //     if(self.selSearchResult < 0 )
+  //     {
+  //       self.selSearchResult = self.searchResults.length - 1;
+  //     }
+  //
+  //     var sel = self.searchResults[self.selSearchResult];
+  //     tip_Handsontable.selectCell(sel.row, sel.col);
+  //
+  // };
 
   // add listener to tip_search field to cause the grid to
   // be searched

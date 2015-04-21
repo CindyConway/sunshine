@@ -528,7 +528,10 @@ angular.module( 'sunshine.global_svcs', [])
       //if debouce breaks for other functions it is
       //because I added context.status and the status argumanet
       //It is used on the save of the schedule edit
-      context.status = status;
+
+      if(typeof context.status != 'undefined'){
+        context.status = status;
+      }
 
       var later = function() {
         timeout = null;

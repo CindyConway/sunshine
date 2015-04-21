@@ -91,7 +91,7 @@ angular.module( 'sunshine.edit', [
 .factory("TipGo",["$state", function($state){
   var  go = function(){
     var self = this;
-    $state.go('tip_picker',{schedule_id : self.selected_dept});
+    $state.go('tip_picker',{dept_id : self.selected_dept});
   };
   return go;
 }])
@@ -99,6 +99,7 @@ angular.module( 'sunshine.edit', [
 .factory("RunSearch",["PopulateGrid", "Debounce", function(PopulateGrid, Debounce){
 
   var run_search = Debounce.debounce(function(){
+
                     var self = this;
                     var hot = PopulateGrid.getHandsontable();
                     self.searchResults = hot.search.query(self.searchValue);
@@ -108,7 +109,7 @@ angular.module( 'sunshine.edit', [
                     count.innerHTML = searchCounter;
                     count_clone.innerHTML = searchCounter;
                     hot.render();
-                  },669, false);
+                  },669, false, "saved" );
 
   return run_search;
 }])
@@ -125,9 +126,9 @@ angular.module( 'sunshine.edit', [
             var self = this;
 
             var dept_id = self.selected_dept;
-            var dept_name = self.selected_dept_name;
             Authentication.setValue("selDept", dept_id);
-            Authentication.setValue("selDeptName", dept_name);
+            //var dept_name = self.selected_dept_name;
+            //Authentication.setValue("selDeptName", dept_name);
 
               Schedule.get_draft(dept_id)
                 .then(function (data){
@@ -136,6 +137,7 @@ angular.module( 'sunshine.edit', [
                     self.draft = Schedule.draft;
                     self._id = Schedule._id;
                     self.pdf_link = GlobalVariables.api_url + "/v1/pdf/" + self._id;
+                    Authentication.setValue("selDeptName", self.draft.department);
 
                     //setup configuration
                     var settings = HOTHelper.config(ScheduleEdit.config());
@@ -544,8 +546,12 @@ angular.module( 'sunshine.edit', [
       record.draft = {};
       record.draft.record = row;
 
-      Schedule.delete_draft_record(record)
-      .then(successCallback);
+      if(row._id){
+        Schedule.delete_draft_record(record)
+        .then(successCallback);
+      }else{
+        setStatus("saved");
+      }
       index++;
     }
   };
@@ -568,22 +574,24 @@ angular.module( 'sunshine.edit', [
       case 1 :
         return tenPct;
       case 2 :
-        return fifteenPct;
-      case 3 :
-        return twentyPct;
-      case 4 :
         return tenPct;
+      case 3 :
+        return fifteenPct;
+      case 4 :
+        return twentyPct;
       case 5 :
         return tenPct;
       case 6 :
-          return fivePct;
+        return tenPct;
       case 7 :
-        return fivePct;
+          return fivePct;
       case 8 :
         return fivePct;
       case 9 :
-        return twentyPct;
+        return fivePct;
       case 10 :
+        return tenPct;
+      case 11 :
         return  1;
     }
 
@@ -603,7 +611,7 @@ angular.module( 'sunshine.edit', [
         config.contextMenu.items.row_above = {name:"Insert row"};
         config.contextMenu.items.remove_row = {name:"Remove row"};
 
-        config.colHeaders = ["_id","Division","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
+        config.colHeaders = ["_id","Division", "Division Contact", "Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
         config.colWidths = colWidth;
 
         //schema for empty row
@@ -620,6 +628,11 @@ angular.module( 'sunshine.edit', [
         divisionConfig.source = divisionAutoComplete;
         divisionConfig.strict = false;
         config.columns.push(divisionConfig);
+
+        //Division Contact Column
+        var divisionContactConfig = {};
+        divisionContactConfig.data = "division_contact";
+        config.columns.push(divisionContactConfig);
 
 
          //Category Column

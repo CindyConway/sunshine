@@ -55,36 +55,36 @@ angular.module( 'sunshine.tip', [
       });
 
 
-  self.next = function(){
-
-      if (self.searchResults.length < 1 ){return;}
-
-      self.selSearchResult++;
-
-      if(self.selSearchResult > (self.searchResults.length - 1))
-      {
-        self.selSearchResult = 0;
-      }
-
-      var sel = self.searchResults[self.selSearchResult];
-      tip_Handsontable.selectCell(sel.row, sel.col);
-
-  };
-
-  self.previous = function(){
-      if (self.searchResults.length < 1 ){return;}
-
-      self.selSearchResult--;
-
-      if(self.selSearchResult < 0 )
-      {
-        self.selSearchResult = self.searchResults.length - 1;
-      }
-
-      var sel = self.searchResults[self.selSearchResult];
-      tip_Handsontable.selectCell(sel.row, sel.col);
-
-  };
+  // self.next = function(){
+  //
+  //     if (self.searchResults.length < 1 ){return;}
+  //
+  //     self.selSearchResult++;
+  //
+  //     if(self.selSearchResult > (self.searchResults.length - 1))
+  //     {
+  //       self.selSearchResult = 0;
+  //     }
+  //
+  //     var sel = self.searchResults[self.selSearchResult];
+  //     tip_Handsontable.selectCell(sel.row, sel.col);
+  //
+  // };
+  //
+  // self.previous = function(){
+  //     if (self.searchResults.length < 1 ){return;}
+  //
+  //     self.selSearchResult--;
+  //
+  //     if(self.selSearchResult < 0 )
+  //     {
+  //       self.selSearchResult = self.searchResults.length - 1;
+  //     }
+  //
+  //     var sel = self.searchResults[self.selSearchResult];
+  //     tip_Handsontable.selectCell(sel.row, sel.col);
+  //
+  // };
 
   // add listener to tip_search field to cause the grid to
   // be searched
@@ -169,16 +169,23 @@ angular.module( 'sunshine.tip', [
 
     //remove one record from the database
     var beforeRemoveRow = function(index, amount){
+        setStatus("saving");
+
         var rowNumber = this.sortIndex[index] ? this.sortIndex[index][0] : index;
         var row = this.getSourceDataAtRow(rowNumber);
 
-        Template.del(row)
-        .success(function(res){
+        if(row._id){
+          Template.del(row)
+          .success(function(res){
+            setStatus("saved");
 
-        })
-        .error(function(err){
-          console.log(err);
-        });
+          })
+          .error(function(err){
+            console.log(err);
+          });
+        }else{
+          setStatus("saved");
+        }
     };
 
     var afterRender = function(){
