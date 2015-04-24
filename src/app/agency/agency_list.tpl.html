@@ -45,7 +45,7 @@
     </table>
     <div ng-repeat="record in agencyCtrl2.records" class="grey-border-bottom grey-border-right grey-border-left px2 sm-full-width">
 
-      <a target="_blank" ng-if="::record.link"  href="http://{{::record.link}}"><h1 class="m0 p2-top blue-text record-headings">{{record.title}}</h1></a>
+      <a target="_blank" ng-if="::record.link"  href="{{::record.link}}"><h1 class="m0 p2-top blue-text record-headings">{{record.title}}</h1></a>
           <!-- OR -->
       <h1 ng-hide="::record.link" class="m0 p2-top blue-text record-headings">{{record.title}}</h1>
 

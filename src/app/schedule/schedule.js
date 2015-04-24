@@ -23,7 +23,7 @@ angular.module( 'sunshine.schedule', ['ui.router'])
 
     Schedule.get_draft(self._id).then(function (data){
         self.draft =  data.draft;
-        self.isNotLocked = self.draft.status != "LOCKED";
+        self.isNotLocked = self.draft.status != "Locked";
     });
 })
 
