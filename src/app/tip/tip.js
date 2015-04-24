@@ -43,7 +43,6 @@ angular.module( 'sunshine.tip', [
           var settings = HOTHelper.config(TipEdit.config());
          var l = HOTHelper.getFittedWidths.call(tip_Handsontable, template, settings.columns);
          settings.search = {callback: HOTHelper.searchResultCounter};
-         settings.manualColumnResize = [1, l.category, l.title, l.link, l.retention, l.on_site, l.off_site, l.total, l.remarks, l.is_visible ];
          settings.data = template;
 
          //Display Table
@@ -99,6 +98,41 @@ angular.module( 'sunshine.tip', [
 
 .factory('TipEdit', ["Template", "RetentionCategories", "HOTHelper",
   function (Template, RetentionCategories, HOTHelper) {
+
+    //Function to adjust the width of the columns
+    var colWidth = function(index){
+      win_width = window.innerWidth;
+      win_width = win_width * 0.924;
+      var fivePct = win_width * 0.05;
+      var eightPct = win_width * 0.08;
+      var tenPct = win_width * 0.1;
+      var fifteenPct = win_width * 0.15;
+      var twentyPct = win_width * 0.2;
+
+      switch(index){
+        case 0 :
+          return  1;
+        case 1 :
+          return tenPct;
+        case 2 :
+          return twentyPct;
+        case 3 :
+          return tenPct;
+        case 4 :
+          return tenPct;
+        case 5 :
+          return tenPct;
+        case 6 :
+          return tenPct;
+        case 7 :
+          return tenPct;
+        case 8 :
+          return fifteenPct;
+        case 9 :
+          return fivePct;
+      }
+
+    };
 
     // Division Autocomplete Function
     var categoryAutoComplete = function(query, process){
@@ -205,6 +239,8 @@ angular.module( 'sunshine.tip', [
 
         config.colHeaders = ["_id","Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "Visibility"];
 
+        config.autoColumnSize = false;
+        config.colWidths = colWidth;
         //schema for empty row
         config.dataSchema={_id:null, category:null, title:null, link:null, retention:null, on_site:null, off_site:null, total:null, remarks:null, is_visible: null};
 

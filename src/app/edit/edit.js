@@ -143,7 +143,7 @@ angular.module( 'sunshine.edit', [
                     var settings = HOTHelper.config(ScheduleEdit.config());
 
                     //Make grid read only if it is locked
-                    if(self.draft.status == "LOCKED"){
+                    if(self.draft.status == "Locked"){
                       settings.readOnly = true;
                     }
 
@@ -229,7 +229,7 @@ angular.module( 'sunshine.edit', [
                         Schedule.unlock(self._id)
                           .success(function(data){
 
-                            Schedule.draft.status = "DIRTY";
+                            Schedule.draft.status = "Edited";
                             self.draft.status = Schedule.draft.status;
                             var settings = thisHandsontable.getSettings();
                             settings.readOnly = false;
@@ -271,8 +271,8 @@ angular.module( 'sunshine.edit', [
                         Schedule.lock(self._id)
                           .success(function(data){
 
-                            Schedule.draft.status = "LOCKED";
-                            self.draft.status = "LOCKED";
+                            Schedule.draft.status = "Locked";
+                            self.draft.status = "Locked";
                             var settings = thisHandsontable.getSettings();
 
                             settings.readOnly = true;
@@ -312,7 +312,7 @@ angular.module( 'sunshine.edit', [
                 Schedule.publish(self._id)
                   .success(function(data){
 
-                    Schedule.draft.status = "CLEAN";
+                    Schedule.draft.status = "Published";
                     self.draft.status = Schedule.draft.status;
 
                     var settings = thisHandsontable.getSettings();
@@ -362,7 +362,7 @@ angular.module( 'sunshine.edit', [
                       self.dept_list = data;
                       self.selected_dept = Authentication.selDept;
 
-                      Schedule.draft.status = "DIRTY";
+                      Schedule.draft.status = "Edited";
                       self.draft.status = Schedule.draft.status;
 
                       if(HttpQueue.count === 0){
@@ -472,7 +472,7 @@ angular.module( 'sunshine.edit', [
 
   // Category Autocomplete Function
   var categoryAutoComplete = function(query, process){
-     var vals = this.instance.getDataAtCol(2);
+     var vals = this.instance.getDataAtCol(3);
      var uniqueVals = vals.unique().sort().nulless();
 
      process(uniqueVals);
@@ -516,7 +516,7 @@ angular.module( 'sunshine.edit', [
     Schedule.save_draft_record(obj)
     .then(function(res){
       self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
-      Schedule.draft.status = "DIRTY";
+      Schedule.draft.status = "Edited";
 
       if(HttpQueue.count === 0){
         setStatus("saved");
@@ -561,7 +561,7 @@ angular.module( 'sunshine.edit', [
   };
 
   var colWidth = function(index){
-    var info = angular.element(document.querySelector('#department-info')); 
+    var info = angular.element(document.querySelector('#department-info'));
     win_width = info[0].clientWidth;
     var fivePct = win_width * 0.07;
     var tenPct = win_width * 0.1;
@@ -605,7 +605,7 @@ angular.module( 'sunshine.edit', [
         config.fixedRowsTop = 0;
         config.fixedRowsOffset = 66;
         config.autoColumnSize = false;
-
+        //config.contextMenu = false;
         config.contextMenu =   {};
         config.contextMenu.items = {};
         config.contextMenu.items.row_above = {name:"Insert row"};

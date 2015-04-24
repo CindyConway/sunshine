@@ -19,12 +19,12 @@
 
           <div id="action-group">
             <p class="horizontal-center">{{editCtrl.errorMsg}}</p>
-            <button ng-click="editCtrl.lock()" ng-disabled="editCtrl.draft.status != 'DIRTY'" >Lock</button>
-            <button ng-click="editCtrl.tips()" ng-disabled="editCtrl.draft.status === 'LOCKED'">Add Recommendations</button>
+            <button ng-click="editCtrl.lock()" ng-disabled="editCtrl.draft.status != 'Edited'" >Lock</button>
+            <button ng-click="editCtrl.tips()" ng-disabled="editCtrl.draft.status === 'Locked'">Add Recommendations</button>
             <a href="{{editCtrl.pdf_link}}" target="_blank" download>Generate PDF</a>
             <button ng-hide="!editCtrl.allow" ng-click="editCtrl.publish()"
-                ng-disabled="editCtrl.draft.status != 'LOCKED'">Publish</button>
-            <button ng-hide="!editCtrl.allow" ng-click="editCtrl.unlock()" ng-disabled="editCtrl.draft.status != 'LOCKED'">Unlock</button>
+                ng-disabled="editCtrl.draft.status != 'Locked'">Publish</button>
+            <button ng-hide="!editCtrl.allow" ng-click="editCtrl.unlock()" ng-disabled="editCtrl.draft.status != 'Locked'">Unlock</button>
             <button ng-hide="!editCtrl.allow" ng-click="editCtrl.del()">Delete</button>
             <a href="#/agency/{{editCtrl._id}}" target="_blank">View Published</a>
           </div>
@@ -39,7 +39,7 @@
                 name="department"
                 ng-model="editCtrl.draft.department"
                 ng-change="editCtrl.save()"
-                ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                ng-disabled="editCtrl.draft.status == 'Locked'"
                 placeholder="Organization Name (required)"
                 required="">
               <input
@@ -48,7 +48,7 @@
                 class="dept-input"
                 ng-model="editCtrl.draft.website"
                 ng-change="editCtrl.save()"
-                ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                ng-disabled="editCtrl.draft.status == 'Locked'"
                 placeholder="Organization Website (required)"
                 required="">
               <label>Ratified on:</label>
@@ -60,7 +60,7 @@
                     datepicker-popup="dd/MM/yyyy"
                     ng-model="editCtrl.draft.ratified_on"
                     ng-change="editCtrl.save()"
-                    ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                    ng-disabled="editCtrl.draft.status == 'Locked'"
                     is-open="editCtrl.opened"
                     datepicker-options="editCtrl.dateOptions"
                     date-disabled="disabled(date, mode)"
@@ -71,7 +71,7 @@
                       <button type="button"
                               class="btn btn-default"
                               ng-click="editCtrl.open($event)"
-                              ng-disabled="editCtrl.draft.status == 'LOCKED'">
+                              ng-disabled="editCtrl.draft.status == 'Locked'">
                               <i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </p>
@@ -83,7 +83,7 @@
                 class="dept-input"
                 ng-model="editCtrl.draft.contact"
                 ng-change="editCtrl.save()"
-                ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                ng-disabled="editCtrl.draft.status == 'Locked'"
                 placeholder="Contact Person (required)"
                 required="">
               <input
@@ -91,7 +91,7 @@
                 class="dept-input"
                 ng-model="editCtrl.draft.phone"
                 ng-change="editCtrl.save()"
-                ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                ng-disabled="editCtrl.draft.status == 'Locked'"
                 placeholder="Phone number (required)"
                 required="">
               <input
@@ -99,7 +99,7 @@
                 class="dept-input"
                 ng-model="editCtrl.draft.email"
                 ng-change="editCtrl.save()"
-                ng-disabled="editCtrl.draft.status == 'LOCKED'"
+                ng-disabled="editCtrl.draft.status == 'Locked'"
                 placeholder="Email">
             </div>
           </form>

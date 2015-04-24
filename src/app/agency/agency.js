@@ -46,10 +46,10 @@ angular.module( 'sunshine.agency', ['ui.router'])
   self.on_site_fltr = '';
   self.off_site_fltr = '';
   self.total_fltr = '';
-console.log(self.schedule_id);
+
   self.agency_promise = Schedule.get_adopted(self.schedule_id)
   .then(function (data){
-    console.log(data);
+
     self.adopted = data[0].adopted;
     self.records = self.adopted.record;
 
