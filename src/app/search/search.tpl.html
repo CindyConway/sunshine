@@ -7,10 +7,9 @@
 
           <a ui-sref="home">
             <span class="switcher">
-              <img class="houdini" src="assets/logo-main.png" alt="index of records logo">
+              <img class="houdini" src="assets/logo-main.png" alt="index of records logo" />
             </span>
           </a>
-          <button cc-button class="absolute top-0 right-0 blue-text" ><i class="fa fa-bars mr1 "></i>Refine</button>
         </div>
       </div>
     </div>
@@ -27,7 +26,7 @@
     <cc-menu cc-placement="right" cc-width="300px" class="grey-background
     cc-media-start-closed">
     <div class="full-width">
-      <button cc-button class="relative left grey-background mb2"><i class="fa fa-chevron-right"></i></button>
+      <button cc-button class="relative left grey-background mb2"><i class="fa fa-times"></i></button>
     </div>
       <form name="mainSearch" ng-submit="searchCtrl.search(searchCtrl.terms)" novalidate>
         <div class="search-box-sml mb1 mt3 px3">
@@ -45,7 +44,7 @@
         </div>
         <div class="center" ng-if="searchCtrl.count > 0">
           Number of matches: {{searchCtrl.count}}
-          <hr class="grey-border">
+          <hr class="grey-border" />
         </div>
       </form>
 
@@ -59,7 +58,7 @@
             <li class="no-bullet">
               <div ng-repeat="department in searchCtrl.aggs.departments.buckets" class="lh20 regular">
                 <input type="checkbox" checklist-model="searchCtrl.dept_sel" checklist-value="department.key"
-                                                                            ng-model= "searchCtrl.dept_sel" >
+                                                                            ng-model= "searchCtrl.dept_sel" />
                 <label class="regular">{{department.key}}</label>
               </div>
             </li>
@@ -71,7 +70,7 @@
           <ul>
             <li class="no-bullet">
             <div ng-repeat="category in searchCtrl.aggs.category.buckets" class="lh20 regular">
-              <input type="checkbox" checklist-model="searchCtrl.category_sel" checklist-value="category.key">
+              <input type="checkbox" checklist-model="searchCtrl.category_sel" checklist-value="category.key" />
                 <label class="regular">{{category.key}}</label>
             </div>
             </li>
@@ -83,7 +82,7 @@
           <ul>
             <li class="no-bullet">
               <div ng-repeat="retention in searchCtrl.aggs.retention.buckets" class="lh20 regular">
-                <input type="checkbox" checklist-model="searchCtrl.retention_sel" checklist-value="retention.key">
+                <input type="checkbox" checklist-model="searchCtrl.retention_sel" checklist-value="retention.key" />
                 <label class="regular"> {{retention.key}}</label>
               </div>
             </li>
@@ -100,10 +99,11 @@
 
     <!------------ Breadcrumb and Text ------------------>
     <div class="white-background" ncy-breadcrumb></div>
-    <div ng-if="searchCtrl.count > 0" class="three-quarter-width mt3 mb3 horizontal-center sm-full-width">You may submit a request for any of the following records in accordance with applicable public records laws. The departments have included a direct link to some of the records; if there is no link for the record you are seeking, and/or you would like to request additional information regarding that record, please contact the department or division directly using the contact information provided for that specific record.</div>
+    <button cc-button class="refine-search">Refine Search</button>
 
     <!------------ Search Result ------------------>
     <cc-content  style="min-height:400px">
+	<div ng-if="searchCtrl.count > 0" class="three-quarter-width mt3 mb3 horizontal-center sm-full-width">You may submit a request for any of the following records in accordance with applicable public records laws. The departments have included a direct link to some of the records; if there is no link for the record you are seeking, and/or you would like to request additional information regarding that record, please contact the department or division directly using the contact information provided for that specific record.</div>
         <div  ng-if="searchCtrl.results" class="px4 sm-full-width" ng-repeat="result in searchCtrl.results">
           <h1 ng-if="result.highlight.title" class="blue-text shadow" ng-bind-html="result.highlight.title[0]"></h1>
           <h1 ng-if="!result.highlight.title"class="blue-text">{{result._source.title}}</h1>
@@ -112,7 +112,7 @@
               <td ng-if="result._source.department" class="bold vertical-align-top w110">Department: </td>
               <td ng-if="result.highlight.department[0]">
                 <a ui-sref="agency/({dept_id:'{{result._source.schedule_id}}'})">
-                  <span ng-bind-html="result.highlight.department[0]"</span></a> </td>
+                  <span ng-bind-html="result.highlight.department[0]"></span></a> </td>
               <td ng-if="!result.highlight.department[0]">
                 <a ui-sref="agency_list({dept_id:'{{result._source.schedule_id}}'})">{{result._source.department}}</a></td>
             </tr>
@@ -169,11 +169,11 @@
                   <span class="bold p2-left p1-right">total time retained: </span>
                   <span ng-if="result.highlight.total[0]" ng-bind-html="result.highlight.total[0]"></span>
                   <span ng-if="!result.highlight.total[0]">{{result._source.total}}</span>
-              </small>
+              </span></span></small>
               </td>
             </tr>
           </table>
-          <hr>
+          <hr />
         </div>
     </cc-content>
   </div>
