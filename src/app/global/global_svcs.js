@@ -128,7 +128,7 @@ angular.module( 'sunshine.global_svcs', [])
         [ Search Object ]
 
 ==================================*/
-.service('Search', function($http, GlobalVariables) {
+.service('Search', function($http, GlobalVariables, Authentication) {
   var apiUrl = GlobalVariables.api_url;
   search_terms = {};
   search_filters = {};
@@ -202,6 +202,9 @@ angular.module( 'sunshine.global_svcs', [])
   so it can be passed to Elasticsearch
   ******************************************/
   this.set_terms = function(terms){
+
+    Authentication.setValue("searchTerms", terms);
+
     var json = {};
     json.terms = terms;
     search_terms = json;
@@ -211,6 +214,10 @@ angular.module( 'sunshine.global_svcs', [])
   METHOD: get_terms
   ******************************************/
   this.get_terms = function(){
+    if(!search_terms){
+      return Authentication.searchTerms;
+    }
+
     return search_terms;
   };
 
@@ -362,7 +369,7 @@ angular.module( 'sunshine.global_svcs', [])
 
   this.get_draft = function(dept_id) {
     var url = apiUrl + '/v1/temp/schedule/' + dept_id;
-    //console.log(url);
+
     return $http
       .get(url)
       .then(function(res) {

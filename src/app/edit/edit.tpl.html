@@ -18,7 +18,8 @@
           </div>
 
           <div id="action-group">
-            <p class="horizontal-center">{{editCtrl.errorMsg}}</p>
+            <p class="horizontal-center p3 error-msg" ng-if="editCtrl.errorMsg != ''" ng-cloak>{{editCtrl.errorMsg}}</p>
+            <p class="horizontal-center p3 info-msg" ng-if="editCtrl.draft.status == 'Locked' && !editCtrl.allow">If this schedule needs to be unlocked before it is published, please email <span class="bold">indextorecords@sfgov.org</span>.</p>
             <button ng-click="editCtrl.lock()" ng-disabled="editCtrl.draft.status != 'Edited'" >Lock</button>
             <button ng-click="editCtrl.tips()" ng-disabled="editCtrl.draft.status === 'Locked'">Add Recommendations</button>
             <a href="{{editCtrl.pdf_link}}" target="_blank" download>Generate PDF</a>
@@ -57,7 +58,7 @@
                     type="text"
                     show-weeks="false"
                     class="form-control"
-                    datepicker-popup="dd/MM/yyyy"
+                    datepicker-popup="MM/dd/yyyy"
                     ng-model="editCtrl.draft.ratified_on"
                     ng-change="editCtrl.save()"
                     ng-disabled="editCtrl.draft.status == 'Locked'"
