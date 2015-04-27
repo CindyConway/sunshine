@@ -20,18 +20,18 @@ angular.module('sunshine.search', ['ui.router'])
   });
 })
 
-.controller('SearchCtrl', function($scope, Search, GlobalVariables) {
+.controller('SearchCtrl', function($scope, Search, GlobalVariables, Authentication) {
 
   var self = this;
   self.results = {};
   self.aggs = {};
   self.count = null;
   self.suggestion = '';
-  self.terms = Search.get_terms().terms;
 
   self.dept_sel = [];
   self.category_sel = [];
   self.retention_sel = [];
+  self.terms = Authentication.searchTerms;
 
   Search.clear_filters();
 
@@ -41,7 +41,9 @@ angular.module('sunshine.search', ['ui.router'])
       return self.dept_sel.toString();
     },
     function(newVal, oldVal) {
-      filter ('department.og', self.dept_sel);
+      if (newVal !== oldVal) {//avoid calling on initial page load
+        filter ('department.og', self.dept_sel);
+      }
     }
   );
 
@@ -51,7 +53,9 @@ angular.module('sunshine.search', ['ui.router'])
       return self.category_sel.toString();
     },
     function(newVal, oldVal) {
-      filter ('category.og', self.category_sel);
+      if (newVal !== oldVal) {//avoid calling on initial page load
+        filter ('category.og', self.category_sel);
+      }
     }
   );
 
@@ -61,16 +65,17 @@ angular.module('sunshine.search', ['ui.router'])
       return self.retention_sel.toString();
     },
     function(newVal, oldVal) {
-      filter ('retention.og', self.retention_sel);
+      if (newVal !== oldVal) {//avoid calling on initial page load
+        filter ('retention.og', self.retention_sel);
+      }
     }
   );
 
   var filter  = function (es_field, filterArray ){
     Search.set_filters(es_field, filterArray);
-
+console.log("filter");
     Search.full_text()
     .success(function(data, status) {
-
       if (typeof data.hits != 'undefined') {
         self.results = data.hits.hits;
         self.aggs = data.aggregations;
@@ -82,8 +87,7 @@ angular.module('sunshine.search', ['ui.router'])
 
   };
 
-  this.search = function() {
-
+  self.search = function() {
     self.dept_sel = [];
     self.division_sel = [];
     self.category_sel = [];
@@ -99,6 +103,9 @@ angular.module('sunshine.search', ['ui.router'])
       })
       .error(function(err, status) {});
   };
+
+  self.search();
+
 })
 
 ;

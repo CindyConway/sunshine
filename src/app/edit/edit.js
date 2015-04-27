@@ -136,6 +136,10 @@ angular.module( 'sunshine.edit', [
                     // put the data on the controller's scope
                     self.draft = Schedule.draft;
                     self._id = Schedule._id;
+
+                    //reset validation error
+                    self.errorMsg = "";
+
                     self.pdf_link = GlobalVariables.api_url + "/v1/pdf/" + self._id;
                     Authentication.setValue("selDeptName", self.draft.department);
 
@@ -259,35 +263,43 @@ angular.module( 'sunshine.edit', [
 
 }])
 
-.factory("ScheduleLock",["Schedule", "Debounce", "HttpQueue", "PopulateGrid", "$rootScope",
-  function(Schedule, Debounce, HttpQueue, PopulateGrid, $rootScope){
+.factory("ScheduleLock",["Schedule", "Debounce", "HttpQueue", "PopulateGrid", "$rootScope", "dialogs",
+  function(Schedule, Debounce, HttpQueue, PopulateGrid, $rootScope, dialogs){
     var lock = Debounce.debounce(function(){
                         var self = this;
                         var thisHandsontable = PopulateGrid.getHandsontable();
                         var IsValid = angular.element(document.querySelector('.htInvalid'));
 
-                        if(self.editDepartment.$valid && IsValid.length === 0){
+                         if(self.editDepartment.$valid && IsValid.length === 0){
+                          var header = "Lock";
+                          var msg = "You cannot unlock this schedule without assistance. Would you like to continue?";
+                          var dlg = dialogs.confirm(header, msg);
+                          dlg.result.then(function(btn){
+                            Schedule.lock(self._id)
+                              .success(function(data){
 
-                        Schedule.lock(self._id)
-                          .success(function(data){
+                                Schedule.draft.status = "Locked";
+                                self.draft.status = "Locked";
+                                var settings = thisHandsontable.getSettings();
 
-                            Schedule.draft.status = "Locked";
-                            self.draft.status = "Locked";
-                            var settings = thisHandsontable.getSettings();
+                                settings.readOnly = true;
+                                thisHandsontable.updateSettings(settings);
+                                //update autosave status
+                                if(HttpQueue.count === 0){
+                                  self.status = "saved";
+                                  self.errorMsg = "";
+                                }
 
-                            settings.readOnly = true;
-                            thisHandsontable.updateSettings(settings);
-                            //update autosave status
-                            if(HttpQueue.count === 0){
-                              self.status = "saved";
-                              self.errorMsg = "";
-                            }
-
-                          })
-                          .error(function(data){
-                            console.log(data);
+                              })
+                              .error(function(data){
+                                console.log(data);
+                              });
+                          },function(btn){
+                            //user clicked not in confirmation dialog
+                            self.status = "cancelled";
                           });
-                        }else{
+
+                        }else{// Validation Error
 
                           if(HttpQueue.count === 0){
                             self.status = "saved";
@@ -444,6 +456,11 @@ angular.module( 'sunshine.edit', [
       }
 
       if(str == 'saved'){
+        status_spinner.className += " off-side";
+        status_spinner_clone.className += " off-side";
+      }
+
+      if(str == 'cancelled'){
         status_spinner.className += " off-side";
         status_spinner_clone.className += " off-side";
       }

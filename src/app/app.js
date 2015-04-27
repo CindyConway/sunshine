@@ -17,6 +17,7 @@ angular
   'sunshine.tip_picker',
   'sunshine.auth_svcs',
   'sunshine.admin',
+  'sunshine.contact_us',
   //'sunshine.test',
   'ui.router',
   'angularUtils.directives.dirPagination',
