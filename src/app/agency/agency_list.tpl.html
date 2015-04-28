@@ -31,7 +31,7 @@
             <div class="left">
               <h1 class="bold p1-right agency-name">{{::agencyCtrl2.adopted.department}}</h1>
               <a class="lh05" href="http://{{::agencyCtrl2.adopted.website}}" target="_blank">{{::agencyCtrl2.adopted.website}}</a>
-              <div><label>ratified on: </label><span class="regular ml1">{{::agencyCtrl2.adopted.ratified_on}}</span></div>
+              <div><label>ratified on: </label><span class="regular ml1">{{::agencyCtrl2.adopted.ratified_on | date: 'MMM d, yyyy'}}</span></div>
             </div>
             <div class="right sm-left">
               <H4 class="bold">Department Contact:</H4>
@@ -43,7 +43,7 @@
         </tr>
       </thead>
     </table>
-    <div ng-repeat="record in agencyCtrl2.records" class="grey-border-bottom grey-border-right grey-border-left px2 sm-full-width">
+    <div ng-repeat="record in agencyCtrl2.records | orderBy: 'title'" class="grey-border-bottom grey-border-right grey-border-left px2 sm-full-width">
 
       <a target="_blank" ng-if="::record.link"  href="{{::record.link}}"><h1 class="m0 p2-top blue-text record-headings">{{record.title}}</h1></a>
           <!-- OR -->
