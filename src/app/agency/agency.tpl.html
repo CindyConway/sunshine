@@ -17,7 +17,6 @@
     <a class="px1 regular" ui-sref="agency_list({dept_id:'{{::agencyCtrl.schedule_id}}'})">List View</a>
   </div>
 
-
     <div class="relative center"
       cg-busy="{promise:agencyCtrl.agency_promise,templateUrl:'loading_msg.html',delay:30}"></div>
     <table ng-if="::agencyCtrl.adopted.department" class="noborder-top grey-border">
@@ -131,7 +130,7 @@
                       <!-- OR -->
             <span ng-hide="::record.link">{{::record.title}}</span>
           </td>
-          <td class="p1 grey-border">{{::record.division}}</td>
+          <td class="p1 grey-border">{{::record.division}} <div ng-if="record.division_contact"><span class="bold">Contact:</span> {{record.division_contact}}</div></td>
           <td class="p1 grey-border">{{::record.remarks}}</td>
           <td class="p1 grey-border">{{::record.retention}}</td>
           <td class="p1 grey-border">{{::record.on_site}}</td>
