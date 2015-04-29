@@ -158,7 +158,6 @@ angular.module( 'sunshine.edit', [
                     var department_info = document.getElementById('department-info');
                     var error_disp = document.getElementById('error-disp');
                     department_info.className = department_info.className.replace("hidden", '');
-                    console.log(error_disp);
                     error_disp.className = error_disp.className.replace("hidden", '');
 
                     if(typeof thisHandsontable != 'undefined'){
