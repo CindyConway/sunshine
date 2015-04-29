@@ -158,6 +158,7 @@ angular.module( 'sunshine.edit', [
                     var department_info = document.getElementById('department-info');
                     var error_disp = document.getElementById('error-disp');
                     department_info.className = department_info.className.replace("hidden", '');
+                    console.log(error_disp);
                     error_disp.className = error_disp.className.replace("hidden", '');
 
                     if(typeof thisHandsontable != 'undefined'){
@@ -281,6 +282,7 @@ angular.module( 'sunshine.edit', [
                         var IsValid = angular.element(document.querySelector('.htInvalid'));
 
                          if(self.editDepartment.$valid && IsValid.length === 0){
+                           self.errorMsg = '';
                           var header = "Lock";
                           var msg = "You cannot unlock this schedule without assistance. Would you like to continue?";
                           var dlg = dialogs.confirm(header, msg);
