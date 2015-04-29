@@ -18,7 +18,7 @@
           </div>
 
           <div id="action-group">
-            <p class="horizontal-center p3 error-msg" ng-if="editCtrl.errorMsg != ''" ng-cloak>{{editCtrl.errorMsg}}</p>
+            <p id="error-disp" class="horizontal-center p3 error-msg hidden" ng-if="editCtrl.errorMsg != ''">{{editCtrl.errorMsg}}</p>
             <p class="horizontal-center p3 info-msg" ng-if="editCtrl.draft.status == 'Locked' && !editCtrl.allow">If this schedule needs to be unlocked before it is published, please email <span class="bold">indextorecords@sfgov.org</span>.</p>
             <button ng-click="editCtrl.lock()" ng-disabled="editCtrl.draft.status != 'Edited'" >Lock</button>
             <button ng-click="editCtrl.tips()" ng-disabled="editCtrl.draft.status === 'Locked'">Add Recommendations</button>
@@ -31,8 +31,8 @@
           </div>
       </div>
       <div id="grid-background">
-        <div id="department-info" class="clearfix horizontal-center">
-        <form name="editCtrl.editDepartment" ng-submit="editCtrl.runValidation()" >
+        <div id="department-info" class="clearfix horizontal-center hidden">
+        <form name="editCtrl.editDepartment" ng-submit="editCtrl.runValidation()" novalidate >
           <div class="dept-left">
               <input
                 id="department"
@@ -40,9 +40,7 @@
                 name="department"
                 ng-model="editCtrl.draft.department"
                 ng-change="editCtrl.save()"
-                ng-disabled="editCtrl.draft.status == 'Locked'"
-                placeholder="Organization Name (required)"
-                required="">
+                ng-disabled="editCtrl.draft.status == 'Locked'">
               <input
                 id="website"
                 name="website"
@@ -66,7 +64,6 @@
                     datepicker-options="editCtrl.dateOptions"
                     date-disabled="disabled(date, mode)"
                     show-button-bar="false"
-                    ng-required="true"
                     close-text="Close" />
                     <span class="input-group-btn">
                       <button type="button"

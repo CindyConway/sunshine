@@ -28,10 +28,10 @@ angular.module( 'sunshine.tip_picker', [
 .controller('TipPickerCtrl', function tipCtrl( $stateParams, Schedule, Template, Authentication,
   TipPicker, HOTHelper) {
   var self = this;
-  var tip_Handsontable;
+  var tip_picker_Handsontable;
   self.draft_dept =  Authentication.selDept;
   self.draft_dept_name = Authentication.selDeptName;
-  self.tip_grid = document.getElementById('tip-grid');
+  self.tip_picker_grid = document.getElementById('tip-picker-grid');
   self.tip_count = document.getElementById("tip-count");
   self.searchResults = [];
   self.selSearchResult = -1;
@@ -48,12 +48,17 @@ angular.module( 'sunshine.tip_picker', [
          settings.data = template;
 
         //Display Table
-        self.tip_grid.style.visibility = 'hidden';
-        if(typeof tip_Handsontable == 'undefined'){
-          tip_Handsontable = new Handsontable(self.tip_grid, settings);
+        self.tip_picker_grid.style.visibility = 'hidden';
+
+        if(typeof tip_picker_Handsontable != 'undefined'){
+            tip_picker_Handsontable.destroy();
         }
 
-        self.tip_grid.style.visibility = 'visible';
+        if(typeof tip_picker_Handsontable == 'undefined'){
+          tip_picker_Handsontable = new Handsontable(self.tip_picker_grid, settings);
+        }
+
+        self.tip_picker_grid.style.visibility = 'visible';
       });
 
   // self.next = function(){
@@ -91,9 +96,9 @@ angular.module( 'sunshine.tip_picker', [
   // be searched
   var tip_search = document.getElementById('tip-search');
   Handsontable.Dom.addEvent(tip_search, 'keyup', function (event) {
-    self.searchResults = tip_Handsontable.search.query(this.value);
+    self.searchResults = tip_picker_Handsontable.search.query(this.value);
     self.tip_count.innerHTML = self.searchResults.length;
-    tip_Handsontable.render();
+    tip_picker_Handsontable.render();
   });
 
 })
