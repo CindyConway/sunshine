@@ -28,10 +28,10 @@ angular.module( 'sunshine.tip_picker', [
 .controller('TipPickerCtrl', function tipCtrl( $stateParams, Schedule, Template, Authentication,
   TipPicker, HOTHelper) {
   var self = this;
-  var tip_Handsontable;
+  var tip_picker_Handsontable;
   self.draft_dept =  Authentication.selDept;
   self.draft_dept_name = Authentication.selDeptName;
-  self.tip_grid = document.getElementById('tip-grid');
+  self.tip_picker_grid = document.getElementById('tip-picker-grid');
   self.tip_count = document.getElementById("tip-count");
   self.searchResults = [];
   self.selSearchResult = -1;
@@ -44,18 +44,21 @@ angular.module( 'sunshine.tip_picker', [
 
         //Add runtime settings
          var settings = HOTHelper.config(TipPicker.config());
-         var l = HOTHelper.getFittedWidths.call(tip_Handsontable, template, settings.columns);
          settings.search = {callback: HOTHelper.searchResultCounter};
-         settings.manualColumnResize = [1, l.selected, l.category, l.title, l.link, l.retention, l.on_site, l.off_site, l.total, l.remarks ];
          settings.data = template;
 
         //Display Table
-        self.tip_grid.style.visibility = 'hidden';
-        if(typeof tip_Handsontable == 'undefined'){
-          tip_Handsontable = new Handsontable(self.tip_grid, settings);
+        self.tip_picker_grid.style.visibility = 'hidden';
+
+        if(typeof tip_picker_Handsontable != 'undefined'){
+            tip_picker_Handsontable.destroy();
         }
 
-        self.tip_grid.style.visibility = 'visible';
+        if(typeof tip_picker_Handsontable == 'undefined'){
+          tip_picker_Handsontable = new Handsontable(self.tip_picker_grid, settings);
+        }
+
+        self.tip_picker_grid.style.visibility = 'visible';
       });
 
   // self.next = function(){
@@ -93,15 +96,50 @@ angular.module( 'sunshine.tip_picker', [
   // be searched
   var tip_search = document.getElementById('tip-search');
   Handsontable.Dom.addEvent(tip_search, 'keyup', function (event) {
-    self.searchResults = tip_Handsontable.search.query(this.value);
+    self.searchResults = tip_picker_Handsontable.search.query(this.value);
     self.tip_count.innerHTML = self.searchResults.length;
-    tip_Handsontable.render();
+    tip_picker_Handsontable.render();
   });
 
 })
 
 .factory('TipPicker', ["Template", "Schedule","RetentionCategories", 'Authentication',
   function (Template, Schedule, RetentionCategories, Authentication) {
+
+    //Function to adjust the width of the columns
+    var colWidth = function(index){
+      win_width = window.innerWidth;
+      win_width = win_width * 0.924;
+      var fivePct = win_width * 0.05;
+      var sevenPct = win_width * 0.07;
+      var tenPct = win_width * 0.1;
+      var fifteenPct = win_width * 0.15;
+      var twentyPct = win_width * 0.2;
+
+      switch(index){
+        case 0 :
+          return  1;
+        case 1 :
+          return fivePct;
+        case 2 :
+          return tenPct;
+        case 3 :
+          return twentyPct;
+        case 4 :
+          return tenPct;
+        case 5 :
+          return fifteenPct;
+        case 6 :
+          return sevenPct;
+        case 7 :
+          return sevenPct;
+        case 8 :
+          return sevenPct;
+        case 9 :
+          return twentyPct;
+      }
+
+    };
 
     //Before Save
     var beforeSave = function(change, source){
@@ -170,6 +208,8 @@ angular.module( 'sunshine.tip_picker', [
       config.columns = [];
       config.contextMenu = false;
       config.colHeaders = ["_id", " ", "Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks"];
+      config.autoColumnSize = false;
+      config.colWidths = colWidth;
 
       //schema for empty row
       config.dataSchema={_id:null, selected:false, category:null, title:null, link:null, retention:null, on_site:null, off_site:null, total:null, remarks:null};

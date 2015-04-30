@@ -54,7 +54,6 @@ angular.module( 'sunshine.edit', [
       startingDay: 1,
       showWeeks:false
     };
-
     self.open = function($event) {
       $event.preventDefault();
       $event.stopPropagation();
@@ -84,6 +83,7 @@ angular.module( 'sunshine.edit', [
         Authentication.setValue("selDept", self.selected_dept);
         Authentication.setValue("selDeptName", self.selected_dept_name);
         self.populateGrid();
+
     });
 
 })
@@ -148,11 +148,17 @@ angular.module( 'sunshine.edit', [
 
                     //Make grid read only if it is locked
                     if(self.draft.status == "Locked"){
+                      settings.contextMenu = false;
                       settings.readOnly = true;
                     }
 
                     settings.data = Schedule.records;
 
+                    //Deal with Angular validation triggering before ajax call is finished
+                    var department_info = document.getElementById('department-info');
+                    var error_disp = document.getElementById('error-disp');
+                    department_info.className = department_info.className.replace("hidden", '');
+                    error_disp.className = error_disp.className.replace("hidden", '');
 
                     if(typeof thisHandsontable != 'undefined'){
                         thisHandsontable.destroy();
@@ -236,6 +242,10 @@ angular.module( 'sunshine.edit', [
                             Schedule.draft.status = "Edited";
                             self.draft.status = Schedule.draft.status;
                             var settings = thisHandsontable.getSettings();
+                            settings.contextMenu =   {};
+                            settings.contextMenu.items = {};
+                            settings.contextMenu.items.row_above = {name:"Insert row"};
+                            settings.contextMenu.items.remove_row = {name:"Remove row"};
                             settings.readOnly = false;
                             thisHandsontable.updateSettings(settings);
 
@@ -271,6 +281,7 @@ angular.module( 'sunshine.edit', [
                         var IsValid = angular.element(document.querySelector('.htInvalid'));
 
                          if(self.editDepartment.$valid && IsValid.length === 0){
+                           self.errorMsg = '';
                           var header = "Lock";
                           var msg = "You cannot unlock this schedule without assistance. Would you like to continue?";
                           var dlg = dialogs.confirm(header, msg);
@@ -283,6 +294,7 @@ angular.module( 'sunshine.edit', [
                                 var settings = thisHandsontable.getSettings();
 
                                 settings.readOnly = true;
+                                settings.contextMenu = false;
                                 thisHandsontable.updateSettings(settings);
                                 //update autosave status
                                 if(HttpQueue.count === 0){
@@ -579,11 +591,13 @@ angular.module( 'sunshine.edit', [
 
   var colWidth = function(index){
     var info = angular.element(document.querySelector('#department-info'));
-    win_width = info[0].clientWidth;
-    var fivePct = win_width * 0.07;
+    if(typeof info[0] == 'undefined') {return;}
+
+    win_width = info[0].offsetWidth;
+    var sevenPct = win_width * 0.07;
     var tenPct = win_width * 0.1;
-    var fifteenPct = win_width * 0.13;
-    var twentyPct = win_width * 0.18;
+    var thirteenPct = win_width * 0.13;
+    var sixteenPct = win_width * 0.16;
 
     switch(index){
       case 0 :
@@ -593,19 +607,19 @@ angular.module( 'sunshine.edit', [
       case 2 :
         return tenPct;
       case 3 :
-        return fifteenPct;
+        return thirteenPct;
       case 4 :
-        return twentyPct;
+        return sixteenPct;
       case 5 :
         return tenPct;
       case 6 :
         return tenPct;
       case 7 :
-          return fivePct;
+          return sevenPct;
       case 8 :
-        return fivePct;
+        return sevenPct;
       case 9 :
-        return fivePct;
+        return sevenPct;
       case 10 :
         return tenPct;
       case 11 :
@@ -722,7 +736,6 @@ angular.module( 'sunshine.edit', [
     link: function(scope, elem, attr){
 
         angular.element($window).bind('resize', function() {
-          console.log('resize');
           var hot = PopulateGrid.getHandsontable();
           hot.render();
         });
