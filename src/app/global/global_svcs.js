@@ -3,7 +3,7 @@ angular.module( 'sunshine.global_svcs', [])
 
 /*================================
 
-      [Global Variable ]
+      [Global Variable ] 
 
 ==================================*/
 .value('GlobalVariables',

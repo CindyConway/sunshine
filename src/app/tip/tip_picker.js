@@ -193,6 +193,7 @@ angular.module( 'sunshine.tip_picker', [
       Schedule.delete_draft_record(dept)
       .success(function(res){
         setStatus("saved");
+		// show hide the yellow confirmation box
       })
       .error(function(err){
         console.log(err);
@@ -201,6 +202,9 @@ angular.module( 'sunshine.tip_picker', [
 
   };
 
+
+ 
+  
   return{
     config : function(){
       // basic config

@@ -37,7 +37,18 @@
             </div>
           </th>
         </tr>
-        <tr>
+	   <tr>
+	   
+	   <th class="p3-top">
+            <div class="md-group">
+              <input id="division" type="text" floating ng-model="::agencyCtrl.division_fltr" />
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="floating-label"><i class="fa fa-pencil"></i>Division</label>
+            </div>
+            <i href="" class="fa fa-sort right pointer mt2" ng-click="predicate = 'division'; reverse=!reverse"></i>
+          </th>
+	   
           <th class="p3-top">
             <div class="md-group">
               <input id="category" type="text" floating ng-model="::agencyCtrl.category_fltr" />
@@ -54,27 +65,10 @@
               <span class="bar"></span>
               <label class="floating-label"><i class="fa fa-pencil"></i>Title</label>
             </div>
-
-            <i href="" class="fa fa-sort right pointer mt2" ng-click="predicate = 'title'; reverse=!reverse"></i>
+           <i href="" class="fa fa-sort right pointer mt2" ng-click="predicate = 'title'; reverse=!reverse"></i>
           </th>
-          <th class="p3-top">
-            <div class="md-group">
-              <input id="division" type="text" floating ng-model="::agencyCtrl.division_fltr" />
-              <span class="highlight"></span>
-              <span class="bar"></span>
-              <label class="floating-label"><i class="fa fa-pencil"></i>Division</label>
-            </div>
-            <i href="" class="fa fa-sort right pointer mt2" ng-click="predicate = 'division'; reverse=!reverse"></i>
-          </th>
-          <th class="p3-top">
-            <div class="md-group">
-              <input id="remarks" type="text" floating ng-model="::agencyCtrl.remarks_fltr" />
-              <span class="highlight"></span>
-              <span class="bar"></span>
-              <label class="floating-label"><i class="fa fa-pencil"></i>Remarks</label>
-            </div>
-            <i href="" class="fa fa-sort right pointer mt2" ng-click="predicate = 'remarks'; reverse=!reverse"></i>
-          </th>
+          
+          
           <th class="p3-top">
             <div class="md-group">
               <input id="retention" type="text" floating ng-model="::agencyCtrl.retention_fltr" />
@@ -111,31 +105,44 @@
             </div>
             <i href="" class="fa fa-sort right pointer mt2" ng-click="predicate = 'total'; reverse=!reverse"></i>
           </th>
+		  
+		  <th class="p3-top">
+            <div class="md-group">
+              <input id="remarks" type="text" floating ng-model="::agencyCtrl.remarks_fltr" />
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="floating-label"><i class="fa fa-pencil"></i>Remarks</label>
+            </div>
+            <i href="" class="fa fa-sort right pointer mt2" ng-click="predicate = 'remarks'; reverse=!reverse"></i>
+          </th>
+		  
+	  
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="record in agencyCtrl.records | orderBy:predicate:reverse
-                                                  | filter : {category: agencyCtrl.category_fltr,
+                                                  | filter : {division: agencyCtrl.division_fltr,
+												  category: agencyCtrl.category_fltr,
                                                   title: agencyCtrl.title_fltr,
-                                                  division: agencyCtrl.division_fltr,
-                                                  remarks:agencyCtrl.remarks_fltr,
                                                   retention: agencyCtrl.retention_fltr,
                                                   on_site: agencyCtrl.on_site_fltr,
                                                   off_site: agencyCtrl.off_site_fltr,
-                                                  total: agencyCtrl.total_fltr}"
+                                                  total: agencyCtrl.total_fltr,
+												  remarks:agencyCtrl.remarks_fltr}"
                                                   ng-class-odd="'grey-background'" ng-class="'grey-border'">
-          <td class="p1 grey-border">{{::record.category}}</td>
+          <td class="p1 grey-border">{{::record.division}} <div ng-if="record.division_contact"><span class="bold">Contact:</span> {{record.division_contact}}</div></td>
+      
+		  <td class="p1 grey-border">{{::record.category}}</td>
           <td class="p1 grey-border">
             <a target="_blank" ng-if="::record.link" href="http://{{::record.link}}">{{::record.title}}</a>
                       <!-- OR -->
             <span ng-hide="::record.link">{{::record.title}}</span>
           </td>
-          <td class="p1 grey-border">{{::record.division}} <div ng-if="record.division_contact"><span class="bold">Contact:</span> {{record.division_contact}}</div></td>
-          <td class="p1 grey-border">{{::record.remarks}}</td>
           <td class="p1 grey-border">{{::record.retention}}</td>
           <td class="p1 grey-border">{{::record.on_site}}</td>
           <td class="p1 grey-border">{{::record.off_site}}</td>
           <td class="p1">{{::record.total}}</td>
+		   <td class="p1 grey-border">{{::record.remarks}}</td>
         </tr>
       </tbody>
     </table>

@@ -92,14 +92,18 @@
       </form>
     </cc-menu>
 
-    <div ng-if="searchCtrl.count == 0" class="py5 half-width horizontal-center">No results were found ...
-      Please check your spelling or return to the <a ui-sref="home">home</a> page and click on one of the agencies.
-      This can help you get an idea of the types of records that are in the Index.
-    </div>
+   
 
     <!------------ Breadcrumb and Text ------------------>
     <div class="white-background" ncy-breadcrumb></div>
     <button cc-button class="refine-search">Refine Search</button>
+	
+	<!------------------if no results------------------>
+	 <div ng-if="searchCtrl.count == 0" class="py5 half-width horizontal-center">No results were found ...
+      Please check your spelling or return to the <a ui-sref="home">home</a> page and click on one of the agencies.
+      This can help you get an idea of the types of records that are in the Index.
+    </div>
+	
 
     <!------------ Search Result ------------------>
     <cc-content  style="min-height:400px">
