@@ -13,7 +13,7 @@ angular.module( 'sunshine.admin', [
       '</button>',
       '<ul  class="dropdown-menu" role="menu">',
     //  '<li><a href="#" ng-show="allowPublisher"><i class="fa fa-tachometer"></i>Dashboard</a></li>',
-      '<li><a ui-sref="tip" ng-show="allowAdmin || allowPublisher"><i class="fa fa-check"></i>Recommendations</a></li>',
+      '<li><a ui-sref="tip" ng-show="allowAdmin || allowPublisher"><i class="fa fa-check"></i>Record Template</a></li>',
       '<li><a href="#" ng-click="add_schedule()" ng-show="allowAdmin || allowPublisher"><i class="fa fa-plus-square"></i>New Schedule</a></li>',
     //  '<li class="divider"></li> ',
     //  '<li><a href="#" ng-show="allowAdmin"><i class="fa fa-user"></i>Users</a></li>',

@@ -9,7 +9,7 @@ angular.module( 'sunshine.tip_picker', [
     $stateProvider.state( 'tip_picker', {
         url: '/tip_picker/:dept_id',
         ncyBreadcrumb: {
-          label: 'Add Recommendations',
+          label: 'Add Record Template',
           parent: 'edit'
         },
         views: {
