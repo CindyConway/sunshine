@@ -83,7 +83,7 @@ angular
 
     // Route unauthorized for user
     event.preventDefault();
-    $state.go('admin.login');
+    $state.go('login');
     return;
 
   });
