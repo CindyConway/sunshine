@@ -490,6 +490,10 @@ angular.module( 'sunshine.edit', [
   "Authentication", "$window", "SetStatus",
   function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper, Authentication, $window, SetStatus){
 
+//  var undoCounter = 0; // addresses bug in HoT that causes issues when deleting a row, then selecting "undo"
+  var x = 0;
+  var addedRowIndex;
+
   function callback(res){}
 
   // Division Autocomplete Function
@@ -521,30 +525,69 @@ angular.module( 'sunshine.edit', [
 
   //Before Save
   var beforeSave = function(change, source){
+
     if(source == "insertId"){return;}
     setStatus("saving");
   };
 
+  var afterCreateRow = function(index, amount){
+    console.log("aftercreaterow");
+    console.log(index, amount);
+    addedRowIndex = index;
+  };
+
   //Autosave function
   var autoSave = function(change,source){
+    x++;
+    console.log("counter " + x);
 
     var self = this;
+    var row;
+
     if (source === 'loadData') {return;} //dont' save this change
     if (source === 'insertId') {return;} // stops an endless loop when the new record id is added after an insert
 
     var data = change[0];
 
-    // transform sorted row to original row
-    var rowNumber = this.sortIndex[data[0]] ? this.sortIndex[data[0]][0] : data[0];
-    var row = this.getSourceDataAtRow(rowNumber);
+    // if(source == "external"){//External is the value of source when undo is called on a deleted row
+    //   console.log(change);
+    //   rowNumber = this.sortIndex[change[0]];
+    //   console.log("logical row " + change[0]);
+    //   console.log("physical row " + rowNumber);
+    //   console.log("added row index" + addedRowIndex);
+    //
+    //   console.log(source);
+    // //  console.log(undoCounter);
+    //   console.log(this.countRows());
+    //   if (undoCounter === 0){ //HoT bug when using undo on a deleted row
+    //       undoCounter = this.countRows() - change[0] + 1;
+    //   }
+    //
+    //   if(undoCounter > 1 ){
+    //     undoCounter--;
+    //     return;
+    //   }
+    //
+    //   row = change[3];
+    //   undoCounter = 0;
+    // }else{
+      // transform sorted row to original row
+      var rowNumber = this.sortIndex[data[0]] ? this.sortIndex[data[0]][0] : data[0];
+      row = this.getSourceDataAtRow(rowNumber);
+  //  }
+
     var obj = {};
     obj._id = Schedule._id;
     obj.draft = {};
     obj.draft.record = row;
-
     Schedule.save_draft_record(obj)
     .then(function(res){
-      self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
+
+      //If it is a new record, set _id to the unique key returned from the DB
+      if(obj.draft.record._id === null){
+        self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
+      }
+
       Schedule.draft.status = "Edited";
 
       if(HttpQueue.count === 0){
@@ -641,6 +684,8 @@ angular.module( 'sunshine.edit', [
         config.contextMenu.items = {};
         config.contextMenu.items.row_above = {name:"Insert row"};
         config.contextMenu.items.remove_row = {name:"Remove row"};
+      //  config.contextMenu.items.undo = {};
+        config.undo = true;
 
         config.colHeaders = ["_id", "Division", "Division Contact", "Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
         config.colWidths = colWidth;
@@ -687,10 +732,11 @@ angular.module( 'sunshine.edit', [
         //Retention Column
         var retentionConfig = {};
         retentionConfig.data = "retention";
-        retentionConfig.type = "autocomplete";
+        //retentionConfig.type = "autocomplete";
+        retentionConfig.type = "dropdown";
         retentionConfig.source = RetentionCategories;
-        retentionConfig.allowInvalid = true;
-        retentionConfig.validator = HOTHelper.retentionValidator;
+        //retentionConfig.allowInvalid = true;
+        //retentionConfig.validator = HOTHelper.retentionValidator;
         config.columns.push(retentionConfig);
 
         // On-site Column
@@ -722,6 +768,7 @@ angular.module( 'sunshine.edit', [
         config.afterChange = autoSave;
         config.beforeRemoveRow = beforeRemoveRow;
         config.afterRender = afterRender;
+        config.afterCreateRow = afterCreateRow;
 
         return config;
     }
