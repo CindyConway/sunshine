@@ -11,19 +11,28 @@
       <i id="status-spinner" class="fa fa-spinner fa-spin off-side"></i>
 
       <div class="white-background py0" ncy-breadcrumb></div>
-      <h1>{{tipPickerCtrl.draft_dept_name}}</h1>
+      <h3>Add record(s) to <b>{{tipPickerCtrl.draft_dept_name}}</b> by selecting checkboxes</h3>
       <div id="search-group">
         <input id="tip-search" type="search" placeholder="Search">
-      </div>
+	<button style="float:right" ui-sref="edit" class="btn blue-fade btn-default white-text">Return to Edit Page</button>
+		
+	</div>
+      
 
       <div id="count-group">
         <div id="tip-count">0</div><span>results</span>
+		
         <!-- <a id="previous" href="#" ng-click="editCtrl.previous()"><i class="fa fa-caret-left"></i></a>
         <a id="next" href="#" ng-click="editCtrl.next()"><i class="fa fa-caret-right"></i></a> -->
+		
+		
       </div>
 
       <div id="tip-grid-sizing-container" cc-handsontable-container style="position:relative;">
-        <div id="tip-picker-grid" style="overflow:scroll; visibility:hidden; padding-bottom:200px" class="handsontable"></div>
+        <div id="tip-picker-grid" style="overflow:scroll; visibility:hidden; padding-bottom:200px" class="handsontable">
+	
+		
+		</div>
       </div>
       <span id="ruler" style="visibility:hidden; white-space: nowrap"></span>
     </div>

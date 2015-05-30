@@ -27,7 +27,7 @@
                 ng-disabled="editCtrl.draft.status != 'Locked'">Publish</button>
             <button ng-hide="!editCtrl.allow" ng-click="editCtrl.unlock()" ng-disabled="editCtrl.draft.status != 'Locked'">Unlock</button>
             <button ng-hide="!editCtrl.allow" ng-click="editCtrl.del()">Delete</button>
-            <a href="#/agency/{{editCtrl._id}}" target="_blank">View Published</a>
+            
           </div>
       </div>
       <div id="grid-background">
@@ -100,8 +100,14 @@
                 ng-disabled="editCtrl.draft.status == 'Locked'"
                 placeholder="Email">
             </div>
+			
           </form>
+		  	
         </div>
+	<div id="department-info" class="clearfix horizontal-center " style="border-top: none">
+	<div class="center"><h3>Draft View &nbsp;&nbsp;|&nbsp;&nbsp; <a href="#/agency/{{editCtrl._id}}" target="_blank">View Published</a></h3></div>
+	</div>
+	
         <!-------------- ORIGINAL STICKY SEARCH AREA ------------ -->
         <div id="search-group"  sticky menu="true" class="sticky-menu">
           <div id="edit-status">
