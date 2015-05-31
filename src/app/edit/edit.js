@@ -531,23 +531,30 @@ angular.module( 'sunshine.edit', [
   };
 
   var afterCreateRow = function(index, amount){
-    console.log("aftercreaterow");
-    console.log(index, amount);
+    // console.log("aftercreaterow");
+    // console.log(index, amount);
+    // console.log(this);
     addedRowIndex = index;
   };
 
   //Autosave function
   var autoSave = function(change,source){
     x++;
-    console.log("counter " + x);
+    //console.log("counter " + x);
 
     var self = this;
     var row;
+    var data;
 
     if (source === 'loadData') {return;} //dont' save this change
     if (source === 'insertId') {return;} // stops an endless loop when the new record id is added after an insert
 
-    var data = change[0];
+    //To address HoT bug when using undo on deleted row
+    if(Array.isArray(change[0])){
+      data = change[0];
+    }else{
+      data = [change[0]];
+    }
 
     // if(source == "external"){//External is the value of source when undo is called on a deleted row
     //   console.log(change);
@@ -580,6 +587,15 @@ angular.module( 'sunshine.edit', [
     obj._id = Schedule._id;
     obj.draft = {};
     obj.draft.record = row;
+
+    if (source != "external"){
+      obj.undo = false;
+    }
+
+    if(source == 'external'){
+      obj.undo = true;
+    }
+    console.log(obj);
     Schedule.save_draft_record(obj)
     .then(function(res){
 

@@ -3,7 +3,7 @@ angular.module( 'sunshine.global_svcs', [])
 
 /*================================
 
-      [Global Variable ] 
+      [Global Variable ]
 
 ==================================*/
 .value('GlobalVariables',
@@ -408,11 +408,11 @@ angular.module( 'sunshine.global_svcs', [])
     var url = apiUrl + '/v1/edit/record/';
     return $http.put(url, record)
       .success(function(data) {
-      //  $log.log(data);
+        //console.log(data);
         // this.get.push(data);
       })
       .error(function(data) {
-        //$log.log(data);
+        //console.log(data);
       });
   };
 
