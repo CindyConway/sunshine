@@ -318,7 +318,7 @@ angular.module( 'sunshine.edit', [
 
                     thisHandsontable.alter('insert_row', start_row, amount);
                   }
-              },667, false, "saving");
+              },667, false, "saved");
 
     return addRow;
 }])
