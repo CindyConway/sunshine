@@ -569,12 +569,12 @@ angular.module( 'sunshine.global_svcs', [])
 ==================================*/
 .value("RetentionCategories",
     ["1 - Permanent",
-    "2 - Current",
-    "3 - Storage",
     "1 - Permanent, 2 - Current",
     "1 - Permanent, 3 - Storage",
-    "2 - Current, 3 - Storage",
     "1 - Permanent, 2 - Current, 3 - Storage",
+    "2 - Current",
+    "2 - Current, 3 - Storage",
+    "3 - Storage",
     "4 - No Retention Required"
   ])
 ;

@@ -1,5 +1,5 @@
 <div id="admin-header" class="outer" cc-admin-header ng-cloak></div>
-  <div class="blah-background" cc-fill-height>
+  <div class="blah-background">
     <div ng-controller="EditCtrl as editCtrl">
       <div class="relative center"
           cg-busy="{promise:agencyCtrl2.agency_promise,templateUrl:'loading_msg.html',delay:30}"></div>
@@ -111,10 +111,28 @@
 
         <!-------------- ORIGINAL STICKY SEARCH AREA ------------ -->
         <div id="search-group"  sticky menu="true" class="sticky-menu">
+
           <div id="edit-status">
             <span ng-model="editCtrl.status">{{editCtrl.status}}</span>
           </div>
           <i id="status-spinner" class="fa fa-spinner fa-spin"></i>
+
+          <button ng-click="editCtrl.removeRow()" class="p4-right">
+            <span class="fa-stack">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-minus fa-stack-1x"></i>
+            </span>
+            Remove Row
+          </button>
+
+          <button ng-click="editCtrl.addRow()">
+            <span class="fa-stack">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-plus fa-stack-1x"></i>
+          </span>
+            Add Row Above
+          </button>
+
           <div class="left">
             <input id="schedule-search" ng-model="editCtrl.searchValue"
                 ng-change="editCtrl.run_search()" type="search" placeholder="Search">
@@ -128,6 +146,23 @@
             <span ng-model="editCtrl.status">{{editCtrl.status}}</span>
           </div>
           <i id="status-spinner-clone" class="fa fa-spinner fa-spin"></i>
+
+          <button ng-click="editCtrl.removeRow()" class="p4-right">
+            <span class="fa-stack">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-minus fa-stack-1x"></i>
+            </span>
+            Remove Row
+          </button>
+
+          <button ng-click="editCtrl.addRow()">
+            <span class="fa-stack">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-plus fa-stack-1x"></i>
+          </span>
+            Add Row Above
+          </button>
+
           <div class="left">
             <input id="schedule-search-clone" ng-model="editCtrl.searchValue" ng-change="editCtrl.run_search()"
                 type="search" placeholder="Search">

@@ -600,6 +600,11 @@ button:focus{outline:none;}
 .p4-top{
   padding-top:4em;
 }
+
+.p4-right{
+  padding-right:4em;
+}
+
 .p4-bottom{
   padding-bottom:4em;
 }
@@ -1287,7 +1292,7 @@ strong {
 
 /*[======= FOR EDIT PAGE ======]*/
 .handsontable .current-row{
-  background-color:#E7E8EF;
+  background-color:#EEEEEE;
 }
 
 .ng-invalid{
@@ -1332,6 +1337,7 @@ strong {
   border-radius: 5px;
   padding:3px;
 }
+
 
 #search-group span{
   padding-right:5px;
@@ -1392,6 +1398,7 @@ strong {
 
 .blah-background{
   background-color:#EEEEEE;
+  padding-bottom:20px;
 }
 
 #admin-main{
@@ -1430,6 +1437,19 @@ strong {
 #tippicker-status{
   padding-right:30px;
   float:right;
+  font-size: 1.1em;
+}
+
+#search-group button{
+  background-color:white;
+  border:none;
+  color:#428bca;
+  float:right;
+  padding-top:2px;
+}
+
+#search-group button span{
+  font-size:0.6em;
 }
 
 #status-spinner,
@@ -1449,7 +1469,8 @@ strong {
   float:right;
 }
 
-#action-group button{
+#action-group button,
+#tip-picker-group button{
      background:none!important;
      border:none;
      font: inherit;
@@ -1458,6 +1479,16 @@ strong {
      margin-right: 40px;
      margin-left: 0px;
      color:#428bca;
+}
+
+#tip-picker-group button{
+  margin:auto;
+}
+
+#info-msg{
+  background-color:#FAEEC3;
+  border: solid 1px #FBAF5D;
+  margin-bottom:10px;
 }
 
 #action-group a{
@@ -1474,7 +1505,8 @@ strong {
     text-decoration: underline;
 }
 
-#action-group button:hover{
+#action-group button:hover,
+#tip-picker-group button:hover{
   border-bottom:1px solid #428bca;
 }
 
@@ -1485,8 +1517,16 @@ strong {
   display:table;
 }
 
+#tip-picker-group{
+  float:right;
+  display:table;
+  padding-right:30px;
+}
+
 #action-group button[disabled=disabled],
-#action-group button[disabled=disabled]:hover
+#action-group button[disabled=disabled]:hover,
+#tip-picker-group button[disabled=disabled],
+#tip-picker-group button[disabled=disabled]:hover
 {
   color:#EEEEEE;
   border-bottom:none;
@@ -1591,6 +1631,7 @@ strong {
   width: 97%;
   margin: auto;
   padding-left: 10px;
+  padding-bottom: 10px;
 }
 
 .btn-default:hover{
@@ -1620,10 +1661,6 @@ strong {
   margin-bottom: 300px;
 }
 
-.handsontable .htAutocompleteArrow {
-  color:#000;
-}
-
 .handsontable th{
   background-color:#FFF;
 }
@@ -1634,17 +1671,35 @@ span.colHeader{
 }
 .handsontable th,
 .handsontable td {
-    line-height: 1.3em;
+  line-height: 1.3em;
 	font-size: 13px;
 }
+
+.handsontable .htAutocompleteArrow {
+  color:#BFBFBF;
+}
+
 .handsontable th,
 .handsontable td {
-    padding-top:10px;
+  padding-top:10px;
 	padding-bottom: 10px;
 }
+
+.handsontableEditor th,
+.handsontableEditor td {
+  padding-top:1px;
+	padding-bottom: 1px;
+}
+
 .handsontable .handsontable table {
   -webkit-box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.4);
+}
+
+
+#schedule-grid .handsontable.listbox .ht_master table,
+.handsontableEditor .htContainer,{
+  width:300px;
 }
 
 .handsontable td.htInvalid {
@@ -1657,12 +1712,13 @@ span.colHeader{
 }
 
 .autocompleteEditor td{
-  background-color:#E7E8EF;
+  background-color:#EEEEEE;
 }
 
 .autocomplete table{
   border: solid 1px #000
 }
+
 
 #schedule-grid .htCore tr th:nth-child(1),
 #schedule-grid .htCore tr td:nth-child(1),
@@ -1699,6 +1755,7 @@ span.colHeader{
 }
 
 #action-group button,
+#tip-picker-group button,
 #action-group a {
 	display: inline-block;
 	padding: 5px 9px !important;
@@ -1710,6 +1767,7 @@ span.colHeader{
 }
 
 #action-group button:hover,
+#tip-picker-group button:hover,
 #action-group a:hover {
 	text-decoration: none;
 	background-color: #428bca !important;
@@ -1717,25 +1775,30 @@ span.colHeader{
 }
 
 #action-group button[disabled=disabled],
-#action-group button[disabled=disabled]:hover {
+#action-group button[disabled=disabled]:hover,
+#tip-picker-group button[disabled=disabled],
+#tip-picker-group button[disabled=disabled]:hover {
 	background-color: #bfbfbf !important;
 	color: #fff;
 	border: 1px solid #bfbfbf;
 	cursor: not-allowed;
 }
 
-#schedule-grid .autocompleteEditor {
-	border: 1px solid #afafaf;
-	border-bottom: 2px #afafaf solid;
+
+.handsontable.listbox td {
 	background-color: #fff;
 }
 
-#schedule-grid .autocompleteEditor td {
-	background-color: #fff;
+.handsontable.listbox tr td.current{
+  background-color: #EEEEEE;
 }
 
-#schedule-grid .handsontable.listbox .ht_master table {
-	border: none;
+.handsontable.listbox tr:hover td {
+  background-color: #EEEEEE;
+}
+
+.handsontable.listbox .ht_master table {
+	border: solid 1px #BFBFBF;
 }
 
 strong {

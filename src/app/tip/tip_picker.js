@@ -36,6 +36,7 @@ angular.module( 'sunshine.tip_picker', [
   self.searchResults = [];
   self.selSearchResult = -1;
   self.status = "saved";
+  self.info_msg = "";
 
     Template.getByDeptId(self.draft_dept)
       .then(function (data){
@@ -60,37 +61,6 @@ angular.module( 'sunshine.tip_picker', [
 
         self.tip_picker_grid.style.visibility = 'visible';
       });
-
-  // self.next = function(){
-  //
-  //     if (self.searchResults.length < 1 ){return;}
-  //
-  //     self.selSearchResult++;
-  //
-  //     if(self.selSearchResult > (self.searchResults.length - 1))
-  //     {
-  //       self.selSearchResult = 0;
-  //     }
-  //
-  //     var sel = self.searchResults[self.selSearchResult];
-  //     tip_Handsontable.selectCell(sel.row, sel.col);
-  //
-  // };
-  //
-  // self.previous = function(){
-  //     if (self.searchResults.length < 1 ){return;}
-  //
-  //     self.selSearchResult--;
-  //
-  //     if(self.selSearchResult < 0 )
-  //     {
-  //       self.selSearchResult = self.searchResults.length - 1;
-  //     }
-  //
-  //     var sel = self.searchResults[self.selSearchResult];
-  //     tip_Handsontable.selectCell(sel.row, sel.col);
-  //
-  // };
 
   // add listener to tip_search field to cause the grid to
   // be searched
@@ -159,9 +129,17 @@ angular.module( 'sunshine.tip_picker', [
           }
         }
 
-        status.innerHTML = str;
+        if(status){
+          status.innerHTML = str;
+        }
     };
 
+    var setInfoMsg = function(str){
+      var elem = document.getElementById("info-msg");
+      if(elem){
+        elem.innerHTML = str;
+      }
+    };
 
     //Autosave function
     var autoSave = function(change,source){
@@ -185,6 +163,7 @@ angular.module( 'sunshine.tip_picker', [
         Schedule.add_tip(dept)
         .then(function(res){
           self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
+          setInfoMsg("Added to your schedule");
           setStatus("saved");
         });
     }
@@ -192,8 +171,8 @@ angular.module( 'sunshine.tip_picker', [
     if(!row.selected){
       Schedule.delete_draft_record(dept)
       .success(function(res){
+        setInfoMsg ("Removed from your schedule");
         setStatus("saved");
-		// show hide the yellow confirmation box
       })
       .error(function(err){
         console.log(err);
@@ -203,8 +182,8 @@ angular.module( 'sunshine.tip_picker', [
   };
 
 
- 
-  
+
+
   return{
     config : function(){
       // basic config

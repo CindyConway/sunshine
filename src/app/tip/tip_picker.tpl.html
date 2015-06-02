@@ -14,13 +14,15 @@
       <h3 class="mb3">Add template record(s) to <span class="bold">{{tipPickerCtrl.draft_dept_name}}</span> by selecting checkboxes</h3>
       <div id="search-group">
         <input id="tip-search" type="search" placeholder="Search">
+        <div id="tip-picker-group">
+          <button ui-sref="edit">Return to Edit Page</button>
+        </div>
 	    </div>
 
       <div id="count-group">
-        <div id="tip-count">0</div><span>results</span>
-        <div id="action-group">
-          <button ui-sref="edit">Return to Edit Page</button>
-        </div>
+        <div id="tip-count" class-"left">0</div><span>results</span>
+        <div class="clearfix"></div>
+        <p id="info-msg" class="horizontal-center info-msg"></p>
       </div>
 
       <div id="tip-grid-sizing-container" cc-handsontable-container style="position:relative;">
