@@ -17,6 +17,7 @@
 //};
 
 var Handsontable = function (rootElement, userSettings) {
+
   userSettings = userSettings || {};
   var instance = new Handsontable.Core(rootElement, userSettings);
   instance.init();
@@ -14110,6 +14111,7 @@ function Storage(prefix) {
    * Undo last edit.
    */
   Handsontable.UndoRedo.prototype.undo = function () {
+
     if (this.isUndoAvailable()) {
       var action = this.doneActions.pop();
 

@@ -25,7 +25,7 @@ angular.module( 'sunshine.edit', [
 
 .controller('EditCtrl', function EditCtrl($scope, GlobalVariables, ScheduleDelete, PopulateGrid, Department,
     ScheduleAdd, ScheduleSave, SchedulePublish, ScheduleLock, ScheduleUnlock, Authentication, TipGo,
-    RunSearch, SetStatus) { //SchedulePDF
+    RunSearch, SetStatus, RemoveRow, AddRow) { //SchedulePDF
 
     GlobalVariables.showFooter = false;
     var self = this;
@@ -33,14 +33,14 @@ angular.module( 'sunshine.edit', [
     self.searchResults = [];
     self.searchValue = "";
     self.selSearchResult = -1;
+    self.addRow = AddRow;
+    self.removeRow = RemoveRow;
     self.del = ScheduleDelete;
     self.save = ScheduleSave;
     self.publish = SchedulePublish;
     self.lock = ScheduleLock;
     self.unlock = ScheduleUnlock;
     self.tips = TipGo;
-  //  self.next = SearchNext;
-  //  self.previous = SearchPrevious;
     self.populateGrid = PopulateGrid.populateGrid;
     self.status = "saved";
     self.allow = false;
@@ -181,94 +181,37 @@ angular.module( 'sunshine.edit', [
   };
 }])
 
-// .factory("SearchPrevious", ["PopulateGrid", function(PopulateGrid){
-//   var searchPrevious = function(){
-//               var self = this;
-//               var thisHandsontable = PopulateGrid.getHandsontable();
-//
-//               if (self.searchResults.length < 1 ){return;}
-//
-//               self.selSearchResult--;
-//
-//               if(self.selSearchResult < 0 )
-//               {
-//                 self.selSearchResult = self.searchResults.length - 1;
-//               }
-//
-//               var sel = self.searchResults[self.selSearchResult];
-//
-//               thisHandsontable.selectCell(sel.row, sel.col);
-//             };
-//
-//       return searchPrevious;
-// }])
-
-// .factory("SearchNext", ["PopulateGrid", function(PopulateGrid){
-//
-//     var searchNext = function(){
-//       var self = this;
-//       var thisHandsontable = PopulateGrid.getHandsontable();
-//
-//         if (self.searchResults.length < 1 ){return;}
-//
-//         self.selSearchResult++;
-//         console.log(self.selSearchResult);
-//
-//         if(self.selSearchResult > (self.searchResults.length - 1))
-//         {
-//           self.selSearchResult = 0;
-//         }
-//
-//         var sel = self.searchResults[self.selSearchResult];
-//         console.log(sel);
-//         thisHandsontable.selectCell(sel.row, sel.col);
-//       };
-//
-//       return searchNext;
-// }])
-
 .factory("ScheduleUnlock",["Schedule", "Debounce", "HttpQueue", "PopulateGrid", "$rootScope",
   function(Schedule, Debounce, HttpQueue, PopulateGrid, $rootScope){
     var unlock = Debounce.debounce(function(){
-                        var self = this;
-                        var thisHandsontable = PopulateGrid.getHandsontable();
+            var self = this;
+            var thisHandsontable = PopulateGrid.getHandsontable();
+            Schedule.unlock(self._id)
+              .success(function(data){
+
+                Schedule.draft.status = "Edited";
+                self.draft.status = Schedule.draft.status;
+                var settings = thisHandsontable.getSettings();
+                settings.contextMenu =   {};
+                settings.contextMenu.items = {};
+                settings.contextMenu.items.row_above = {name:"Insert row"};
+                settings.contextMenu.items.remove_row = {name:"Remove row"};
+                settings.readOnly = false;
+                thisHandsontable.updateSettings(settings);
+
+                //update autosave status
+                if(HttpQueue.count === 0){
+                  self.status = "saved";
+                  self.errorMsg = "";
+                }
+
+              })
+              .error(function(data){
+                console.log(data);
+              });
 
 
-                      //  if(self.editDepartment.$valid && IsValid.length === 0){
-
-                        Schedule.unlock(self._id)
-                          .success(function(data){
-
-                            Schedule.draft.status = "Edited";
-                            self.draft.status = Schedule.draft.status;
-                            var settings = thisHandsontable.getSettings();
-                            settings.contextMenu =   {};
-                            settings.contextMenu.items = {};
-                            settings.contextMenu.items.row_above = {name:"Insert row"};
-                            settings.contextMenu.items.remove_row = {name:"Remove row"};
-                            settings.readOnly = false;
-                            thisHandsontable.updateSettings(settings);
-
-                            //update autosave status
-                            if(HttpQueue.count === 0){
-                              self.status = "saved";
-                              self.errorMsg = "";
-                            }
-
-                          })
-                          .error(function(data){
-                            console.log(data);
-                          });
-                        // }else{
-                        //
-                        //   if(HttpQueue.count === 0){
-                        //     self.status = "saved";
-                        //   }
-                        //   self.errorMsg = "Fix validation errors";
-                        //   $rootScope.$apply();
-                        // }
-
-                        },667, false, "saving");
+            },667, false, "saving");
         return unlock;
 
 }])
@@ -356,6 +299,50 @@ angular.module( 'sunshine.edit', [
             },667, false, "saving");
 
     return publish;
+}])
+
+
+.factory("AddRow",["Schedule", "Debounce", "HttpQueue", "PopulateGrid",
+  function(Schedule, Debounce, HttpQueue, PopulateGrid){
+
+  var addRow = Debounce.debounce(function(){
+
+                  var self = this;
+                  var thisHandsontable = PopulateGrid.getHandsontable();
+                  var selected = thisHandsontable.getSelected();
+
+                  if(selected){
+                    var start_row = selected[0];
+                    var end_row = selected[2];
+                    var amount = end_row - start_row + 1;
+
+                    thisHandsontable.alter('insert_row', start_row, amount);
+                  }
+              },667, false, "saving");
+
+    return addRow;
+}])
+
+
+.factory("RemoveRow",["Debounce", "PopulateGrid",
+  function(Debounce, PopulateGrid){
+
+  var removeRow = Debounce.debounce(function(){
+
+                var self = this;
+                var thisHandsontable = PopulateGrid.getHandsontable();
+                var selected = thisHandsontable.getSelected();
+
+                if(selected){
+                  var start_row = selected[0];
+                  var end_row = selected[2];
+                  var amount = end_row - start_row + 1;
+
+                  thisHandsontable.alter('remove_row', start_row, amount);
+                }
+            },667, false, "saving");
+
+    return removeRow;
 }])
 
 .factory("ScheduleSave", ["Schedule", "Department", "Debounce", "HttpQueue", "Authentication",
@@ -490,6 +477,9 @@ angular.module( 'sunshine.edit', [
   "Authentication", "$window", "SetStatus",
   function(Schedule, RetentionCategories, Debounce, HttpQueue, HOTHelper, Authentication, $window, SetStatus){
 
+//  var undoCounter = 0; // addresses bug in HoT that causes issues when deleting a row, then selecting "undo"
+//var x = 0;
+
   function callback(res){}
 
   // Division Autocomplete Function
@@ -507,7 +497,7 @@ angular.module( 'sunshine.edit', [
      process(uniqueVals);
    };
 
-   var setStatus = SetStatus;
+  var setStatus = SetStatus;
 
   var cellFmt =  function(row, col, prop){
      var props = {};
@@ -521,30 +511,53 @@ angular.module( 'sunshine.edit', [
 
   //Before Save
   var beforeSave = function(change, source){
+
     if(source == "insertId"){return;}
     setStatus("saving");
   };
 
   //Autosave function
   var autoSave = function(change,source){
+  //  x++;
 
     var self = this;
+    var row;
+    var data;
+
     if (source === 'loadData') {return;} //dont' save this change
     if (source === 'insertId') {return;} // stops an endless loop when the new record id is added after an insert
 
-    var data = change[0];
+    //To address HoT bug when using undo on deleted row
+    if(Array.isArray(change[0])){
+      data = change[0];
+    }else{
+      data = [change[0]];
+    }
 
-    // transform sorted row to original row
     var rowNumber = this.sortIndex[data[0]] ? this.sortIndex[data[0]][0] : data[0];
-    var row = this.getSourceDataAtRow(rowNumber);
+    row = this.getSourceDataAtRow(rowNumber);
+
     var obj = {};
     obj._id = Schedule._id;
     obj.draft = {};
     obj.draft.record = row;
 
+    if (source != "external"){
+      obj.undo = false;
+    }
+
+    if(source == 'external'){
+      obj.undo = true;
+    }
+
     Schedule.save_draft_record(obj)
     .then(function(res){
-      self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
+
+      //If it is a new record, set _id to the unique key returned from the DB
+      if(obj.draft.record._id === null){
+        self.setDataAtCell(rowNumber,0, res.data.record_id, "insertId");
+      }
+
       Schedule.draft.status = "Edited";
 
       if(HttpQueue.count === 0){
@@ -636,11 +649,13 @@ angular.module( 'sunshine.edit', [
         config.fixedRowsTop = 0;
         config.fixedRowsOffset = 66;
         config.autoColumnSize = false;
+        config.outsideClickDeselects = false;
         //config.contextMenu = false;
         config.contextMenu =   {};
         config.contextMenu.items = {};
         config.contextMenu.items.row_above = {name:"Insert row"};
         config.contextMenu.items.remove_row = {name:"Remove row"};
+        config.undo = true;
 
         config.colHeaders = ["_id", "Division", "Division Contact", "Category", "Title", "Link", "Retention", "On-site", "Off-site", "Total", "Remarks", "is_template"];
         config.colWidths = colWidth;
@@ -655,7 +670,7 @@ angular.module( 'sunshine.edit', [
         //Division Column
         var divisionConfig = {};
         divisionConfig.data = "division";
-        divisionConfig.type = "autocomplete";
+        divisionConfig.type = "dropdown";
         divisionConfig.source = divisionAutoComplete;
         divisionConfig.strict = false;
         config.columns.push(divisionConfig);
@@ -669,7 +684,7 @@ angular.module( 'sunshine.edit', [
          //Category Column
         var categoryConfig = {};
         categoryConfig.data = "category";
-        categoryConfig.type = "autocomplete";
+        categoryConfig.type = "dropdown";
         categoryConfig.source = categoryAutoComplete;
         categoryConfig.strict = false;
         categoryConfig.validator = HOTHelper.isRequired;
@@ -687,10 +702,10 @@ angular.module( 'sunshine.edit', [
         //Retention Column
         var retentionConfig = {};
         retentionConfig.data = "retention";
-        retentionConfig.type = "autocomplete";
+        retentionConfig.type = "dropdown";
         retentionConfig.source = RetentionCategories;
-        retentionConfig.allowInvalid = true;
-        retentionConfig.validator = HOTHelper.retentionValidator;
+        retentionConfig.allowInvalid = false;
+        retentionConfig.validator = HOTHelper.isRequired;
         config.columns.push(retentionConfig);
 
         // On-site Column

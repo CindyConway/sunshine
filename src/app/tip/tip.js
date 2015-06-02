@@ -160,7 +160,9 @@ angular.module( 'sunshine.tip', [
           }
         }
 
-        status.innerHTML = str;
+        if(status){
+          status.innerHTML = str;
+        }
     };
 
     //Autosave function
@@ -231,7 +233,7 @@ angular.module( 'sunshine.tip', [
         var config = {};
         config.columns = [];
         config.minSpareRows = 1;
-
+        config.undo = true;
         config.contextMenu =   {};
         config.contextMenu.items = {};
         config.contextMenu.items.row_above = {name:"Insert row"};
@@ -241,6 +243,7 @@ angular.module( 'sunshine.tip', [
 
         config.autoColumnSize = false;
         config.colWidths = colWidth;
+
         //schema for empty row
         config.dataSchema={_id:null, category:null, title:null, link:null, retention:null, on_site:null, off_site:null, total:null, remarks:null, is_visible: null};
 
@@ -300,7 +303,6 @@ angular.module( 'sunshine.tip', [
         config.beforeRemoveRow = beforeRemoveRow;
         config.beforeChange = beforeSave;
         config.afterRender = afterRender;
-
 
         return config;
       }

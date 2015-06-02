@@ -1,5 +1,5 @@
 <div id="admin-header" class="outer" cc-admin-header ng-cloak></div>
-  <div class="blah-background" cc-fill-height>
+  <div class="blah-background">
     <div ng-controller="EditCtrl as editCtrl">
       <div class="relative center"
           cg-busy="{promise:agencyCtrl2.agency_promise,templateUrl:'loading_msg.html',delay:30}"></div>
@@ -27,93 +27,112 @@
                 ng-disabled="editCtrl.draft.status != 'Locked'">Publish</button>
             <button ng-hide="!editCtrl.allow" ng-click="editCtrl.unlock()" ng-disabled="editCtrl.draft.status != 'Locked'">Unlock</button>
             <button ng-hide="!editCtrl.allow" ng-click="editCtrl.del()">Delete</button>
-            
+
           </div>
       </div>
       <div id="grid-background">
-        <div id="department-info" class="clearfix horizontal-center hidden">
-        <form name="editCtrl.editDepartment" ng-submit="editCtrl.runValidation()" novalidate >
-          <div class="dept-left">
-              <input
-                id="department"
-                class="dept-input"
-                name="department"
-                ng-model="editCtrl.draft.department"
-                ng-change="editCtrl.save()"
-                ng-disabled="editCtrl.draft.status == 'Locked'">
-              <input
-                id="website"
-                name="website"
-                class="dept-input"
-                ng-model="editCtrl.draft.website"
-                ng-change="editCtrl.save()"
-                ng-disabled="editCtrl.draft.status == 'Locked'"
-                placeholder="Organization Website (required)"
-                required="">
-              <label>Ratified on:</label>
-              <p class="input-group">
-                    <input id="ratified_on"
-                    type="text"
-                    show-weeks="false"
-                    class="form-control"
-                    datepicker-popup="MM/dd/yyyy"
-                    ng-model="editCtrl.draft.ratified_on"
+        <div id="department-info" class="horizontal-center hidden">
+          <form name="editCtrl.editDepartment" ng-submit="editCtrl.runValidation()" novalidate >
+            <div class="clearfix">
+              <div class="dept-left">
+                  <input
+                    id="department"
+                    class="dept-input"
+                    name="department"
+                    ng-model="editCtrl.draft.department"
+                    ng-change="editCtrl.save()"
+                    ng-disabled="editCtrl.draft.status == 'Locked'">
+                  <input
+                    id="website"
+                    name="website"
+                    class="dept-input"
+                    ng-model="editCtrl.draft.website"
                     ng-change="editCtrl.save()"
                     ng-disabled="editCtrl.draft.status == 'Locked'"
-                    is-open="editCtrl.opened"
-                    datepicker-options="editCtrl.dateOptions"
-                    date-disabled="disabled(date, mode)"
-                    show-button-bar="false"
-                    close-text="Close" />
-                    <span class="input-group-btn">
-                      <button type="button"
-                              class="btn btn-default"
-                              ng-click="editCtrl.open($event)"
-                              ng-disabled="editCtrl.draft.status == 'Locked'">
-                              <i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
-                </p>
-          </div>
-          <div class="dept-right">
-              <label>Department Contact:</label>
-              <input
-                name="contact"
-                class="dept-input"
-                ng-model="editCtrl.draft.contact"
-                ng-change="editCtrl.save()"
-                ng-disabled="editCtrl.draft.status == 'Locked'"
-                placeholder="Contact Person (required)"
-                required="">
-              <input
-                name="phone"
-                class="dept-input"
-                ng-model="editCtrl.draft.phone"
-                ng-change="editCtrl.save()"
-                ng-disabled="editCtrl.draft.status == 'Locked'"
-                placeholder="Phone number (required)"
-                required="">
-              <input
-                name="email"
-                class="dept-input"
-                ng-model="editCtrl.draft.email"
-                ng-change="editCtrl.save()"
-                ng-disabled="editCtrl.draft.status == 'Locked'"
-                placeholder="Email">
+                    placeholder="Organization Website (required)"
+                    required="">
+                  <label>Ratified on:</label>
+                  <p class="input-group">
+                        <input id="ratified_on"
+                        type="text"
+                        show-weeks="false"
+                        class="form-control"
+                        datepicker-popup="MM/dd/yyyy"
+                        ng-model="editCtrl.draft.ratified_on"
+                        ng-change="editCtrl.save()"
+                        ng-disabled="editCtrl.draft.status == 'Locked'"
+                        is-open="editCtrl.opened"
+                        datepicker-options="editCtrl.dateOptions"
+                        date-disabled="disabled(date, mode)"
+                        show-button-bar="false"
+                        close-text="Close" />
+                        <span class="input-group-btn">
+                          <button type="button"
+                                  class="btn btn-default"
+                                  ng-click="editCtrl.open($event)"
+                                  ng-disabled="editCtrl.draft.status == 'Locked'">
+                                  <i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+              </div>
+              <div class="dept-right">
+                  <label>Department Contact:</label>
+                  <input
+                    name="contact"
+                    class="dept-input"
+                    ng-model="editCtrl.draft.contact"
+                    ng-change="editCtrl.save()"
+                    ng-disabled="editCtrl.draft.status == 'Locked'"
+                    placeholder="Contact Person (required)"
+                    required="">
+                  <input
+                    name="phone"
+                    class="dept-input"
+                    ng-model="editCtrl.draft.phone"
+                    ng-change="editCtrl.save()"
+                    ng-disabled="editCtrl.draft.status == 'Locked'"
+                    placeholder="Phone number (required)"
+                    required="">
+                  <input
+                    name="email"
+                    class="dept-input"
+                    ng-model="editCtrl.draft.email"
+                    ng-change="editCtrl.save()"
+                    ng-disabled="editCtrl.draft.status == 'Locked'"
+                    placeholder="Email">
+                </div>
             </div>
-			
+            <div class="center mb1">
+              <span>Draft View | </span>
+              <a href="#/agency/{{editCtrl._id}}" target="_blank">Published View</a>
+            </div>
           </form>
-		  	
         </div>
-	<div id="department-info" class="clearfix horizontal-center " style="border-top: none">
-	<div class="center"><h3>Draft View &nbsp;&nbsp;|&nbsp;&nbsp; <a href="#/agency/{{editCtrl._id}}" target="_blank">View Published</a></h3></div>
-	</div>
-	
+
         <!-------------- ORIGINAL STICKY SEARCH AREA ------------ -->
         <div id="search-group"  sticky menu="true" class="sticky-menu">
+
           <div id="edit-status">
             <span ng-model="editCtrl.status">{{editCtrl.status}}</span>
           </div>
           <i id="status-spinner" class="fa fa-spinner fa-spin"></i>
+
+          <button ng-click="editCtrl.removeRow()" class="p4-right">
+            <span class="fa-stack">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-minus fa-stack-1x"></i>
+            </span>
+            Remove Row
+          </button>
+
+          <button ng-click="editCtrl.addRow()">
+            <span class="fa-stack">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-plus fa-stack-1x"></i>
+          </span>
+            Add Row Above
+          </button>
+
           <div class="left">
             <input id="schedule-search" ng-model="editCtrl.searchValue"
                 ng-change="editCtrl.run_search()" type="search" placeholder="Search">
@@ -127,6 +146,23 @@
             <span ng-model="editCtrl.status">{{editCtrl.status}}</span>
           </div>
           <i id="status-spinner-clone" class="fa fa-spinner fa-spin"></i>
+
+          <button ng-click="editCtrl.removeRow()" class="p4-right">
+            <span class="fa-stack">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-minus fa-stack-1x"></i>
+            </span>
+            Remove Row
+          </button>
+
+          <button ng-click="editCtrl.addRow()">
+            <span class="fa-stack">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-plus fa-stack-1x"></i>
+          </span>
+            Add Row Above
+          </button>
+
           <div class="left">
             <input id="schedule-search-clone" ng-model="editCtrl.searchValue" ng-change="editCtrl.run_search()"
                 type="search" placeholder="Search">

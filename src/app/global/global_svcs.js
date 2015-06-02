@@ -3,13 +3,13 @@ angular.module( 'sunshine.global_svcs', [])
 
 /*================================
 
-      [Global Variable ] 
+      [Global Variable ]
 
 ==================================*/
 .value('GlobalVariables',
   {
     //"showFooter" : true,
-    "api_url": 'http://10.250.60.109:1971' //,
+    "api_url": 'http://localhost:1971' //,
     //"user_dept": null,
     //"selected_dept": null
   }
@@ -408,11 +408,11 @@ angular.module( 'sunshine.global_svcs', [])
     var url = apiUrl + '/v1/edit/record/';
     return $http.put(url, record)
       .success(function(data) {
-      //  $log.log(data);
+        //console.log(data);
         // this.get.push(data);
       })
       .error(function(data) {
-        //$log.log(data);
+        //console.log(data);
       });
   };
 
@@ -569,12 +569,12 @@ angular.module( 'sunshine.global_svcs', [])
 ==================================*/
 .value("RetentionCategories",
     ["1 - Permanent",
-    "2 - Current",
-    "3 - Storage",
     "1 - Permanent, 2 - Current",
     "1 - Permanent, 3 - Storage",
-    "2 - Current, 3 - Storage",
     "1 - Permanent, 2 - Current, 3 - Storage",
+    "2 - Current",
+    "2 - Current, 3 - Storage",
+    "3 - Storage",
     "4 - No Retention Required"
   ])
 ;
