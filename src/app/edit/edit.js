@@ -708,7 +708,7 @@ angular.module( 'sunshine.edit', [
         retentionConfig.type = "dropdown";
         retentionConfig.source = RetentionCategories;
         retentionConfig.allowInvalid = false;
-        retentionConfig.validator = HOTHelper.isRequired;
+        retentionConfig.validator = HOTHelper.retentionValidator;
         config.columns.push(retentionConfig);
 
         // On-site Column
