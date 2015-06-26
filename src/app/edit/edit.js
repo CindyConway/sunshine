@@ -665,7 +665,10 @@ angular.module( 'sunshine.edit', [
         config.dataSchema={_id:null, division:null, category:null, title:null, link: null, retention:null, on_site:null, off_site:null, total:null, remarks:null, is_template:null};
 
         //_id Column (hidden)
-        config.columns.push({"data":"_id"});
+        var idConfig = {};
+        idConfig.data = "_id";
+        idConfig.readOnly = "true";
+        config.columns.push(idConfig);
 
         //Division Column
         var divisionConfig = {};
@@ -727,6 +730,7 @@ angular.module( 'sunshine.edit', [
         //is_template
         var is_temp = {};
         is_temp.data = "is_template";
+        is_temp.readOnly = "true";
         config.columns.push(is_temp);
 
         // conditional cell formatting

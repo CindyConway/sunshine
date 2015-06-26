@@ -18,6 +18,7 @@ angular.module( 'sunshine.admin', [
     //  '<li class="divider"></li> ',
     //  '<li><a href="#" ng-show="allowAdmin"><i class="fa fa-user"></i>Users</a></li>',
     //  '<li class="divider"></li> ',
+      '<li><a href="assets/IndexToRecords_UserManual.pdf" target="_blank"><i class="fa fa-book"></i>User Manual</a></li>',
       '<li><a href="#" ng-click="logout()"><i class="fa fa-sign-out"></i>Logout</a></li>',
       '</ul> ',
       '</div>',
