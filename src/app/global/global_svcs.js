@@ -9,7 +9,7 @@ angular.module( 'sunshine.global_svcs', [])
 .value('GlobalVariables',
   {
     //"showFooter" : true,
-    "api_url": 'http://localhost:1971' //,
+    "api_url": 'http://index.sfgov.org/node' //,
     //"user_dept": null,
     //"selected_dept": null
   }

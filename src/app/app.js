@@ -18,12 +18,10 @@ angular
   'sunshine.auth_svcs',
   'sunshine.admin',
   'sunshine.contact_us',
-  //'sunshine.test',
   'ui.router',
   'angularUtils.directives.dirPagination',
   'ui.bootstrap',
   'ui.unique',
-  'cc.slide.menu',
   'paper.input',
   'checklist-model',
   'ngSanitize',
@@ -31,21 +29,19 @@ angular
   'cgBusy',
   'ncy-angular-breadcrumb',
   'debounce',
-  'sticky'
+  'sticky',
+  'pageslide-directive'
 ])
 
 .run(function($rootScope, $window, $location, Authentication, $state) {
-
-
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 
     Authentication.check();
 
-    //This is the damned pdf printing. Still need to figue out security
+    //This is the pdf printing. Still need to figue out security
     if(toState.data.authorizedRoles.indexOf("printer") > -1){
         return;
     }
-
 
     //This is a public page, allow routing
     if(toState.data.authorizedRoles.indexOf("Everyone") > -1){
@@ -112,13 +108,9 @@ angular
   $httpProvider.defaults.transformRequest.push(spinnerFunction);
 })
 
-// .config( function ( $provide, $stateProvider, $urlRouterProvider){
-//   $urlRouterProvider.otherwise( '/home' );
-// }, function(USER_ROLESProvider){} )
-// //Using the main application's run method to execute any code after services have been started
-// .run( function run ($rootScope) {
-//
-// })
+.config( function ($urlRouterProvider){
+  $urlRouterProvider.otherwise( '/home' );
+})
 
 .controller( 'AppCtrl', function AppCtrl ( $scope, $location, Login, UserAuth, $window,
   $rootScope, GlobalVariables ) {

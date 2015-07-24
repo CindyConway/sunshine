@@ -70,12 +70,10 @@ module.exports = {
       'vendor/angular-ui-router/release/angular-ui-router.js',
       'vendor/angular-ui-utils/modules/route/route.js',
       'vendor/angular-animate/angular-animate.js',
-      'vendor/slide.and.push/scripts/slide.and.push.js',
       'vendor/angular-sanitize/angular-sanitize.js',
       'vendor/checklist-model/checklist-model.js',
       'vendor/angular-busy/dist/angular-busy.js',
       'vendor/angular-breadcrumb/dist/angular-breadcrumb.js',
-      //'vendor/handsontable/dist/handsontable.full.min.js',
       'vendor/handsontable/dist/handsontable.full.js',
       'vendor/ng-debounce/angular-debounce.js',
       'vendor/zeroclipboard/dist/ZeroClipboard.min.js',
@@ -83,9 +81,9 @@ module.exports = {
       'vendor/zeroclipboard/dist/ZeroClipboard.swf',
       'vendor/angular-dialog-service/dist/dialogs.min.js',
       'vendor/bootstrap/dist/bootstrap.min.js',
-    //  'vendor/ngSticky/dist/sticky.min.js'
       'vendor/ngSticky/lib/sticky.js',
-      'vendor/headhesive.js/dist/headhesive.min.js'
+      'vendor/headhesive.js/dist/headhesive.min.js',
+      'vendor/ng-pageslide/src/angular-pageslide-directive.js'
 
     ],
     css: [
