@@ -20,7 +20,7 @@ angular.module('sunshine.search', ['ui.router'])
   });
 })
 
-.controller('SearchCtrl', function($scope, Search, GlobalVariables, Authentication) {
+.controller('SearchCtrl', function($scope, Search, Authentication) {
 
   var self = this;
   self.results = {};

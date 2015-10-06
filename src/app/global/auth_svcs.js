@@ -34,10 +34,10 @@ angular.module( 'sunshine.auth_svcs', [])
   return auth;
 })
 
-.factory('UserAuth', function($window, $location, $http, Authentication, GlobalVariables) {
+.factory('UserAuth', function($window, $location, $http, Authentication, SunshineConfig) {
   return {
     login: function(email, password) {
-      var url = GlobalVariables.api_url + "/v1/login";
+      var url = SunshineConfig.api_url + "/v1/login";
       return $http.post(url, {
         "email": email,
         "pwrd": password

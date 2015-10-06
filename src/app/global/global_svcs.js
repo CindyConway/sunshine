@@ -3,25 +3,11 @@ angular.module( 'sunshine.global_svcs', [])
 
 /*================================
 
-      [Global Variable ]
-
-==================================*/
-.value('GlobalVariables',
-  {
-    //"showFooter" : true,
-    "api_url": 'http://localhost:1971' //,
-    //"user_dept": null,
-    //"selected_dept": null
-  }
-)
-
-/*================================
-
       [ User Object ]
 
 ==================================*/
-.service("User", function($http, GlobalVariables){
-  var apiUrl = GlobalVariables.api_url;
+.service("User", function($http, SunshineConfig){
+  var apiUrl = SunshineConfig.api_url;
   var url = apiUrl + "/v1/signup";
 
   this.signup = function(user){
@@ -41,8 +27,8 @@ angular.module( 'sunshine.global_svcs', [])
 
 ==================================*/
 
-.service('Department', function($http, GlobalVariables) {
-  var apiUrl =GlobalVariables.api_url;
+.service('Department', function($http, SunshineConfig) {
+  var apiUrl =SunshineConfig.api_url;
 
   /*****************************************
   METHOD: del
@@ -128,8 +114,8 @@ angular.module( 'sunshine.global_svcs', [])
         [ Search Object ]
 
 ==================================*/
-.service('Search', function($http, GlobalVariables, Authentication) {
-  var apiUrl = GlobalVariables.api_url;
+.service('Search', function($http, SunshineConfig, Authentication) {
+  var apiUrl = SunshineConfig.api_url;
   search_terms = {};
   search_filters = {};
 
@@ -252,8 +238,8 @@ angular.module( 'sunshine.global_svcs', [])
 
 ==================================*/
 
-.service('Template', function($http, GlobalVariables) {
-  var apiUrl = GlobalVariables.api_url;
+.service('Template', function($http, SunshineConfig) {
+  var apiUrl = SunshineConfig.api_url;
   var self = this;
   self.all = null;
   self.for_dept = null;
@@ -333,9 +319,9 @@ angular.module( 'sunshine.global_svcs', [])
 
 ==================================*/
 
-.service('Schedule', function($http, GlobalVariables) {
+.service('Schedule', function($http, SunshineConfig) {
 
-  var apiUrl = GlobalVariables.api_url;
+  var apiUrl = SunshineConfig.api_url;
   var self = this;
   self.draft = null;
   self._id = null;

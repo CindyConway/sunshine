@@ -31,7 +31,7 @@ angular.module( 'sunshine.agency', ['ui.router'])
   });
 })
 
-.controller( 'AgencyCtrl', function AgencyController(Schedule, $stateParams, GlobalVariables, Authentication) {
+.controller( 'AgencyCtrl', function AgencyController(Schedule, $stateParams, Authentication) {
   var self = this;
   Authentication.selDept = $stateParams.dept_id;
   self.schedule_id = Authentication.selDept;
