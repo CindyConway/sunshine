@@ -3,6 +3,20 @@ angular.module( 'sunshine.global_svcs', [])
 
 /*================================
 
+      [Global Variable ]
+
+==================================*/
+.value('GlobalVariables',
+  {
+    //"showFooter" : true,
+    "api_url": 'http://index.sfgov.org/node' //,
+    //"user_dept": null,
+    //"selected_dept": null
+  }
+)
+
+/*================================
+
       [ User Object ]
 
 ==================================*/

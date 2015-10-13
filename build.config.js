@@ -70,7 +70,6 @@ module.exports = {
       'vendor/angular-ui-router/release/angular-ui-router.js',
       'vendor/angular-ui-utils/modules/route/route.js',
       'vendor/angular-animate/angular-animate.js',
-      'vendor/slide.and.push/scripts/slide.and.push.js',
       'vendor/angular-sanitize/angular-sanitize.js',
       'vendor/checklist-model/checklist-model.js',
       'vendor/angular-busy/dist/angular-busy.js',
@@ -83,7 +82,8 @@ module.exports = {
       'vendor/angular-dialog-service/dist/dialogs.min.js',
       'vendor/bootstrap/dist/bootstrap.min.js',
       'vendor/ngSticky/lib/sticky.js',
-      'vendor/headhesive.js/dist/headhesive.min.js'
+      'vendor/headhesive.js/dist/headhesive.min.js',
+      'vendor/ng-pageslide/src/angular-pageslide-directive.js'
 
     ],
     css: [
