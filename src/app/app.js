@@ -32,7 +32,8 @@ angular
   'ncy-angular-breadcrumb',
   'debounce',
   'sticky',
-  'pageslide-directive'
+  'pageslide-directive',
+  'angularytics'
 ])
 
 .run(function($rootScope, $window, $location, Authentication, $state) {

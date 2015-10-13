@@ -83,7 +83,8 @@ module.exports = {
       'vendor/bootstrap/dist/bootstrap.min.js',
       'vendor/ngSticky/lib/sticky.js',
       'vendor/headhesive.js/dist/headhesive.min.js',
-      'vendor/ng-pageslide/src/angular-pageslide-directive.js'
+      'vendor/ng-pageslide/src/angular-pageslide-directive.js',
+      'vendor/angularytics/dist/angularytics.min.js'
 
     ],
     css: [
