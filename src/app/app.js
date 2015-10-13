@@ -2,6 +2,8 @@
 // App wide dependencies
 angular
 .module( 'sunshine', [
+  //'sunshine.dev',
+  'sunshine.prod',
   'templates-app',
   'templates-common',
   'sunshine.home',
@@ -113,8 +115,8 @@ angular
 })
 
 .controller( 'AppCtrl', function AppCtrl ( $scope, $location, Login, UserAuth, $window,
-  $rootScope, GlobalVariables ) {
-    $scope.show_footer = GlobalVariables.showFooter;
+  $rootScope, SunshineConfig ) {
+    $scope.show_footer = SunshineConfig.showFooter;
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
         if ( angular.isDefined( toState.data.pageTitle ) ) {

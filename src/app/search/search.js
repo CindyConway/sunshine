@@ -20,7 +20,8 @@ angular.module('sunshine.search', ['ui.router'])
   });
 })
 
-.controller('SearchCtrl', function($scope, $window, Search, GlobalVariables, Debounce) {
+
+.controller('SearchCtrl', function($scope, Search, Authentication) {
 
   var self = this;
   var storedTerms = $window.sessionStorage.searchTerms;
